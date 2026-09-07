@@ -54,7 +54,7 @@ export const units: Unit[] = [
         title: "양팔저울로 알고리즘 비교하기",
         summary:
           "가벼운 불량 상자 하나를 찾을 때, 차례로 비교하기와 절반씩 나누기는 저울을 몇 번 쓸까요?",
-        status: "in-progress",
+        status: "ready",
       },
     ],
   },

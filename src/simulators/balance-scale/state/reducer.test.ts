@@ -1,0 +1,20 @@
+import { expect, it } from "vitest"
+import { createRun, reducer } from "./reducer"
+it("먼저 끝난 비교는 멈추고 되감기는 공통 시간축을 복원한다", () => {
+  let state = createRun({ n: 8, algorithm: "sequential-pair", placement: "worst" }, 7, "run")
+  state = reducer(state, { type: "auto", running: true })
+  for (let i = 0; i < 4; i++) state = reducer(state, { type: "step", compare: true })
+  expect(state.pair["sequential-pair"].comparisons).toBe(4)
+  expect(state.pair["divide-half"].comparisons).toBe(3)
+  expect(state.running).toBe(false)
+  state = reducer(state, { type: "back" })
+  expect(state.pair["divide-half"].finished).toBe(true)
+  expect(state.pair["sequential-pair"].finished).toBe(false)
+  state = reducer(state, { type: "back" })
+  expect(state.pair["divide-half"].finished).toBe(false)
+  expect(state.pair["divide-half"].comparisons).toBe(2)
+  state = reducer(state, { type: "reset", fake: 0, runId: "next" })
+  expect(state.tick).toBe(0)
+  expect(state.pair["divide-half"].fakeIndex).toBe(0)
+  expect(state.runId).toBe("next")
+})

@@ -3,7 +3,7 @@ import { UnitTile } from "../components/ui/UnitTile"
 import { simulatorPath, units } from "../content/units"
 
 export function HomePage() {
-  const inProgress = units.flatMap(u =>
+  const availableExperiments = units.flatMap(u =>
     u.simulators.filter(s => s.status !== "coming-soon").map(s => ({ unit: u, sim: s })),
   )
 
@@ -33,13 +33,13 @@ export function HomePage() {
         </ul>
       </section>
 
-      {inProgress.length > 0 && (
+      {availableExperiments.length > 0 && (
         <section className="mt-20 max-w-[70ch]" aria-labelledby="now-heading">
           <h2 id="now-heading" className="text-[1.6rem]">
-            지금 만들고 있는 실험
+            지금 해 볼 수 있는 실험
           </h2>
           <ul className="mt-4 divide-y divide-line border-y border-line">
-            {inProgress.map(({ unit, sim }) => (
+            {availableExperiments.map(({ unit, sim }) => (
               <li key={sim.slug}>
                 <Link
                   to={simulatorPath(unit, sim)}
