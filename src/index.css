@@ -1,0 +1,101 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Do Hyeon", "IBM Plex Sans KR", system-ui, sans-serif;
+  --font-sans: "IBM Plex Sans KR", "Apple SD Gothic Neo", system-ui, sans-serif;
+
+  /* 실험 노트 종이와 잉크 */
+  --color-paper: #f5f7fa;
+  --color-paper-2: #eaeef4;
+  --color-ink: #16213a;
+  --color-ink-2: #4b5670;
+  --color-ink-3: #8a94aa;
+  --color-line: #d3dae6;
+  --color-marker: #ffd23f;
+
+  /* 단원 5색: 폴더 색 */
+  --color-unit-system: #1e9c5a;
+  --color-unit-data: #2b6be6;
+  --color-unit-algo: #f0671f;
+  --color-unit-ai: #7a3be8;
+  --color-unit-culture: #e0325c;
+
+  --ease-out-soft: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@layer base {
+  html {
+    font-size: 17px;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    color: var(--color-ink);
+    background-color: var(--color-paper);
+    /* 모눈 실험 노트 */
+    background-image:
+      linear-gradient(
+        to right,
+        color-mix(in srgb, var(--color-line) 45%, transparent) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        to bottom,
+        color-mix(in srgb, var(--color-line) 45%, transparent) 1px,
+        transparent 1px
+      );
+    background-size: 32px 32px;
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    font-feature-settings: "tnum";
+    /* 한국어는 단어 중간에서 끊지 않는다 */
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.005em;
+    margin: 0;
+  }
+
+  p {
+    margin: 0;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-ink);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background: var(--color-marker);
+    color: var(--color-ink);
+  }
+}
+
+@layer utilities {
+  /* 단원 폴더 타일 위의 탭 */
+  .folder-tab::before {
+    content: "";
+    position: absolute;
+    top: -12px;
+    left: 0;
+    width: 72px;
+    height: 12px;
+    border-radius: 8px 8px 0 0;
+    background: var(--unit);
+  }
+}
