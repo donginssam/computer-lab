@@ -1,6 +1,6 @@
 import type { SimState, Tilt } from "./types"
 export function tilt(left: number[], right: number[], fakeIndex: number): Tilt {
-  if (left.length !== right.length) throw new Error("양쪽에 같은 수의 상자를 올려 주세요.")
+  if (left.length !== right.length) throw new Error("양쪽에 같은 수의 동전을 올려 주세요.")
   return left.includes(fakeIndex) ? "left" : right.includes(fakeIndex) ? "right" : "balanced"
 }
 export function init(n: number, fakeIndex: number): SimState {
@@ -12,7 +12,7 @@ export function init(n: number, fakeIndex: number): SimState {
     fakeIndex < 0 ||
     fakeIndex >= n
   )
-    throw new Error("상자 개수 또는 불량 위치가 올바르지 않습니다.")
+    throw new Error("동전 수 또는 가짜 동전 위치가 올바르지 않습니다.")
   return {
     n,
     fakeIndex,

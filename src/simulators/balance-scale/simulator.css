@@ -31,7 +31,7 @@
 }
 .mode-tabs {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 0.4rem;
   margin: 2rem 0 1rem;
 }
@@ -129,34 +129,42 @@
   border-left: 4px solid #b54a0b;
   margin: 0.8rem 0;
 }
-.box-grid {
+.coin-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(42px, 1fr));
+  grid-template-columns: repeat(auto-fill, 42px);
   gap: 0.35rem;
   margin-top: 0.8rem;
 }
-.box {
-  background: #eaeef4;
-  border: 1px solid #a5b1c5;
-  min-height: 40px;
+.coin {
+  width: 42px;
+  height: 42px;
+  background: #f4d77b;
+  border: 2px solid #a86e16;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 4px;
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0 0 3px #ffe8a6,
+    0 1px 1px #16213a24;
+  color: #5d3b08;
+  font-weight: 600;
   font-size: 0.85rem;
 }
-.box.active,
-.manual-boxes button.active {
+.coin.active {
   background: #245bc0;
+  border-color: #173d8c;
+  box-shadow: inset 0 0 0 3px #86adf5;
   color: white;
 }
-.box.excluded {
+.coin.excluded {
   opacity: 0.4;
 }
-.box.answer {
+.coin.answer {
   background: #b4233b;
   color: white;
   border: 2px solid #701329;
+  box-shadow: inset 0 0 0 3px #ed8a9b;
 }
 .step-log ol {
   max-height: 240px;
@@ -185,7 +193,7 @@
 }
 .concept-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
 }
 .balance-page table {
@@ -213,33 +221,24 @@
   align-items: center;
 }
 .quiz {
-  margin-top: 1rem;
-  border-top: 1px solid #d3dae6;
-  padding-top: 0.8rem;
+  min-width: 0;
+  margin: 1.25rem 0 0;
+  border: 0;
+  padding: 0;
+}
+.quiz + .quiz {
+  margin-top: 1.75rem;
 }
 .quiz legend {
-  padding-top: 1rem;
-  margin-bottom: 0.6rem;
+  padding: 0;
+  margin-bottom: 0.75rem;
+  font-weight: 500;
 }
 .quiz p,
 .hint {
   margin-top: 0.7rem;
   padding: 0.5rem;
   background: #fff0b8;
-}
-.teacher-guide {
-  list-style: decimal;
-  padding-left: 1.5rem;
-}
-.teacher-guide li {
-  margin: 0.4rem 0;
-}
-.manual-boxes button {
-  padding: 0.2rem;
-}
-.manual-boxes small {
-  display: block;
-  font-size: 0.65rem;
 }
 .chart {
   width: 100%;
@@ -259,9 +258,6 @@
   .comparison-grid,
   .concept-grid {
     grid-template-columns: 1fr;
-  }
-  .mode-tabs {
-    grid-template-columns: repeat(2, 1fr);
   }
   .mode-tabs button {
     padding-inline: 0.35rem;

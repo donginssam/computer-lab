@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --font-display: "Do Hyeon", "IBM Plex Sans KR", system-ui, sans-serif;
+  --font-display: "Nanum Myeongjo", "IBM Plex Sans KR", system-ui, sans-serif;
   --font-sans: "IBM Plex Sans KR", "Apple SD Gothic Neo", system-ui, sans-serif;
 
   /* 실험 노트 종이와 잉크 */

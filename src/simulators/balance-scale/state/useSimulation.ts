@@ -1,21 +1,31 @@
 import { useCallback, useEffect, useReducer } from "react"
 import { algorithms } from "../engine"
+import type { AlgorithmId } from "../engine/types"
 import { createRun, reducer, type Options } from "./reducer"
 export const newId = () => crypto.randomUUID()
-export function chooseFake(options: Options) {
-  return options.placement === "random"
-    ? Math.floor(Math.random() * options.n)
-    : algorithms[options.algorithm].worstCaseFakeIndex(options.n)
+/**
+ * Side by side runs both algorithms, so there is no algorithm to read the
+ * worst case from. It always uses the sequential scan's worst position: that
+ * pins 차례로 비교하기 at its maximum for every N while 절반씩 나누기 stays at
+ * or below ⌊log₂N⌋, which is the contrast the mode exists to show.
+ */
+export const WORST_CASE_BASELINE: AlgorithmId = "sequential-pair"
+export function chooseFake(options: Options, compare: boolean) {
+  if (options.placement === "random") return Math.floor(Math.random() * options.n)
+  const baseline = compare ? WORST_CASE_BASELINE : options.algorithm
+  return algorithms[baseline].worstCaseFakeIndex(options.n)
 }
 export function useSimulation(options: Options, compare: boolean) {
-  const [state, dispatch] = useReducer(reducer, options, o => createRun(o, chooseFake(o), newId()))
+  const [state, dispatch] = useReducer(reducer, options, o =>
+    createRun(o, chooseFake(o, compare), newId()),
+  )
   const done = compare
     ? Object.values(state.pair).every(s => s.finished)
     : state.pair[options.algorithm].finished
   const step = useCallback(() => dispatch({ type: "step", compare }), [compare])
   const reset = useCallback(
-    () => dispatch({ type: "reset", fake: chooseFake(options), runId: newId() }),
-    [options],
+    () => dispatch({ type: "reset", fake: chooseFake(options, compare), runId: newId() }),
+    [options, compare],
   )
   useEffect(() => {
     if (!state.running || done) return

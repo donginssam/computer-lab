@@ -1,5 +1,5 @@
 import type { Weighing } from "../engine/types"
-import { resultLabel, boxList } from "../copy"
+import { resultLabel, coinList } from "../copy"
 function Pan({ x, ids }: { x: number; ids: number[] }) {
   const size = ids.length <= 3 ? 24 : ids.length <= 8 ? 20 : ids.length <= 20 ? 16 : 12
   const cols = Math.floor(112 / (size + 2))
@@ -12,7 +12,23 @@ function Pan({ x, ids }: { x: number; ids: number[] }) {
           key={id}
           transform={`translate(${-(Math.min(cols, ids.length - Math.floor(i / cols) * cols) * (size + 2) - 2) / 2 + (i % cols) * (size + 2)},${188 - (Math.floor(i / cols) + 1) * (size + 2)})`}
         >
-          <rect width={size} height={size} rx="3" fill="#2b6be6" />
+          <circle
+            cx={size / 2}
+            cy={size / 2}
+            r={size / 2 - 0.75}
+            fill="#2b6be6"
+            stroke="#173d8c"
+            strokeWidth="1.5"
+          />
+          <circle
+            cx={size / 2}
+            cy={size / 2}
+            r={size * 0.36}
+            fill="none"
+            stroke="white"
+            strokeWidth="1"
+            opacity="0.55"
+          />
           {ids.length <= 20 && (
             <text
               x={size / 2}
@@ -39,7 +55,7 @@ export function BalanceScale({ weighing }: { weighing?: Weighing }) {
         role="img"
         aria-label={
           weighing
-            ? `${resultLabel[weighing.result]}. 왼쪽 ${boxList(weighing.left)}, 오른쪽 ${boxList(weighing.right)}`
+            ? `${resultLabel[weighing.result]}. 왼쪽 동전 ${coinList(weighing.left)}, 오른쪽 동전 ${coinList(weighing.right)}`
             : "저울질을 기다리는 양팔저울"
         }
       >
@@ -62,7 +78,7 @@ export function BalanceScale({ weighing }: { weighing?: Weighing }) {
         </text>
       </svg>
       <p className="outside">
-        저울 밖 후보: {weighing?.outside.length ? boxList(weighing.outside) : "없음"}
+        저울 밖 후보: {weighing?.outside.length ? coinList(weighing.outside) : "없음"}
       </p>
     </div>
   )

@@ -14,7 +14,7 @@ describe("units", () => {
     }
   })
 
-  it("양팔저울 시뮬레이터 경로를 만든다", () => {
+  it("가짜 동전 찾기 시뮬레이터 경로를 만든다", () => {
     const algo = unitById("algorithm")!
     expect(simulatorPath(algo, algo.simulators[0])).toBe("/units/algorithm/balance-scale")
   })

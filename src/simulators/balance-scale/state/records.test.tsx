@@ -37,7 +37,9 @@ it("기록을 개별 또는 전체 삭제할 수 있다", () => {
     )
   }
   render(<Table />)
-  fireEvent.click(screen.getByRole("button", { name: "N=8 절반씩 나누기 3회 기록 삭제" }))
+  fireEvent.click(
+    screen.getByRole("button", { name: "동전 8개 절반씩 나누기 저울질 3회 기록 삭제" }),
+  )
   expect(screen.getByRole("heading", { name: "실험 기록 (1)" })).toBeInTheDocument()
   fireEvent.click(screen.getByRole("button", { name: "전체 삭제" }))
   expect(screen.getByRole("heading", { name: "실험 기록 (0)" })).toBeInTheDocument()

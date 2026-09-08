@@ -5,7 +5,6 @@ import { unitById, unitPath } from "../../content/units"
 import { ControlPanel } from "./components/ControlPanel"
 import { SimulationView } from "./components/SimulationView"
 import { SideBySide } from "./components/SideBySide"
-import { TryItYourself } from "./components/TryItYourself"
 import { ConceptCards } from "./components/ConceptCards"
 import { ExperimentTable } from "./components/ExperimentTable"
 import { useSimulation } from "./state/useSimulation"
@@ -19,7 +18,6 @@ const ComplexityChart = lazy(() =>
 const modes = [
   { id: "simulation", title: "시뮬레이션" },
   { id: "compare", title: "나란히 비교" },
-  { id: "try", title: "직접 해보기" },
   { id: "records", title: "실험 기록" },
 ]
 function Simulation({
@@ -82,7 +80,8 @@ function Simulation({
           {state.running ? "Ⅱ 일시 정지" : "▶ 자동 실행"}
         </button>
         <p className="small-note">
-          단축키: Space 다음 단계 · R 초기화 · A 자동 실행/정지 (입력·버튼에 초점이 없을 때)
+          단축키: Space 다음 단계 · R 초기화 · A 자동 실행/정지 (입력 칸이나 버튼을 클릭한 상태가
+          아닐 때)
         </p>
       </div>
       {compare ? (
@@ -98,8 +97,9 @@ export function BalanceScalePage() {
   const [params, setParams] = useSearchParams()
   const rawN = Number(params.get("n") ?? 7)
   const n = Number.isFinite(rawN) ? Math.max(2, Math.min(100, Math.trunc(rawN))) : 7
-  const algorithm =
-    params.get("algorithm") === "sequential-pair" ? "sequential-pair" : "divide-half"
+  // 차례로 비교하기 is the naive method students reach for first, so it opens
+  // the page; discovering 절반씩 나누기 is the point of the lesson.
+  const algorithm = params.get("algorithm") === "divide-half" ? "divide-half" : "sequential-pair"
   const placement = params.get("placement") === "random" ? "random" : "worst"
   const mode = modes.find(m => m.id === params.get("mode"))?.id ?? "simulation"
   const options = useMemo<Options>(() => ({ n, algorithm, placement }), [n, algorithm, placement])
@@ -136,17 +136,15 @@ export function BalanceScalePage() {
   return (
     <div className="balance-page" style={{ "--unit": unit.color } as React.CSSProperties}>
       <Breadcrumb
-        items={[
-          { label: unit.title, to: unitPath(unit) },
-          { label: "양팔저울로 알고리즘 비교하기" },
-        ]}
+        items={[{ label: unit.title, to: unitPath(unit) }, { label: "양팔저울로 가짜 동전 찾기" }]}
       />
       <header className="mt-6">
         <p className="small-note">알고리즘 실험실 · 01</p>
-        <h1 className="text-[clamp(2rem,5vw,3rem)]">양팔저울로 알고리즘 비교하기</h1>
+        <h1 className="text-[clamp(2rem,5vw,3rem)]">양팔저울로 가짜 동전 찾기</h1>
         <p className="mt-4">
-          겉모양이 같은 상자 N개 중 <strong>딱 하나만 가볍습니다.</strong> 저울은 ‘왼쪽이 가볍다 /
-          오른쪽이 가볍다 / 같다’만 알려 줍니다. 가장 적은 저울질로 정답을 찾아보세요.
+          겉모양이 같은 동전 여러 개 중 <strong>진짜보다 가벼운 가짜 동전이 딱 하나</strong>
+          있습니다. 저울은 ‘왼쪽이 가볍다 / 오른쪽이 가볍다 / 양쪽이 같다’만 알려 줍니다. 가장 적은
+          저울질로 가짜 동전을 찾아보세요.
         </p>
       </header>
       <div className="mode-tabs" role="tablist" aria-label="실험 모드">
@@ -183,23 +181,20 @@ export function BalanceScalePage() {
       </div>
       <section id="experiment-panel" role="tabpanel" aria-labelledby={`tab-${mode}`} tabIndex={0}>
         {mode !== "records" && (
-          <ControlPanel options={options} change={change} manual={mode === "try"} />
+          <ControlPanel options={options} change={change} compare={mode === "compare"} />
         )}
         {(mode === "simulation" || mode === "compare") && (
           <Simulation
-            key={`${mode}:${n}:${algorithm}:${placement}`}
+            key={`${mode}:${n}:${mode === "compare" ? "" : algorithm}:${placement}`}
             options={options}
             compare={mode === "compare"}
             save={save}
           />
         )}
-        {mode === "try" && <TryItYourself key={n} n={n} />}
         {mode === "records" && (
           <>
             {storageError && (
-              <p role="status">
-                브라우저 저장 공간을 사용할 수 없어 현재 화면에서만 기록을 유지합니다.
-              </p>
+              <p role="status">기록을 저장할 수 없어서, 이 화면을 벗어나면 기록이 사라집니다.</p>
             )}
             <ExperimentTable
               records={records}
@@ -213,8 +208,8 @@ export function BalanceScalePage() {
         )}
       </section>
       <p className="small-note">
-        현재 주소를 복사하면 모드와 상자 수·알고리즘·불량 위치 설정을 공유할 수 있습니다. 무작위
-        정답과 진행 단계는 공유되지 않습니다.
+        지금 주소를 복사하면 모드와 동전 수·알고리즘·가짜 동전 위치 설정을 그대로 전달할 수
+        있습니다. 가짜 동전이 어디 있었는지와 어디까지 진행했는지는 함께 전달되지 않습니다.
       </p>
       <ConceptCards />
     </div>

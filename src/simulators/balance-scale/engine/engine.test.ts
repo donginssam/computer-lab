@@ -35,7 +35,7 @@ for (const algorithm of Object.values(algorithms)) {
     })
   })
 }
-it("홀수의 저울 밖 정답은 균형 한 번으로 확정한다", () => {
+it("홀수의 저울 밖 동전은 양쪽이 같은 저울질 한 번으로 확정한다", () => {
   const state = algorithms["divide-half"].step(algorithms["divide-half"].init(3, 2))
   expect(state.history[0]?.result).toBe("balanced")
   expect(state.answer).toBe(2)

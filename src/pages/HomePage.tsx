@@ -14,9 +14,10 @@ export function HomePage() {
           눌러 보고, 돌려 보고,
           <br className="hidden sm:block" /> 비교해 보는 정보 수업
         </h1>
-        <p className="mt-5 max-w-[46ch] text-[1.1rem] text-ink-2">
-          교과서에 글로만 있던 개념을 직접 움직여 보는 시뮬레이터 모음입니다. 단원을 골라 들어가면
-          수업에서 바로 쓸 수 있는 실험이 기다리고 있어요.
+        <p className="mt-5 max-w-[52ch] text-[1.1rem] text-ink-2">
+          교과서에 글로만 있던 개념을 직접 움직여 보는 시뮬레이터 모음입니다.
+          <br />
+          단원을 골라 들어가면 수업에서 바로 쓸 수 있는 실험이 기다리고 있어요.
         </p>
       </section>
 
