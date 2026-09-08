@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useReducer } from "react"
 import { algorithms } from "../engine"
 import type { AlgorithmId } from "../engine/types"
-import { createRun, reducer, type Options } from "./reducer"
-export const newId = () => crypto.randomUUID()
+import { activeAlgorithms, createRun, reducer, type Options } from "./reducer"
 /**
  * Side by side runs both algorithms, so there is no algorithm to read the
  * worst case from. It always uses the sequential scan's worst position: that
@@ -17,14 +16,13 @@ export function chooseFake(options: Options, compare: boolean) {
 }
 export function useSimulation(options: Options, compare: boolean) {
   const [state, dispatch] = useReducer(reducer, options, o =>
-    createRun(o, chooseFake(o, compare), newId()),
+    createRun(o, chooseFake(o, compare), crypto.randomUUID()),
   )
-  const done = compare
-    ? Object.values(state.pair).every(s => s.finished)
-    : state.pair[options.algorithm].finished
+  const done = activeAlgorithms(options, compare).every(id => state.pair[id].finished)
   const step = useCallback(() => dispatch({ type: "step", compare }), [compare])
   const reset = useCallback(
-    () => dispatch({ type: "reset", fake: chooseFake(options, compare), runId: newId() }),
+    () =>
+      dispatch({ type: "reset", fake: chooseFake(options, compare), runId: crypto.randomUUID() }),
     [options, compare],
   )
   useEffect(() => {

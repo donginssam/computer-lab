@@ -12,15 +12,15 @@ pnpm verify:pwa
 pnpm exec prettier --check README.md docs
 ```
 
-전체 저장소 형식 검사는 `pnpm format:check`입니다. 문서만 변경할 때는 문서 범위의 검사와 링크 확인으로 검증하고, 기존 파일의 포맷을 일괄 수정하지 않습니다.
+전체 저장소 형식 검사는 `pnpm format:check`이며 `pnpm build`의 첫 단계에서도 실행합니다. 타입 검사만 필요하면 `pnpm typecheck`를 실행합니다. 문서만 변경할 때는 문서 범위의 검사와 링크 확인으로 검증하고, 기존 파일의 포맷을 일괄 수정하지 않습니다.
 
-| 테스트 파일                                                                | 확인하는 행동                                                                                     |
-| -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| [units.test.ts](../src/content/units.test.ts)                              | 5개 단원 순서, slug 중복, 시뮬레이터 경로                                                         |
-| [engine.test.ts](../src/simulators/balance-scale/engine/engine.test.ts)    | N=2~100의 모든 가짜 위치에서 정답·종료·불변성·상한·최악 위치·종료 후 멱등성, 입력 오류            |
-| [reducer.test.ts](../src/simulators/balance-scale/state/reducer.test.ts)   | 먼저 끝난 알고리즘 정지, 공통 tick 되감기                                                         |
-| [records.test.tsx](../src/simulators/balance-scale/state/records.test.tsx) | 저장 형식과 500개 제한, 행별·전체 삭제                                                            |
-| [simulation.test.tsx](../src/simulators/balance-scale/simulation.test.tsx) | 같은 조건 비교와 중복 저장 방지, 타이머 정리, URL·저장값 오류, 단축키, N=100 자동 종료, 숫자 입력 |
+| 테스트 파일                                                                | 확인하는 행동                                                                                                     |
+| -------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| [units.test.ts](../src/content/units.test.ts)                              | 5개 단원 순서, slug 중복, 시뮬레이터 경로                                                                         |
+| [engine.test.ts](../src/simulators/balance-scale/engine/engine.test.ts)    | N=2~100의 모든 가짜 위치에서 정답·종료·불변성·상한·최악 위치·종료 후 멱등성, 입력 오류                            |
+| [reducer.test.ts](../src/simulators/balance-scale/state/reducer.test.ts)   | 먼저 끝난 알고리즘 정지, 공통 tick 되감기                                                                         |
+| [records.test.tsx](../src/simulators/balance-scale/state/records.test.tsx) | 저장 형식·500개 제한·중복 병합, 저장 실패와 복구, 행별·전체 삭제                                                  |
+| [simulation.test.tsx](../src/simulators/balance-scale/simulation.test.tsx) | 같은 조건 비교와 중복 저장 방지, 타이머 정리, URL·저장값 오류, 단축키, N=100 자동 종료, 숫자 입력, 탭 키보드 이동 |
 
 엔진 전수 검사는 알고리즘당 5,049개 `(N, fakeIndex)` 조합을 다룹니다. 정확한 테스트 개수와 통과 여부는 실행 결과를 기준으로 기록합니다.
 

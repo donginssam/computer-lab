@@ -1,11 +1,16 @@
 import { algorithms } from "../engine"
-import type { AlgorithmId, SimState } from "../engine/types"
+import { algorithmIds, type AlgorithmId, type SimState } from "../engine/types"
 export type Placement = "worst" | "random"
 export interface Options {
   n: number
   algorithm: AlgorithmId
   placement: Placement
 }
+
+export function activeAlgorithms(options: Options, compare: boolean): readonly AlgorithmId[] {
+  return compare ? algorithmIds : [options.algorithm]
+}
+
 export interface RunState {
   options: Options
   pair: Record<AlgorithmId, SimState>
@@ -36,9 +41,7 @@ type Action =
 export function reducer(state: RunState, action: Action): RunState {
   switch (action.type) {
     case "step": {
-      const ids: AlgorithmId[] = action.compare
-        ? ["sequential-pair", "divide-half"]
-        : [state.options.algorithm]
+      const ids = activeAlgorithms(state.options, action.compare)
       if (ids.every(id => state.pair[id].finished)) return { ...state, running: false }
       const pair = { ...state.pair }
       ids.forEach(id => {
@@ -54,7 +57,7 @@ export function reducer(state: RunState, action: Action): RunState {
     case "back": {
       if (!state.tick) return state
       const pair = { ...state.pair }
-      for (const id of Object.keys(pair) as AlgorithmId[]) {
+      for (const id of algorithmIds) {
         const count = Math.min(state.tick - 1, pair[id].comparisons)
         pair[id] = algorithms[id].init(state.options.n, pair[id].fakeIndex)
         for (let i = 0; i < count; i++) pair[id] = algorithms[id].step(pair[id])

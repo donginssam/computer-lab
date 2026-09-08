@@ -2,7 +2,7 @@ import type { AlgorithmId, SimState } from "../engine/types"
 import { algorithms } from "../engine"
 import { resultLabel, coinLabel, coinList, term } from "../copy"
 import { BalanceScale } from "./BalanceScale"
-export function StatsBar({ state, algorithm }: { state: SimState; algorithm: AlgorithmId }) {
+function StatsBar({ state, algorithm }: { state: SimState; algorithm: AlgorithmId }) {
   return (
     <dl className="stats">
       <div>
@@ -20,7 +20,7 @@ export function StatsBar({ state, algorithm }: { state: SimState; algorithm: Alg
     </dl>
   )
 }
-export function CoinGrid({ state }: { state: SimState }) {
+function CoinGrid({ state }: { state: SimState }) {
   const last = state.history.at(-1)
   return (
     <>
@@ -29,20 +29,10 @@ export function CoinGrid({ state }: { state: SimState }) {
           const answer = state.answer === id
           const excluded = !state.candidates.includes(id)
           const active = last?.left.includes(id) || last?.right.includes(id)
-          const label = answer
-            ? coinLabel.answer
-            : excluded
-              ? coinLabel.excluded
-              : active
-                ? coinLabel.active
-                : coinLabel.candidate
+          const status = answer ? "answer" : excluded ? "excluded" : active ? "active" : "candidate"
+          const label = `${id + 1}번 ${coinLabel[status]}`
           return (
-            <span
-              key={id}
-              className={`coin ${answer ? "answer" : excluded ? "excluded" : active ? "active" : ""}`}
-              aria-label={`${id + 1}번 ${label}`}
-              title={`${id + 1}번 ${label}`}
-            >
+            <span key={id} className={`coin ${status}`} aria-label={label} title={label}>
               {answer ? "★" : excluded ? "×" : ""}
               {id + 1}
             </span>
@@ -56,7 +46,7 @@ export function CoinGrid({ state }: { state: SimState }) {
     </>
   )
 }
-export function StepLog({ state }: { state: SimState }) {
+function StepLog({ state }: { state: SimState }) {
   return (
     <details className="step-log" open>
       <summary>단계 기록 ({state.history.length})</summary>
@@ -74,6 +64,17 @@ export function StepLog({ state }: { state: SimState }) {
 }
 export function SimulationView({ state, algorithm }: { state: SimState; algorithm: AlgorithmId }) {
   const { name, bigO, bigOPlain } = algorithms[algorithm]
+  const lastWeighing = state.history.at(-1)
+  let message = `어느 동전이 가짜인지는 아직 숨겨져 있습니다. ${term.weighing}을 시작하세요.`
+  if (state.finished) {
+    message = `★ 완료! ${state.answer! + 1}번이 진짜보다 가벼운 가짜 동전입니다. ${term.weighing} ${state.comparisons}회.`
+    if (lastWeighing?.result === "balanced") {
+      message +=
+        " 마지막에 양쪽이 같아서, 저울 밖에 있던 동전 1개가 답입니다. 더 재지 않아도 됩니다."
+    }
+  } else if (lastWeighing) {
+    message = resultLabel[lastWeighing.result]
+  }
   return (
     <section className="sim-card">
       <h2>
@@ -81,13 +82,9 @@ export function SimulationView({ state, algorithm }: { state: SimState; algorith
       </h2>
       <p className="small-note">{bigOPlain}</p>
       <StatsBar state={state} algorithm={algorithm} />
-      <BalanceScale weighing={state.history.at(-1)} />
+      <BalanceScale weighing={lastWeighing} />
       <p className="result" role="status" aria-live="polite">
-        {state.finished
-          ? `★ 완료! ${state.answer! + 1}번이 진짜보다 가벼운 가짜 동전입니다. ${term.weighing} ${state.comparisons}회.${state.history.at(-1)?.result === "balanced" ? " 마지막에 양쪽이 같아서, 저울 밖에 있던 동전 1개가 답입니다. 더 재지 않아도 됩니다." : ""}`
-          : state.history.length
-            ? resultLabel[state.history.at(-1)!.result]
-            : `어느 동전이 가짜인지는 아직 숨겨져 있습니다. ${term.weighing}을 시작하세요.`}
+        {message}
       </p>
       <CoinGrid state={state} />
       <StepLog state={state} />

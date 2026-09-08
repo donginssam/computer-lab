@@ -9,15 +9,15 @@ import {
   YAxis,
 } from "recharts"
 import { divideMax, sequentialMax } from "../engine/theory"
+import { COIN_MAX, COIN_MIN } from "../engine/core"
 import { algorithms } from "../engine"
 import type { Experiment } from "../state/records"
 const sequential = algorithms["sequential-pair"]
 const divide = algorithms["divide-half"]
-const theory = Array.from({ length: 99 }, (_, i) => ({
-  n: i + 2,
-  sequential: sequentialMax(i + 2),
-  divide: divideMax(i + 2),
-}))
+const theory = Array.from({ length: COIN_MAX - COIN_MIN + 1 }, (_, i) => {
+  const n = i + COIN_MIN
+  return { n, sequential: sequentialMax(n), divide: divideMax(n) }
+})
 export function ComplexityChart({ records }: { records: Experiment[] }) {
   return (
     <section className="sim-card">
@@ -41,8 +41,13 @@ export function ComplexityChart({ records }: { records: Experiment[] }) {
             accessibilityLayer
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis type="number" dataKey="n" domain={[2, 100]} ticks={[2, 16, 32, 64, 100]} />
-            <YAxis type="number" domain={[0, 50]} allowDecimals={false} />
+            <XAxis
+              type="number"
+              dataKey="n"
+              domain={[COIN_MIN, COIN_MAX]}
+              ticks={[COIN_MIN, 16, 32, 64, COIN_MAX]}
+            />
+            <YAxis type="number" domain={[0, sequentialMax(COIN_MAX)]} allowDecimals={false} />
             <Tooltip />
             <Line
               dataKey="sequential"

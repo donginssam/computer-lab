@@ -25,13 +25,25 @@ React 19 · TypeScript 6 · Vite 8 · React Router 8 · Tailwind CSS 4 · Rechar
 pnpm lint          # oxlint
 pnpm test          # 엔진 전수 검사 및 상태/UI 검증
 pnpm test:watch    # 테스트 감시 실행
-pnpm build         # TypeScript 검사 + dist 생성, 이어서 404.html 복사
+pnpm build         # Prettier·TypeScript 검사 + dist 생성, 이어서 404.html 복사
 pnpm verify:pwa    # manifest·서비스 워커·Pages 경로 검사
 pnpm preview       # 빌드 결과 로컬 미리 보기
 pnpm format:check  # 저장소 전체 Prettier 검사
 ```
 
-PWA 기능은 프로덕션 빌드에서 활성화됩니다. `pnpm build`와 `pnpm preview`를 실행한 뒤 브라우저의 앱 설치 메뉴와 오프라인 새로고침을 확인할 수 있습니다. 새 배포가 준비되면 화면 아래 알림에서 사용자가 업데이트 시점을 선택합니다.
+PWA 기능은 프로덕션 빌드에서 활성화됩니다. `pnpm build`와 `pnpm preview`를 실행한 뒤 브라우저의 앱 설치 메뉴와 오프라인 새로고침을 확인할 수 있습니다.
+
+### 새 버전 알림
+
+화면 아래 알림은 **새 버전이 있을 때만** 뜹니다. 설치 직후의 오프라인 준비 완료 같은 상태는 알리지 않습니다 — 설치했으면 당연한 상태라 수업 중 방해만 되기 때문입니다.
+
+새 배포를 받으면 `새 버전이 나왔어요.` 알림이 뜹니다. **수업 중에는 `나중에`** 를 누르면 알림만 닫히고 화면은 그대로 유지됩니다 — 새 워커는 대기 상태로 남아 있다가 앱을 완전히 닫았다 다시 열 때 적용됩니다. **`지금 새로 고침`** 을 누르면 즉시 새 버전으로 다시 불러옵니다.
+
+### 설치 화면 스크린샷
+
+Chrome이 풍부한 설치 UI(앱 미리보기가 있는 설치 대화상자)를 띄우려면 `form_factor`가 `wide`인 스크린샷과 `wide`가 아닌 스크린샷이 각각 최소 1장씩 필요합니다. `public/screenshot-wide.png`(1280×720, 데스크톱)와 `public/screenshot-narrow.png`(540×960, 모바일)가 그 역할을 하며, 둘 다 실행 중인 양팔저울 시뮬레이터를 실제로 캡처한 것입니다.
+
+UI를 크게 바꾸면 같은 크기로 다시 캡처해 교체하세요. `pnpm verify:pwa`가 두 form factor의 존재와 **manifest에 적힌 `sizes`가 실제 PNG 크기와 일치하는지**까지 검사하므로, 크기가 어긋나면 빌드 검증에서 걸립니다.
 
 ## 개발 문서
 

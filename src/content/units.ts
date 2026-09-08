@@ -1,3 +1,5 @@
+import type { CSSProperties } from "react"
+
 export type UnitId = "computing-system" | "data" | "algorithm" | "ai" | "digital-culture"
 
 export type SimulatorStatus = "ready" | "in-progress" | "coming-soon"
@@ -81,6 +83,9 @@ export const units: Unit[] = [
 export const unitById = (id: string | undefined): Unit | undefined => units.find(u => u.id === id)
 
 export const unitPath = (unit: Unit) => `/units/${unit.id}`
+
+/** 단원 색을 --unit으로 넘긴다. 타일·카드·헤더·시뮬레이터가 같은 변수를 읽는다. */
+export const unitStyle = (unit: Unit) => ({ "--unit": unit.color }) as CSSProperties
 
 export const simulatorPath = (unit: Unit, sim: SimulatorMeta) => `${unitPath(unit)}/${sim.slug}`
 

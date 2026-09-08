@@ -1,4 +1,4 @@
-import type { Experiment } from "../state/records"
+import { MAX_RECORDS, type Experiment } from "../state/records"
 import { algorithms } from "../engine"
 export function ExperimentTable({
   records,
@@ -18,8 +18,8 @@ export function ExperimentTable({
         </button>
       </div>
       <p className="small-note">
-        이 컴퓨터의 이 브라우저에만 최근 500개가 남습니다. 가짜 동전이 어디였는지는 실험이 끝난 뒤에
-        보여 줍니다.
+        이 컴퓨터의 이 브라우저에만 최근 {MAX_RECORDS}개가 남습니다. 가짜 동전이 어디였는지는 실험이
+        끝난 뒤에 보여 줍니다.
       </p>
       {!records.length ? (
         <p className="empty-state">

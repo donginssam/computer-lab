@@ -1,5 +1,6 @@
 import type { Options } from "../state/reducer"
 import { algorithms } from "../engine"
+import { clampCoinCount, COIN_MAX, COIN_MIN } from "../engine/core"
 import { WORST_CASE_BASELINE } from "../state/useSimulation"
 export function ControlPanel({
   options,
@@ -14,21 +15,20 @@ export function ControlPanel({
   // sequential scan, so there is nothing left for the picker to decide there.
   const worst = options.placement === "worst"
   const chosen = compare ? algorithms[WORST_CASE_BASELINE] : algorithms[options.algorithm]
-  const other = algorithms["divide-half"]
+  // 대비 문장은 기준이 아닌 쪽을 가리킨다. 기준이 바뀌어도 따라간다.
+  const other = Object.values(algorithms).find(a => a.id !== chosen.id)
   return (
     <section className="sim-card controls" aria-label="실험 설정">
       <label>
         동전 수{" "}
         <input
           type="number"
-          min={2}
-          max={100}
+          min={COIN_MIN}
+          max={COIN_MAX}
           key={options.n}
           defaultValue={options.n}
           onBlur={e => {
-            const value = String(
-              Math.max(2, Math.min(100, Math.trunc(Number(e.target.value) || 7))),
-            )
+            const value = String(clampCoinCount(e.target.value))
             e.currentTarget.value = value
             change("n", value)
           }}
@@ -41,12 +41,14 @@ export function ControlPanel({
         <span className="sr-only">동전 수 슬라이더</span>
         <input
           type="range"
-          min={2}
-          max={100}
+          min={COIN_MIN}
+          max={COIN_MAX}
           value={options.n}
           onChange={e => change("n", e.target.value)}
         />
-        <span>2~100개</span>
+        <span>
+          {COIN_MIN}~{COIN_MAX}개
+        </span>
       </label>
       {!compare && (
         <label>
@@ -71,7 +73,7 @@ export function ControlPanel({
         {worst &&
           `‘가장 늦게 찾는 곳’은 ${chosen.name}가 가짜 동전을 가장 늦게 찾게 되는 자리에 숨긴다는 뜻입니다. ` +
             `그래서 ${chosen.name}는 동전 ${options.n}개에서 가장 많이 걸려도 ${chosen.maxComparisons(options.n)}회인데, 이 자리에서는 그 ${chosen.maxComparisons(options.n)}회를 다 씁니다.` +
-            (compare
+            (compare && other
               ? ` 같은 자리에서 ${other.name}는 ${other.maxComparisons(options.n)}회 안에 끝납니다. 어느 쪽이 유리한지 직접 확인해 보세요.`
               : "") +
             " "}

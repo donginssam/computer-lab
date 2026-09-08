@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "pnpm format:check && pnpm typecheck && vite build",
+    "typecheck": "tsc --noEmit",
     "postbuild": "cp dist/index.html dist/404.html",
     "verify:pwa": "node scripts/verify-pwa.mjs",
     "preview": "vite preview",

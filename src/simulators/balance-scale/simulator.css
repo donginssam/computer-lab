@@ -16,7 +16,7 @@
   cursor: pointer;
 }
 .balance-page button:hover:not(:disabled) {
-  background: #eaeef4;
+  background: var(--color-paper-2);
 }
 .balance-page button:disabled {
   opacity: 0.45;
@@ -25,9 +25,9 @@
 .balance-page button.primary,
 .balance-page button[aria-pressed="true"],
 .balance-page button[aria-selected="true"] {
-  background: #16213a;
+  background: var(--color-ink);
   color: white;
-  border-color: #16213a;
+  border-color: var(--color-ink);
 }
 .mode-tabs {
   display: grid;
@@ -38,7 +38,7 @@
 .sim-card {
   min-width: 0;
   background: #ffffffdc;
-  border: 1px solid #d3dae6;
+  border: 1px solid var(--color-line);
   border-radius: 10px;
   padding: clamp(0.8rem, 2vw, 1.4rem);
   margin-bottom: 1rem;
@@ -54,7 +54,7 @@
 }
 .sim-card h2 small {
   font: 0.85rem var(--font-sans);
-  color: #4b5670;
+  color: var(--color-ink-2);
   white-space: nowrap;
 }
 .controls,
@@ -83,7 +83,7 @@
   min-height: 30px;
 }
 .small-note {
-  color: #4b5670;
+  color: var(--color-ink-2);
   font-size: 0.8rem;
   margin: 0.5rem 0;
 }
@@ -96,11 +96,11 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 0.3rem;
   padding: 0.8rem 0;
-  border-block: 1px solid #d3dae6;
+  border-block: 1px solid var(--color-line);
 }
 .stats dt {
   font-size: 0.8rem;
-  color: #4b5670;
+  color: var(--color-ink-2);
 }
 .stats dd {
   font-size: 1.5rem;
@@ -117,7 +117,7 @@
 }
 .outside {
   font-size: 0.8rem;
-  background: #eaeef4;
+  background: var(--color-paper-2);
   padding: 0.5rem;
   border-radius: 5px;
   overflow-wrap: anywhere;
@@ -173,7 +173,7 @@
 }
 .step-log li {
   padding: 0.45rem;
-  border-bottom: 1px solid #d3dae6;
+  border-bottom: 1px solid var(--color-line);
 }
 .step-log li.latest {
   background: #edf3ff;
@@ -183,18 +183,14 @@
   cursor: pointer;
   padding: 0.5rem 0;
 }
-.comparison-grid {
+.comparison-grid,
+.concept-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
 }
 .concepts {
   margin-top: 2.5rem;
-}
-.concept-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
 }
 .balance-page table {
   border-collapse: collapse;
@@ -205,7 +201,7 @@
 .balance-page td {
   padding: 0.5rem;
   text-align: left;
-  border-bottom: 1px solid #d3dae6;
+  border-bottom: 1px solid var(--color-line);
 }
 .table-scroll {
   overflow-x: auto;

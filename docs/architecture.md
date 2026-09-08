@@ -13,23 +13,23 @@ src/
 ├── index.css                       공통 테마·서체·포커스
 ├── content/units.ts                5개 단원과 시뮬레이터 메타데이터
 ├── components/
-│   ├── PwaStatus.tsx               오프라인 준비·새 버전 알림
+│   ├── PwaUpdatePrompt.tsx         새 버전 알림
 │   ├── layout/                     AppShell, Header, Footer, Breadcrumb
 │   └── ui/                         UnitTile, SimulatorCard, StatusBadge
 ├── pages/                          HomePage, UnitPage, NotFoundPage
 ├── simulators/balance-scale/
-│   ├── index.tsx                   URL·모드·저장·화면 조립
+│   ├── index.tsx                   URL 설정·모드 선택·화면 조립
 │   ├── copy.ts                     공통 학생용 용어와 상태 라벨
 │   ├── simulator.css               시뮬레이터 레이아웃과 저울 모션
 │   ├── engine/                     타입·저울 판정·알고리즘·이론값
-│   ├── state/                      reducer·타이머 훅·저장 형식
+│   ├── state/                      reducer·실행 훅·기록 저장 훅·저장 형식
 │   └── components/                 설정·저울·결과·비교·표·그래프·개념
 └── test/setup.ts                   테스트 환경 초기화
 ```
 
 `StatsBar`, `CoinGrid`, `StepLog`는 [SimulationView.tsx](../src/simulators/balance-scale/components/SimulationView.tsx)에 함께 정의되어 있습니다.
 
-[vite.config.ts](../vite.config.ts)는 manifest와 Workbox 서비스 워커를 생성합니다. [main.tsx](../src/main.tsx)의 `PwaStatus`가 서비스 워커를 등록하고 오프라인 준비와 새 버전 상태를 화면에 알립니다. 설치 아이콘은 `public/`, 빌드 산출물 검사는 [verify-pwa.mjs](../scripts/verify-pwa.mjs)에 있습니다.
+[vite.config.ts](../vite.config.ts)는 manifest와 Workbox 서비스 워커를 생성합니다. [main.tsx](../src/main.tsx)의 `PwaUpdatePrompt`가 서비스 워커를 등록하고 새 버전이 있을 때 알립니다. 설치 아이콘은 `public/`, 빌드 산출물 검사는 [verify-pwa.mjs](../scripts/verify-pwa.mjs)에 있습니다.
 
 ## 페이지와 경로
 
@@ -67,6 +67,14 @@ URL 설정 → BalanceScalePage → Simulation → useSimulation
 ```
 
 무작위 위치 생성, 타이머, 브라우저 저장은 엔진 밖에서 처리합니다. 비교 모드는 같은 가짜 동전 위치로 생성한 두 엔진 상태를 사용합니다. Recharts 컴포넌트는 기록 탭에서 `lazy`와 `Suspense`로 불러옵니다.
+
+`Simulation`은 실행 제어와 완료 기록 수집을 담당하고, `ModeTabs`는 모드 선택과 키보드 이동을 담당합니다. `useRecords`는 저장·삭제와 저장 실패 상태를 관리합니다. `mergeRecords`는 ID 중복을 제거하고 공통 제한 `MAX_RECORDS`에 맞춰 최신 기록만 남깁니다.
+
+## 스타일 재사용
+
+Tailwind CSS 4와 일반 CSS를 유지합니다. [공식 호환성 문서](https://tailwindcss.com/docs/compatibility#sass-less-and-stylus)는 Sass와의 결합 대신 CSS 변수와 네이티브 중첩을 권장합니다. 현재 규모에서는 별도 Sass 의존성과 빌드 단계를 추가할 이점이 작습니다.
+
+공통 색상·서체는 `src/index.css`의 `@theme`에서 관리하고, 시뮬레이터 CSS에서도 `var(--color-ink)`처럼 같은 변수를 참조합니다. 비교 화면과 개념 카드의 동일한 그리드 규칙은 함께 선언합니다. 저울·동전의 상태별 전용 스타일은 `simulator.css`, 일반적인 간격·반응형 배치는 Tailwind 유틸리티로 관리합니다.
 
 ## 새 시뮬레이터 추가
 

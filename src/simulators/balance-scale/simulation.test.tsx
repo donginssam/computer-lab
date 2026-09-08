@@ -87,3 +87,32 @@ it("숫자 입력을 확정할 때 범위를 보정하고 여러 자리를 입�
   fireEvent.blur(field)
   expect(screen.getByLabelText("동전 수")).toHaveValue(16)
 })
+
+it("범위 밖 동전 수는 주소로 들어오든 입력칸으로 들어오든 같은 값이 된다", () => {
+  open("n=0")
+  const field = screen.getByLabelText("동전 수")
+  expect(field).toHaveValue(2)
+  fireEvent.change(field, { target: { value: "0" } })
+  fireEvent.blur(field)
+  expect(screen.getByLabelText("동전 수")).toHaveValue(2)
+})
+
+it("탭 방향키와 Home/End가 선택, 초점, 패널 연결을 함께 갱신한다", () => {
+  open("n=8")
+  const simulation = screen.getByRole("tab", { name: "시뮬레이션" })
+  const compare = screen.getByRole("tab", { name: "나란히 비교" })
+  const records = screen.getByRole("tab", { name: "실험 기록" })
+  for (const [from, key, target] of [
+    [simulation, "ArrowRight", compare],
+    [compare, "End", records],
+    [records, "ArrowRight", simulation],
+    [simulation, "ArrowLeft", records],
+    [records, "Home", simulation],
+  ] as const) {
+    fireEvent.keyDown(from, { key })
+    expect(target).toHaveFocus()
+    expect(target).toHaveAttribute("aria-selected", "true")
+    expect(target).toHaveAttribute("tabindex", "0")
+    expect(screen.getByRole("tabpanel")).toHaveAttribute("aria-labelledby", target.id)
+  }
+})

@@ -1,7 +1,7 @@
 import { useParams } from "react-router"
 import { Breadcrumb } from "../components/layout/Breadcrumb"
 import { SimulatorCard } from "../components/ui/SimulatorCard"
-import { unitById } from "../content/units"
+import { unitById, unitStyle } from "../content/units"
 import { NotFoundPage } from "./NotFoundPage"
 
 export function UnitPage() {
@@ -10,7 +10,7 @@ export function UnitPage() {
   if (!unit) return <NotFoundPage />
 
   return (
-    <div style={{ "--unit": unit.color } as React.CSSProperties}>
+    <div style={unitStyle(unit)}>
       <Breadcrumb items={[{ label: unit.title }]} />
 
       <header className="mt-6 rounded-lg bg-(--unit) px-6 py-8 text-paper sm:px-8 sm:py-10">

@@ -1,6 +1,7 @@
 export type CoinId = number
 export type Tilt = "left" | "right" | "balanced"
-export type AlgorithmId = "sequential-pair" | "divide-half"
+export const algorithmIds = ["sequential-pair", "divide-half"] as const
+export type AlgorithmId = (typeof algorithmIds)[number]
 export interface Weighing {
   left: CoinId[]
   right: CoinId[]

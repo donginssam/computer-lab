@@ -11,7 +11,15 @@ const requiredFiles = [
   "pwa-512x512.png",
   "maskable-icon-512x512.png",
   "apple-touch-icon-180x180.png",
+  "screenshot-wide.png",
+  "screenshot-narrow.png",
 ]
+
+/** Reads width/height straight out of a PNG's IHDR chunk. */
+async function pngSize(url) {
+  const head = await readFile(url)
+  return `${head.readUInt32BE(16)}x${head.readUInt32BE(20)}`
+}
 
 await Promise.all(requiredFiles.map(file => access(new URL(file, dist))))
 
@@ -32,6 +40,21 @@ for (const size of ["192x192", "512x512"]) {
 
 if (!manifest.icons?.some(icon => icon.purpose === "maskable")) {
   throw new Error("PWA manifest is missing a maskable icon")
+}
+
+// Chrome only offers the richer install UI when both form factors are covered.
+const shots = manifest.screenshots ?? []
+if (!shots.some(shot => shot.form_factor === "wide")) {
+  throw new Error('PWA manifest needs a screenshot with form_factor "wide" for desktop install')
+}
+if (!shots.some(shot => shot.form_factor !== "wide")) {
+  throw new Error('PWA manifest needs a screenshot without form_factor "wide" for mobile install')
+}
+for (const shot of shots) {
+  const actual = await pngSize(new URL(shot.src, dist))
+  if (actual !== shot.sizes) {
+    throw new Error(`PWA screenshot ${shot.src} is ${actual} but the manifest says ${shot.sizes}`)
+  }
 }
 
 const manifestHref = index.match(/<link[^>]+rel="manifest"[^>]+href="([^"]+)"/)?.[1]

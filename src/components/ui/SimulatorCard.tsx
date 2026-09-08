@@ -1,6 +1,6 @@
 import { Link } from "react-router"
 import type { SimulatorMeta, Unit } from "../../content/units"
-import { simulatorPath } from "../../content/units"
+import { simulatorPath, unitStyle } from "../../content/units"
 import { StatusBadge } from "./StatusBadge"
 
 export function SimulatorCard({ unit, sim }: { unit: Unit; sim: SimulatorMeta }) {
@@ -18,13 +18,13 @@ export function SimulatorCard({ unit, sim }: { unit: Unit; sim: SimulatorMeta })
   return clickable ? (
     <Link
       to={simulatorPath(unit, sim)}
-      style={{ "--unit": unit.color } as React.CSSProperties}
+      style={unitStyle(unit)}
       className={`${base} hover:bg-white`}
     >
       {body}
     </Link>
   ) : (
-    <div style={{ "--unit": unit.color } as React.CSSProperties} className={base}>
+    <div style={unitStyle(unit)} className={base}>
       {body}
     </div>
   )

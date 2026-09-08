@@ -1,5 +1,5 @@
 import { Link, NavLink } from "react-router"
-import { units, unitPath } from "../../content/units"
+import { units, unitPath, unitStyle } from "../../content/units"
 
 function Mark() {
   return (
@@ -36,7 +36,7 @@ export function Header() {
         >
           <ul className="flex min-w-max gap-1 px-5 sm:justify-end sm:px-0">
             {units.map(u => (
-              <li key={u.id} style={{ "--unit": u.color } as React.CSSProperties}>
+              <li key={u.id} style={unitStyle(u)}>
                 <NavLink
                   to={unitPath(u)}
                   className={({ isActive }) =>

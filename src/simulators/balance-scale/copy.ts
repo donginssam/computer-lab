@@ -24,8 +24,8 @@ export const resultLabel: Record<Tilt, string> = {
 export const coinLabel = {
   answer: "찾은 가짜 동전",
   excluded: "아닌 것으로 확인됨",
-  active: "저울 위 후보",
-  candidate: "후보",
+  active: `저울 위 ${term.candidate}`,
+  candidate: term.candidate,
 } as const
 
 export const coinList = (ids: number[]) => ids.map(id => id + 1).join("·")

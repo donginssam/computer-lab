@@ -20,6 +20,22 @@ export default defineConfig({
         background_color: "#f5f7fa",
         theme_color: "#16213a",
         categories: ["education"],
+        screenshots: [
+          {
+            src: "screenshot-wide.png",
+            sizes: "1280x720",
+            type: "image/png",
+            form_factor: "wide",
+            label: "양팔저울로 가짜 동전 찾기 — 저울질을 한 단계씩 따라가는 화면",
+          },
+          {
+            src: "screenshot-narrow.png",
+            sizes: "540x960",
+            type: "image/png",
+            form_factor: "narrow",
+            label: "양팔저울로 가짜 동전 찾기 — 휴대폰에서 본 화면",
+          },
+        ],
         icons: [
           {
             src: "pwa-64x64.png",
@@ -48,6 +64,8 @@ export default defineConfig({
         cleanupOutdatedCaches: true,
         clientsClaim: true,
         globPatterns: ["**/*.{html,js,css,ico,png,svg,woff2}"],
+        // Screenshots only feed the install dialog, so they never need to be offline.
+        globIgnores: ["**/screenshot-*.png"],
         navigateFallback: "index.html",
         runtimeCaching: [
           {

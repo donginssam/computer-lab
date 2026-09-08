@@ -1,5 +1,6 @@
 import type { RunState } from "../state/reducer"
 import { algorithms } from "../engine"
+import { COIN_MAX } from "../engine/core"
 import { SimulationView } from "./SimulationView"
 export function SideBySide({ state }: { state: RunState }) {
   const done = Object.values(state.pair).every(s => s.finished)
@@ -16,9 +17,9 @@ export function SideBySide({ state }: { state: RunState }) {
         <p className="result" role="status">
           {algorithms["sequential-pair"].name}는 {state.pair["sequential-pair"].comparisons}회,{" "}
           {algorithms["divide-half"].name}는 {state.pair["divide-half"].comparisons}회.{" "}
-          {state.options.n === 100
+          {state.options.n === COIN_MAX
             ? "동전을 절반으로 줄이면 어떻게 될까요?"
-            : "동전이 100개면 어떻게 달라질까요?"}
+            : `동전이 ${COIN_MAX}개면 어떻게 달라질까요?`}
         </p>
       )}
     </>

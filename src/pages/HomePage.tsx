@@ -1,6 +1,6 @@
 import { Link } from "react-router"
 import { UnitTile } from "../components/ui/UnitTile"
-import { simulatorPath, units } from "../content/units"
+import { simulatorPath, units, unitStyle } from "../content/units"
 
 export function HomePage() {
   const availableExperiments = units.flatMap(u =>
@@ -44,7 +44,7 @@ export function HomePage() {
               <li key={sim.slug}>
                 <Link
                   to={simulatorPath(unit, sim)}
-                  style={{ "--unit": unit.color } as React.CSSProperties}
+                  style={unitStyle(unit)}
                   className="flex items-baseline gap-4 py-4 hover:bg-white/60"
                 >
                   <span
