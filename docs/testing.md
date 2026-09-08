@@ -8,6 +8,7 @@
 pnpm lint
 pnpm test
 pnpm build
+pnpm verify:pwa
 pnpm exec prettier --check README.md docs
 ```
 
@@ -38,6 +39,9 @@ pnpm exec prettier --check README.md docs
 | 손상된 저장값 / 저장 차단                   | 화면 오류 없이 처리, 쓰기 실패 안내                                    |
 | 본문과 입력 칸에서 단축키                   | 본문에서만 실험 제어, 입력 조작 방해 없음                              |
 | 모드 탭 방향키·Home/End                     | 선택·초점·탭 패널 연결 유지                                            |
+| 앱 설치 후 온라인 접속                      | 브라우저에서 standalone 앱으로 실행                                    |
+| 설치한 앱에서 오프라인 새로고침             | 홈·단원·시뮬레이터가 캐시에서 열림                                     |
+| 새 버전 배포 후 기존 앱 재접속              | 업데이트 알림이 나타나고, 선택하면 최신 버전으로 다시 열림             |
 
 N=3의 무작위 위치는 원하는 값이 보장되지 않으므로 브라우저에서 한 번 실행한 결과만으로 균형 분기를 검증하지 않습니다.
 
@@ -45,6 +49,6 @@ N=3의 무작위 위치는 원하는 값이 보장되지 않으므로 브라우�
 
 ## 검증 이력과 한계
 
-2026-09-08 문서 검토 중 `pnpm lint`·`pnpm test`·`pnpm build`를 실행하여 **lint 통과, 5개 파일·16개 테스트 통과, 빌드 성공**을 확인했습니다. README와 docs의 Prettier 검사 및 로컬 링크 검사도 통과했습니다. 이번 문서 변경에서는 브라우저 수동 확인을 다시 실행하지 않았습니다.
+2026-09-08 PWA 전환에서 frozen lockfile 설치, `pnpm lint`·`pnpm test`·루트와 `/computer-lab/` 경로 빌드·`pnpm verify:pwa`를 실행하여 **lint 통과, 5개 파일·16개 테스트 통과, 두 경로의 PWA 검사 통과**를 확인했습니다. 프로덕션 미리 보기에서는 서버를 끈 뒤 홈 새로고침과 `/computer-lab/units/algorithm/balance-scale` 직접 진입이 모두 서비스 워커 캐시에서 열렸습니다.
 
-실제 GitHub Pages 깊은 링크, 정량 FPS·프레임 드랍, 실기기별 성능 검증은 대기 항목입니다. jsdom 테스트와 로컬 미리 보기로 이 항목의 완료를 대신하지 않습니다.
+실제 GitHub Pages 배포·업데이트 감지, 정량 FPS·프레임 드랍, 실기기별 성능 검증은 대기 항목입니다. jsdom 테스트와 로컬 미리 보기로 이 항목의 완료를 대신하지 않습니다.

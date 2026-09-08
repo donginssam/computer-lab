@@ -13,6 +13,7 @@ src/
 ├── index.css                       공통 테마·서체·포커스
 ├── content/units.ts                5개 단원과 시뮬레이터 메타데이터
 ├── components/
+│   ├── PwaStatus.tsx               오프라인 준비·새 버전 알림
 │   ├── layout/                     AppShell, Header, Footer, Breadcrumb
 │   └── ui/                         UnitTile, SimulatorCard, StatusBadge
 ├── pages/                          HomePage, UnitPage, NotFoundPage
@@ -27,6 +28,8 @@ src/
 ```
 
 `StatsBar`, `CoinGrid`, `StepLog`는 [SimulationView.tsx](../src/simulators/balance-scale/components/SimulationView.tsx)에 함께 정의되어 있습니다.
+
+[vite.config.ts](../vite.config.ts)는 manifest와 Workbox 서비스 워커를 생성합니다. [main.tsx](../src/main.tsx)의 `PwaStatus`가 서비스 워커를 등록하고 오프라인 준비와 새 버전 상태를 화면에 알립니다. 설치 아이콘은 `public/`, 빌드 산출물 검사는 [verify-pwa.mjs](../scripts/verify-pwa.mjs)에 있습니다.
 
 ## 페이지와 경로
 
