@@ -1,13 +1,12 @@
 import { StrictMode } from "react"
 import { createRoot } from "react-dom/client"
-import { RouterProvider } from "react-router/dom"
 import "./index.css"
-import { router } from "./router"
+import { AppRoutes } from "./router"
 import { PwaUpdatePrompt } from "./components/PwaUpdatePrompt"
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <AppRoutes />
     <PwaUpdatePrompt />
   </StrictMode>,
 )
