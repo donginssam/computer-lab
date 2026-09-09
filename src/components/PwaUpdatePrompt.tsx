@@ -3,12 +3,16 @@ import { useRegisterSW } from "virtual:pwa-register/react"
 /**
  * Only speaks up when a new version is waiting. Offline readiness needs no
  * announcement — it is the expected state once the app is installed.
+ *
+ * immediate: false는 workbox가 window load 뒤에 등록하게 한다. 첫 방문에서
+ * 서비스 워커가 내려받는 precache가 첫 화면 렌더와 대역폭을 다투지 않는다.
+ * 이미 설치된 워커가 제어하는 재방문·오프라인에는 영향이 없다.
  */
 export function PwaUpdatePrompt() {
   const {
     needRefresh: [needRefresh, setNeedRefresh],
     updateServiceWorker,
-  } = useRegisterSW({ immediate: true })
+  } = useRegisterSW({ immediate: false })
 
   if (!needRefresh) return null
 
