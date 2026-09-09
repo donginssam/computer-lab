@@ -29,10 +29,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Lint
-        run: pnpm lint
-
-      # oxlint는 포매터가 아니라 포맷을 보지 않는다. 배포 워크플로에서는
-      # pnpm build의 첫 단계가 이 검사를 대신하지만, PR에는 build가 없다.
-      - name: Check formatting
-        run: pnpm format:check
+      # oxlint는 포매터가 아니라 포맷을 보지 않으므로 check가 둘을 함께 돌린다.
+      # 배포 워크플로에서는 pnpm build의 첫 단계가 포맷 검사를 대신한다.
+      - name: Lint and check formatting
+        run: pnpm check

@@ -4,7 +4,7 @@
 
 ## 현재 구성
 
-[deploy.yml](../.github/workflows/deploy.yml)은 `main` 푸시와 `workflow_dispatch` 수동 실행을 받습니다. 작업 순서는 checkout → pnpm 설정 → Node.js 24와 pnpm 캐시 → lockfile 고정 설치 → test → Pages 구성 → build → PWA 검사 → `dist` 업로드 → 배포입니다. 정적 검사는 [pr.yml](../.github/workflows/pr.yml)이 PR에서 맡습니다.
+[deploy.yml](../.github/workflows/deploy.yml)은 `main` 푸시와 `workflow_dispatch` 수동 실행을 받습니다. 작업 순서는 checkout → pnpm 설정 → Node.js 24와 pnpm 캐시 → lockfile 고정 설치 → test → Pages 구성 → build → PWA 검사 → `dist` 업로드 → 배포입니다. 정적 검사는 [pr.yml](../.github/workflows/pr.yml)이 PR에서 `pnpm check`로 맡습니다.
 
 권한은 `contents: read`, `pages: write`, `id-token: write`이며 배포 환경은 `github-pages`입니다. `github-pages` 동시 실행 그룹은 이전 실행을 취소합니다. 실제 Actions 버전과 설정은 워크플로 파일을 기준으로 합니다.
 
