@@ -40,9 +40,6 @@ jobs:
       - name: Test
         run: pnpm test
 
-      - name: Lint
-        run: pnpm lint
-
       - name: Configure GitHub Pages
         id: pages
         uses: actions/configure-pages@v6
