@@ -4,9 +4,9 @@
 
 ## 현재 구성
 
-검사는 [ci.yml](../.github/workflows/ci.yml)이 모든 푸시에서 `pnpm check` → `pnpm test` → `pnpm build` → `pnpm verify:pwa` 순으로 실행합니다. 같은 저장소 브랜치는 push 이벤트로 이미 검사하므로 `pull_request`는 포크에서 온 것만 돌려 같은 커밋을 두 번 검사하지 않습니다.
+검사는 [ci.yml](../.github/workflows/ci.yml)이 `pnpm check` → `pnpm test` → `pnpm build` → `pnpm verify:pwa` 순으로 실행합니다. `main`이 아닌 브랜치의 푸시, 포크에서 온 pull request, 그리고 배포 워크플로의 호출(`workflow_call`)에서 실행됩니다. 같은 저장소 브랜치는 푸시로 이미 검사하고 `main` 푸시는 배포가 호출하므로, 어떤 커밋도 두 번 검사하지 않습니다.
 
-[deploy.yml](../.github/workflows/deploy.yml)은 `main`의 CI가 **성공했을 때만** `workflow_run`으로 실행되고, `workflow_dispatch` 수동 실행도 받습니다. 작업 순서는 CI가 통과시킨 커밋 checkout → pnpm 설정 → Node.js 24와 pnpm 캐시 → lockfile 고정 설치 → Pages 구성 → build → PWA 검사 → `dist` 업로드 → 배포입니다. `workflow_run`은 기본 브랜치에 있는 워크플로 정의를 쓰므로, 이 설정은 `main`에 병합된 뒤부터 동작합니다.
+[deploy.yml](../.github/workflows/deploy.yml)은 `main` 푸시와 `workflow_dispatch` 수동 실행을 받고, 두 개의 job으로 구성합니다. `ci` job이 위 워크플로를 그대로 호출하고, `deploy` job이 `needs: ci`로 그 뒤에 붙습니다. 따라서 CI가 실패하거나 취소되면 배포 job은 시작하지 않으며, 검사와 배포가 같은 커밋 위에서 순서대로 일어납니다. `deploy` job의 순서는 checkout → pnpm 설정 → Node.js 24와 pnpm 캐시 → lockfile 고정 설치 → Pages 구성 → build → `dist` 업로드 → 배포입니다.
 
 권한은 `contents: read`, `pages: write`, `id-token: write`이며 배포 환경은 `github-pages`입니다. `github-pages` 동시 실행 그룹은 이전 실행을 취소합니다. 실제 Actions 버전과 설정은 워크플로 파일을 기준으로 합니다.
 
@@ -35,7 +35,11 @@ pnpm preview --base=/computer-lab/
 
 홈·단원과 지연 로딩하는 시뮬레이터·그래프 청크는 모두 사전 캐시를 사용하고 실험 기록은 localStorage에 저장합니다. Google Fonts는 접속 중 받은 파일을 별도로 캐시하며, 캐시되지 않은 서체는 오프라인에서 시스템 서체로 대체합니다. 설치 대화상자용 스크린샷은 오프라인 실행에 필요하지 않아 사전 캐시에서 제외합니다.
 
-manifest의 `start_url`·`scope`, 서비스 워커 URL과 범위는 Vite의 `--base` 값을 따릅니다. 따라서 프로젝트 사이트 `/computer-lab/`에 설치한 앱과 캐시는 그 경로 안에서만 동작합니다. 워크플로의 `pnpm verify:pwa`가 이 경로 일치를 배포 전에 확인합니다.
+manifest의 `start_url`·`scope`, 서비스 워커 URL과 범위는 Vite의 `--base` 값을 따릅니다. 따라서 프로젝트 사이트 `/computer-lab/`에 설치한 앱과 캐시는 그 경로 안에서만 동작합니다. CI의 `pnpm verify:pwa`는 기본 경로 빌드를 검사하므로, `--base`를 바꾸거나 공개 경로 처리를 손봤다면 아래 수동 확인으로 하위 경로 빌드를 직접 검사합니다.
+
+```bash
+pnpm build --base="/computer-lab/" && cp dist/index.html dist/404.html && pnpm verify:pwa
+```
 
 앱 셸과 정적 자산은 처음 접속할 때 캐시에 저장됩니다. 새 배포를 감지하면 바로 화면을 바꾸지 않고 업데이트 알림을 띄우며, 사용자가 **업데이트**를 누르면 새 서비스 워커를 적용하고 다시 엽니다. 수업 도중 진행 상태가 갑자기 사라지는 일을 줄이기 위한 방식입니다.
 

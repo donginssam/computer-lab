@@ -1,8 +1,12 @@
 name: CI
 
 on:
+  # main 푸시는 deploy 워크플로가 이 파일을 job으로 호출하므로 여기서 제외한다.
+  # 그래야 배포 커밋도 검사되면서 같은 커밋을 두 번 돌리지 않는다.
   push:
+    branches-ignore: [main]
   pull_request:
+  workflow_call:
 
 permissions:
   contents: read

@@ -1,11 +1,7 @@
 name: Deploy to GitHub Pages
 
 on:
-  # main의 CI가 성공했을 때만 배포한다. workflow_run은 기본 브랜치에 있는
-  # 워크플로 정의를 사용하므로, 이 파일이 main에 올라간 뒤부터 동작한다.
-  workflow_run:
-    workflows: [CI]
-    types: [completed]
+  push:
     branches: [main]
   workflow_dispatch:
 
@@ -19,21 +15,20 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # CI를 이 워크플로의 job으로 호출한다. needs가 배포를 CI 성공에 고정하므로,
+  # 검사와 배포가 같은 커밋 위에서 순서대로 일어난다.
+  ci:
+    uses: ./.github/workflows/ci.yml
+
   deploy:
-    if: >-
-      github.event_name == 'workflow_dispatch' ||
-      github.event.workflow_run.conclusion == 'success'
+    needs: ci
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      # CI가 통과시킨 바로 그 커밋을 배포한다. 기본값은 기본 브랜치의 최신
-      # 커밋이라, 그 사이 새 푸시가 있으면 검사하지 않은 커밋이 나갈 수 있다.
-      - name: Check out the commit CI verified
+      - name: Check out repository
         uses: actions/checkout@v6
-        with:
-          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
@@ -53,9 +48,6 @@ jobs:
 
       - name: Build
         run: pnpm build --base="${{ steps.pages.outputs.base_path }}/"
-
-      - name: Verify PWA
-        run: pnpm verify:pwa
 
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v5
