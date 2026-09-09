@@ -1,8 +1,10 @@
-import { Outlet, ScrollRestoration } from "react-router"
+import { Outlet } from "react-router"
 import { Footer } from "./Footer"
 import { Header } from "./Header"
+import { useScrollRestoration } from "./useScrollRestoration"
 
 export function AppShell() {
+  useScrollRestoration()
   return (
     <div className="flex min-h-dvh flex-col">
       <Header />
@@ -10,7 +12,6 @@ export function AppShell() {
         <Outlet />
       </main>
       <Footer />
-      <ScrollRestoration />
     </div>
   )
 }
