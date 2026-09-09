@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useReducer } from "react"
+import { useCallback, useReducer } from "react"
+import { useRunLoop } from "../../shared/useRunLoop"
 import { algorithms } from "../engine"
 import type { AlgorithmId } from "../engine/types"
 import { activeAlgorithms, createRun, reducer, type Options } from "./reducer"
@@ -25,34 +26,20 @@ export function useSimulation(options: Options, compare: boolean) {
       dispatch({ type: "reset", fake: chooseFake(options, compare), runId: crypto.randomUUID() }),
     [options, compare],
   )
-  useEffect(() => {
-    if (!state.running || done) return
-    const timer = window.setTimeout(step, state.speed)
-    return () => window.clearTimeout(timer)
-  }, [state.running, state.speed, state.tick, done, step])
-  useEffect(() => {
-    const onKey = (event: KeyboardEvent) => {
-      if (
-        event.ctrlKey ||
-        event.altKey ||
-        event.metaKey ||
-        event.repeat ||
-        !(event.target instanceof HTMLElement) ||
-        event.target.closest(
-          "input, select, textarea, button, a, summary, [contenteditable=true], [role=tab]",
-        )
-      )
-        return
-      if (event.code === "Space") {
-        event.preventDefault()
-        step()
-      }
-      if (event.key.toLowerCase() === "r") reset()
-      if (event.key.toLowerCase() === "a" && !done)
-        dispatch({ type: "auto", running: !state.running })
-    }
-    window.addEventListener("keydown", onKey)
-    return () => window.removeEventListener("keydown", onKey)
-  }, [step, reset, done, state.running])
-  return { state, dispatch, done, step, reset }
+  const toggle = useCallback(
+    () => dispatch({ type: "auto", running: !state.running }),
+    [state.running],
+  )
+
+  useRunLoop({
+    running: state.running,
+    speed: state.speed,
+    tick: state.tick,
+    done,
+    step,
+    reset,
+    toggle,
+  })
+
+  return { state, dispatch, done, step, reset, toggle }
 }

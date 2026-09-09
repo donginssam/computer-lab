@@ -46,7 +46,7 @@ it("2자리 직접 입력 07을 8회에 찾고 되감기 뒤 중복 저장하지
   fireEvent.blur(input)
   for (let index = 0; index < 8; index += 1)
     fireEvent.click(screen.getByRole("button", { name: "다음 단계 ▶" }))
-  expect(screen.getByText(/07에서 열렸습니다\. 8회/)).toHaveClass("ps-result")
+  expect(screen.getByText(/07에서 열렸습니다\. 8회/)).toHaveClass("result")
   expect(readRecords()).toHaveLength(1)
   expect(screen.getByTestId("location").textContent).not.toContain("07")
   fireEvent.click(screen.getByRole("button", { name: "◀ 이전" }))
@@ -58,7 +58,7 @@ it("욕심쟁이 반례와 합병 정렬 상한을 화면에 보여 준다", () 
   const view = open("strategy=change&coins=labA&amount=120")
   for (let index = 0; index < 3; index += 1)
     fireEvent.click(screen.getByRole("button", { name: "다음 단계 ▶" }))
-  expect(screen.getByText(/모두 3개입니다/)).toHaveClass("ps-result")
+  expect(screen.getByText(/모두 3개입니다/)).toHaveClass("result")
   expect(screen.getByText("욕심쟁이 결과와 다릅니다.")).toBeInTheDocument()
   view.unmount()
 
@@ -66,7 +66,7 @@ it("욕심쟁이 반례와 합병 정렬 상한을 화면에 보여 준다", () 
   const steps = sortEngine.init({ n: 8, order: "worst" }, 0).trace.length
   for (let index = 0; index < steps; index += 1)
     fireEvent.click(screen.getByRole("button", { name: "다음 단계 ▶" }))
-  expect(screen.getByText(/비교는 17회/)).toHaveClass("ps-result")
+  expect(screen.getByText(/비교는 17회/)).toHaveClass("result")
 })
 
 it("단축키는 입력을 방해하지 않고 전략 전환 시 자동 실행 타이머를 정리한다", () => {

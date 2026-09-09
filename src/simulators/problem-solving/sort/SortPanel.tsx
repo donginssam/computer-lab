@@ -1,4 +1,6 @@
 import { useState } from "react"
+import { blurOnEnter } from "../../shared/blurOnEnter"
+import { CARD_MAX, CARD_MIN, clampCardCount } from "../bounds"
 import { parseCardInput, type SortOrder } from "./engine"
 
 const orderNames: Record<SortOrder, string> = {
@@ -22,24 +24,22 @@ export function SortPanel({
   const [manualText, setManualText] = useState("35-12-90-7")
   const [error, setError] = useState("")
   return (
-    <section className="ps-card ps-settings" aria-label="숫자 카드 실험 설정">
+    <section className="sim-card ps-settings" aria-label="숫자 카드 실험 설정">
       <label>
         카드 수{" "}
         <input
           type="number"
-          min={2}
-          max={16}
+          min={CARD_MIN}
+          max={CARD_MAX}
           key={n}
           defaultValue={n}
           onBlur={event => {
-            const value = Math.trunc(Math.max(2, Math.min(16, Number(event.target.value) || 8)))
+            const value = clampCardCount(Number(event.target.value) || 8)
             event.currentTarget.value = String(value)
             setManualCards(undefined)
             change({ n: String(value) })
           }}
-          onKeyDown={event => {
-            if (event.key === "Enter") event.currentTarget.blur()
-          }}
+          onKeyDown={blurOnEnter}
         />
       </label>
       <label>
@@ -76,9 +76,7 @@ export function SortPanel({
                 setManualCards(undefined)
               }
             }}
-            onKeyDown={event => {
-              if (event.key === "Enter") event.currentTarget.blur()
-            }}
+            onKeyDown={blurOnEnter}
           />
         </label>
       )}
@@ -87,7 +85,7 @@ export function SortPanel({
           {error} 이번 실험은 무작위 카드로 시작합니다.
         </p>
       )}
-      <p className="ps-note">
+      <p className="small-note">
         큰 묶음을 반으로 나누고, 작은 묶음을 정리한 뒤 다시 합칩니다. 설정을 바꾸면 새 실험이
         시작됩니다.
       </p>

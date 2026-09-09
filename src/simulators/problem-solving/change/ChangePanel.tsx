@@ -1,3 +1,5 @@
+import { blurOnEnter } from "../../shared/blurOnEnter"
+import { AMOUNT_MAX, AMOUNT_MIN, AMOUNT_STEP, clampAmount } from "../bounds"
 import { coinPresets, type CoinSetId } from "./engine"
 
 export function ChangePanel({
@@ -15,33 +17,38 @@ export function ChangePanel({
   }
 
   return (
-    <section className="ps-card ps-settings" aria-label="거스름돈 실험 설정">
+    <section className="sim-card ps-settings" aria-label="거스름돈 실험 설정">
       <label>
         거스름돈 금액
         <span className="ps-inline-field">
           <input
             type="number"
-            min={10}
-            max={9990}
-            step={10}
+            min={AMOUNT_MIN}
+            max={AMOUNT_MAX}
+            step={AMOUNT_STEP}
             key={amount}
             defaultValue={amount}
             onBlur={event => {
-              const value =
-                Math.round(Math.max(10, Math.min(9990, Number(event.target.value) || 10)) / 10) * 10
+              const value = clampAmount(Number(event.target.value) || AMOUNT_MIN)
               event.currentTarget.value = String(value)
               change({ amount: String(value) })
             }}
-            onKeyDown={event => {
-              if (event.key === "Enter") event.currentTarget.blur()
-            }}
+            onKeyDown={blurOnEnter}
           />
           원
         </span>
       </label>
       <button
         type="button"
-        onClick={() => change({ amount: String((Math.floor(Math.random() * 999) + 1) * 10) })}
+        onClick={() =>
+          change({
+            amount: String(
+              clampAmount(
+                AMOUNT_MIN + Math.floor(Math.random() * (AMOUNT_MAX / AMOUNT_STEP)) * AMOUNT_STEP,
+              ),
+            ),
+          })
+        }
       >
         금액 무작위
       </button>
@@ -55,7 +62,7 @@ export function ChangePanel({
           ))}
         </select>
       </label>
-      <p className="ps-note">
+      <p className="small-note">
         매번 남은 금액 이하에서 가장 큰 동전을 하나 고릅니다. 설정을 바꾸면 새 실험이 시작됩니다.
       </p>
     </section>

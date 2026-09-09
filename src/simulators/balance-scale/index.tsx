@@ -5,11 +5,12 @@ import { unitById, unitPath, unitStyle } from "../../content/units"
 import { clampCoinCount } from "./engine/core"
 import { ControlPanel } from "./components/ControlPanel"
 import { Simulation } from "./components/Simulation"
-import { ModeTabs } from "./components/ModeTabs"
+import { TabList } from "../shared/TabList"
+import { useRecords } from "../shared/useRecords"
 import { modes } from "./modes"
 import { ConceptCards } from "./components/ConceptCards"
 import { ExperimentTable } from "./components/ExperimentTable"
-import { useRecords } from "./state/useRecords"
+import { readRecords, STORAGE_KEY } from "./state/records"
 import type { Options } from "./state/reducer"
 import "./simulator.css"
 const ComplexityChart = lazy(() =>
@@ -25,7 +26,7 @@ export function BalanceScalePage() {
   const placement = params.get("placement") === "random" ? "random" : "worst"
   const mode = modes.find(m => m.id === params.get("mode"))?.id ?? "simulation"
   const options = useMemo<Options>(() => ({ n, algorithm, placement }), [n, algorithm, placement])
-  const { records, storageError, save, remove, clear } = useRecords()
+  const { records, storageError, save, remove, clear } = useRecords(STORAGE_KEY, readRecords)
   function change(key: string, value: string) {
     setParams(
       old => {
@@ -37,7 +38,7 @@ export function BalanceScalePage() {
     )
   }
   return (
-    <div className="balance-page" style={unitStyle(unit)}>
+    <div className="sim-page balance-page" style={unitStyle(unit)}>
       <Breadcrumb
         items={[{ label: unit.title, to: unitPath(unit) }, { label: "양팔저울로 가짜 동전 찾기" }]}
       />
@@ -50,7 +51,14 @@ export function BalanceScalePage() {
           저울질로 가짜 동전을 찾아보세요.
         </p>
       </header>
-      <ModeTabs mode={mode} change={mode => change("mode", mode)} />
+      <TabList
+        items={modes}
+        current={mode}
+        idPrefix="tab-"
+        panelId="experiment-panel"
+        label="실험 모드"
+        change={next => change("mode", next)}
+      />
       <section id="experiment-panel" role="tabpanel" aria-labelledby={`tab-${mode}`} tabIndex={0}>
         {mode !== "records" && (
           <ControlPanel options={options} change={change} compare={mode === "compare"} />

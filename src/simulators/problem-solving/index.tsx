@@ -2,20 +2,22 @@ import { lazy, Suspense, useCallback, useState } from "react"
 import { useSearchParams } from "react-router"
 import { Breadcrumb } from "../../components/layout/Breadcrumb"
 import { unitById, unitPath, unitStyle } from "../../content/units"
+import { TabList } from "../shared/TabList"
+import { useRecords } from "../shared/useRecords"
+import { clampAmount, clampCardCount, clampDigits, lockPlacements } from "./bounds"
 import { ChangeExperiment } from "./change/ChangeExperiment"
 import { ChangePanel } from "./change/ChangePanel"
-import { coinPresets, type CoinSetId } from "./change/engine"
+import { coinPresets, coinSetIds } from "./change/engine"
 import { problemSolvingCopy } from "./copy"
 import { LockExperiment } from "./lock/LockExperiment"
-import { LockPanel, type LockPlacement } from "./lock/LockPanel"
+import { LockPanel } from "./lock/LockPanel"
 import { lockLimit } from "./lock/engine"
 import { ExperimentTable } from "./shared/ExperimentTable"
-import { useRecords } from "./shared/useRecords"
+import { readRecords, STORAGE_KEY } from "./shared/records"
 import { SortExperiment } from "./sort/SortExperiment"
 import { SortPanel } from "./sort/SortPanel"
-import type { SortOrder } from "./sort/engine"
-import { StrategyTabs } from "./StrategyTabs"
-import { isStrategyId, type StrategyId } from "./strategies"
+import { sortOrders } from "./sort/engine"
+import { strategies, isStrategyId, type StrategyId } from "./strategies"
 import "./simulator.css"
 
 const RecordCharts = lazy(() =>
@@ -32,25 +34,14 @@ function numericParam(value: string | null) {
   return Number.isFinite(parsed) ? parsed : null
 }
 
-function integerParam(value: string | null, fallback: number, min: number, max: number) {
+/** 주소에 값이 없으면 기본값을, 있으면 설정 패널과 같은 범위로 보정해 쓴다. */
+function clampedParam<T>(value: string | null, fallback: T, clamp: (value: number) => T) {
   const parsed = numericParam(value)
-  return parsed === null ? fallback : Math.trunc(Math.max(min, Math.min(max, parsed)))
+  return parsed === null ? fallback : clamp(parsed)
 }
 
-function amountParam(value: string | null, fallback: number) {
-  const parsed = numericParam(value)
-  if (parsed === null) return fallback
-  return Math.round(Math.max(10, Math.min(9990, parsed)) / 10) * 10
-}
-
-function coinSetParam(value: string | null): CoinSetId {
-  return ["korea", "labA", "labB"].includes(String(value)) ? (value as CoinSetId) : "korea"
-}
-
-function orderParam(value: string | null): SortOrder {
-  return ["random", "worst", "reverse", "manual"].includes(String(value))
-    ? (value as SortOrder)
-    : "random"
+function oneOfParam<T extends string>(value: string | null, allowed: readonly T[], fallback: T): T {
+  return allowed.includes(value as T) ? (value as T) : fallback
 }
 
 function lockBatchParam(value: string | null) {
@@ -63,25 +54,21 @@ export function ProblemSolvingPage() {
   const [params, setParams] = useSearchParams()
   const strategyParam = params.get("strategy")
   const strategy: StrategyId = isStrategyId(strategyParam) ? strategyParam : "lock"
-  const digits = integerParam(params.get("d"), 4, 1, 4) as 1 | 2 | 3 | 4
-  const lockPlacement: LockPlacement = ["worst", "random", "manual"].includes(
-    String(params.get("pos")),
-  )
-    ? (params.get("pos") as LockPlacement)
-    : "worst"
+  const digits = clampedParam(params.get("d"), 4, clampDigits)
+  const lockPlacement = oneOfParam(params.get("pos"), lockPlacements, "worst")
   const [manualSecret, setManualSecret] = useState(0)
   const lockBatch = lockBatchParam(params.get("speed"))
   const safeManualSecret = Math.min(manualSecret, lockLimit(digits) - 1)
 
-  const coinSet = coinSetParam(params.get("coins"))
+  const coinSet = oneOfParam(params.get("coins"), coinSetIds, "korea")
   const preset = coinPresets.find(item => item.id === coinSet)!
-  const amount = amountParam(params.get("amount"), preset.exampleAmount)
+  const amount = clampedParam(params.get("amount"), preset.exampleAmount, clampAmount)
   const coins = preset.coins
 
-  const n = integerParam(params.get("n"), 8, 2, 16)
-  const order = orderParam(params.get("order"))
+  const n = clampedParam(params.get("n"), 8, clampCardCount)
+  const order = oneOfParam(params.get("order"), sortOrders, "random")
   const [manualCards, setManualCards] = useState<number[] | undefined>()
-  const { records, storageError, save, remove, clear } = useRecords()
+  const { records, storageError, save, remove, clear } = useRecords(STORAGE_KEY, readRecords)
 
   const change = useCallback(
     (updates: Record<string, string>, replace = true) => {
@@ -98,7 +85,7 @@ export function ProblemSolvingPage() {
   )
 
   return (
-    <div className="problem-page" style={unitStyle(unit)}>
+    <div className="sim-page problem-page" style={unitStyle(unit)}>
       <Breadcrumb
         items={[{ label: unit.title, to: unitPath(unit) }, { label: problemSolvingCopy.title }]}
       />
@@ -107,7 +94,14 @@ export function ProblemSolvingPage() {
         <h1>{problemSolvingCopy.title}</h1>
         <p className="mt-4">{problemSolvingCopy.lead}</p>
       </header>
-      <StrategyTabs strategy={strategy} change={next => change({ strategy: next }, false)} />
+      <TabList
+        items={strategies}
+        current={strategy}
+        idPrefix="ps-tab-"
+        panelId="strategy-panel"
+        label="문제 해결 전략"
+        change={next => change({ strategy: next }, false)}
+      />
       <section
         id="strategy-panel"
         role="tabpanel"
@@ -178,7 +172,7 @@ export function ProblemSolvingPage() {
         )}
       </section>
       {strategy !== "records" && (
-        <p className="ps-note ps-share-note">{problemSolvingCopy.hiddenSetting}</p>
+        <p className="small-note ps-share-note">{problemSolvingCopy.hiddenSetting}</p>
       )}
     </div>
   )

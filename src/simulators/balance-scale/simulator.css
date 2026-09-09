@@ -1,74 +1,13 @@
-.balance-page {
-  min-width: 0;
-}
-.balance-page button,
-.balance-page select,
-.balance-page input[type="number"] {
-  border: 1px solid #a5b1c5;
-  border-radius: 6px;
-  background: white;
-  padding: 0.5rem 0.75rem;
-  min-height: 44px;
-  max-width: 100%;
-  font: inherit;
-  /* font: inherit이 본문 line-height(1.6)까지 가져와 컨트롤마다 높이가 달라진다. */
-  line-height: 1.2;
-}
-/* 브라우저가 select에는 line-height를 적용하지 않아, 높이를 직접 맞춘다. */
-.balance-page select {
-  height: 44px;
-}
-.balance-page button {
-  cursor: pointer;
-}
-.balance-page button:hover:not(:disabled) {
-  background: var(--color-paper-2);
-}
-.balance-page button:disabled {
-  opacity: 0.45;
-  cursor: default;
-}
-.balance-page button.primary,
-.balance-page button[aria-pressed="true"],
-.balance-page button[aria-selected="true"] {
-  background: var(--color-ink);
-  color: white;
-  border-color: var(--color-ink);
-}
-.mode-tabs {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.4rem;
-  margin: 2rem 0 1rem;
-}
-.sim-card {
-  min-width: 0;
-  background: #ffffffdc;
-  border: 1px solid var(--color-line);
-  border-radius: 10px;
-  padding: clamp(0.8rem, 2vw, 1.4rem);
-  margin-bottom: 1rem;
-}
-.sim-card h2,
-.concepts > h2 {
-  font-size: 1.55rem;
-  margin-bottom: 0.7rem;
-}
-.sim-card h3 {
-  font-size: 1.3rem;
-  margin-bottom: 0.7rem;
-}
-.sim-card h2 small {
-  font: 0.85rem var(--font-sans);
-  color: var(--color-ink-2);
-  white-space: nowrap;
-}
-.controls,
-.button-row {
+/* 공용 뼈대는 src/simulators/shared/simulator-base.css에 있다. */
+
+.controls {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 0.65rem;
+}
+.controls > p {
+  flex-basis: 100%;
 }
 .controls label {
   display: flex;
@@ -88,31 +27,6 @@
   accent-color: #b54a0b;
   min-height: 30px;
 }
-.small-note {
-  color: var(--color-ink-2);
-  font-size: 0.8rem;
-  margin: 0.5rem 0;
-}
-.controls > p,
-.button-row > p {
-  flex-basis: 100%;
-}
-.stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.3rem;
-  padding: 0.8rem 0;
-  border-block: 1px solid var(--color-line);
-}
-.stats dt {
-  font-size: 0.8rem;
-  color: var(--color-ink-2);
-}
-.stats dd {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin: 0;
-}
 .scale-wrap svg {
   display: block;
   width: 100%;
@@ -128,12 +42,6 @@
   border-radius: 5px;
   overflow-wrap: anywhere;
   word-break: break-all;
-}
-.result {
-  background: #fff0b8;
-  padding: 0.8rem;
-  border-left: 4px solid #b54a0b;
-  margin: 0.8rem 0;
 }
 .coin-grid {
   display: grid;
@@ -172,80 +80,15 @@
   border: 2px solid #701329;
   box-shadow: inset 0 0 0 3px #ed8a9b;
 }
-.step-log ol {
-  max-height: 240px;
-  overflow-y: auto;
-  font-size: 0.85rem;
-}
-.step-log li {
-  padding: 0.45rem;
-  border-bottom: 1px solid var(--color-line);
-}
-.step-log li.latest {
-  background: #edf3ff;
-  font-weight: 600;
-}
-.balance-page summary {
-  cursor: pointer;
-  padding: 0.5rem 0;
-}
-.comparison-grid,
-.concept-grid {
+.comparison-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
 }
-.concepts {
-  margin-top: 2.5rem;
-}
-.balance-page table {
-  border-collapse: collapse;
-  width: 100%;
-  font-size: 0.85rem;
-}
-.balance-page th,
-.balance-page td {
-  padding: 0.5rem;
-  text-align: left;
-  border-bottom: 1px solid var(--color-line);
-}
-.table-scroll {
-  overflow-x: auto;
-}
-.table-scroll table {
-  min-width: 620px;
-}
-.section-title {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 0.5rem;
-  align-items: center;
-}
-.quiz {
-  min-width: 0;
-  margin: 1.25rem 0 0;
-  border: 0;
-  padding: 0;
-}
-.quiz + .quiz {
-  margin-top: 1.75rem;
-}
-.quiz legend {
-  padding: 0;
-  margin-bottom: 0.75rem;
-  font-weight: 500;
-}
-.quiz p,
 .hint {
   margin-top: 0.7rem;
   padding: 0.5rem;
   background: #fff0b8;
-}
-.chart {
-  width: 100%;
-  height: 340px;
-  min-width: 0;
 }
 .chart-legend {
   display: flex;
@@ -253,28 +96,13 @@
   gap: 0.5rem 1rem;
   font-size: 0.8rem;
 }
-.empty-state {
-  padding: 1.5rem 0;
-}
 @media (max-width: 767px) {
-  .comparison-grid,
-  .concept-grid {
+  .comparison-grid {
     grid-template-columns: 1fr;
-  }
-  .mode-tabs button {
-    padding-inline: 0.35rem;
-    font-size: 0.9rem;
   }
 }
 @media (prefers-reduced-motion: reduce) {
   .scale-beam {
     transition: none;
   }
-}
-
-.balance-page button.primary:hover:not(:disabled),
-.balance-page button[aria-pressed="true"]:hover:not(:disabled),
-.balance-page button[aria-selected="true"]:hover:not(:disabled) {
-  background: #2a3e64;
-  color: white;
 }

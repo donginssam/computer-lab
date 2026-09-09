@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./simulators/shared/simulator-base.css";
 
 @theme {
   --font-display: "Nanum Myeongjo", "IBM Plex Sans KR", system-ui, sans-serif;

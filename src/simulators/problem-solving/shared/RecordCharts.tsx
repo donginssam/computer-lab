@@ -25,10 +25,10 @@ export function RecordCharts({ records }: { records: Experiment[] }) {
     <section className="ps-record-charts" aria-labelledby="record-chart-title">
       <h2 id="record-chart-title">결과를 그래프로 비교해 보세요</h2>
       <div className="ps-chart-grid">
-        <article className="ps-card">
+        <article className="sim-card">
           <h3>자물쇠: 자릿수와 시도</h3>
-          <p className="ps-note">선은 가장 많이 걸려도 필요한 횟수, 점은 내 실험입니다.</p>
-          <div className="ps-chart">
+          <p className="small-note">선은 가장 많이 걸려도 필요한 횟수, 점은 내 실험입니다.</p>
+          <div className="chart">
             <ResponsiveContainer width="100%" height="100%" minWidth={0}>
               <ComposedChart data={lockLimit} accessibilityLayer>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -53,10 +53,10 @@ export function RecordCharts({ records }: { records: Experiment[] }) {
             </ResponsiveContainer>
           </div>
         </article>
-        <article className="ps-card">
+        <article className="sim-card">
           <h3>거스름돈: 고른 개수</h3>
-          <p className="ps-note">같은 금액에서 욕심쟁이 결과와 가장 적은 개수를 비교합니다.</p>
-          <div className="ps-chart">
+          <p className="small-note">같은 금액에서 욕심쟁이 결과와 가장 적은 개수를 비교합니다.</p>
+          <div className="chart">
             <ResponsiveContainer width="100%" height="100%" minWidth={0}>
               <ComposedChart accessibilityLayer>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -82,10 +82,10 @@ export function RecordCharts({ records }: { records: Experiment[] }) {
             </ResponsiveContainer>
           </div>
         </article>
-        <article className="ps-card">
+        <article className="sim-card">
           <h3>카드 정리: 비교 횟수</h3>
-          <p className="ps-note">선은 가장 많이 비교하는 횟수, 점은 내 실험입니다.</p>
-          <div className="ps-chart">
+          <p className="small-note">선은 가장 많이 비교하는 횟수, 점은 내 실험입니다.</p>
+          <div className="chart">
             <ResponsiveContainer width="100%" height="100%" minWidth={0}>
               <ComposedChart data={sortLimit} accessibilityLayer>
                 <CartesianGrid strokeDasharray="3 3" />

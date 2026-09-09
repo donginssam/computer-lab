@@ -8,7 +8,7 @@ export function StepLog({
   empty?: string
 }) {
   return (
-    <details className="ps-step-log" open>
+    <details className="step-log" open>
       <summary>단계 기록 ({total})</summary>
       {entries.length ? (
         <ol start={Math.max(1, total - entries.length + 1)}>
@@ -19,7 +19,7 @@ export function StepLog({
           ))}
         </ol>
       ) : (
-        <p className="ps-note">{empty}</p>
+        <p className="small-note">{empty}</p>
       )}
     </details>
   )

@@ -1,0 +1,248 @@
+/*
+ * 두 시뮬레이터가 함께 쓰는 뼈대. 시뮬레이터별 화면(저울, 자물쇠, 동전, 카드)은
+ * 각자의 simulator.css에 남기고, 여기에는 두 곳에서 똑같이 쓰이던 것만 둔다.
+ */
+
+.sim-page {
+  min-width: 0;
+}
+
+.sim-page button,
+.sim-page select,
+.sim-page input[type="number"],
+.sim-page input[type="text"],
+.sim-page input:not([type]) {
+  max-width: 100%;
+  min-height: 44px;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #a5b1c5;
+  border-radius: 6px;
+  background: white;
+  color: var(--color-ink);
+  font: inherit;
+  /* font: inherit이 본문 line-height(1.6)까지 가져와 컨트롤마다 높이가 달라진다. */
+  line-height: 1.2;
+}
+
+/* 브라우저가 select에는 line-height를 적용하지 않아, 높이를 직접 맞춘다. */
+.sim-page select {
+  height: 44px;
+}
+
+.sim-page button {
+  cursor: pointer;
+}
+
+.sim-page button:hover:not(:disabled) {
+  background: var(--color-paper-2);
+}
+
+.sim-page button:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+
+.sim-page button.primary,
+.sim-page button[aria-selected="true"],
+.sim-page button[aria-pressed="true"] {
+  border-color: var(--color-ink);
+  background: var(--color-ink);
+  color: white;
+}
+
+.sim-page button.primary:hover:not(:disabled),
+.sim-page button[aria-selected="true"]:hover:not(:disabled),
+.sim-page button[aria-pressed="true"]:hover:not(:disabled) {
+  background: #2a3e64;
+  color: white;
+}
+
+.sim-page summary {
+  cursor: pointer;
+  padding: 0.4rem 0;
+}
+
+/* 탭 열 수는 TabList가 --tab-count로 넘긴다. */
+.sim-tabs {
+  display: grid;
+  grid-template-columns: repeat(var(--tab-count, 3), minmax(0, 1fr));
+  gap: 0.4rem;
+  margin: 2rem 0 1rem;
+}
+
+.sim-card {
+  min-width: 0;
+  margin-bottom: 1rem;
+  padding: clamp(0.8rem, 2vw, 1.4rem);
+  border: 1px solid var(--color-line);
+  border-radius: 10px;
+  background: #ffffffdc;
+}
+
+.sim-card h2,
+.concepts > h2,
+.record-charts > h2 {
+  margin-bottom: 0.7rem;
+  font-size: 1.55rem;
+}
+
+.sim-card h3 {
+  margin-bottom: 0.7rem;
+  font-size: 1.3rem;
+}
+
+.sim-card h2 small {
+  color: var(--color-ink-2);
+  font: 0.85rem var(--font-sans);
+  white-space: nowrap;
+}
+
+.button-row,
+.run-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.button-row > p,
+.run-controls > p {
+  flex-basis: 100%;
+}
+
+.small-note {
+  margin: 0.5rem 0;
+  color: var(--color-ink-2);
+  font-size: 0.8rem;
+}
+
+.section-title {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.3rem;
+  padding: 0.8rem 0;
+  border-block: 1px solid var(--color-line);
+}
+
+.stats div {
+  min-width: 0;
+}
+
+.stats dt {
+  color: var(--color-ink-2);
+  font-size: 0.8rem;
+}
+
+.stats dd {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.result {
+  margin: 0.8rem 0;
+  padding: 0.8rem;
+  border-left: 4px solid #b54a0b;
+  background: #fff0b8;
+}
+
+.step-log ol {
+  max-height: 250px;
+  overflow-y: auto;
+  font-size: 0.85rem;
+}
+
+.step-log li {
+  padding: 0.45rem;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.step-log li.latest {
+  background: #edf3ff;
+  font-weight: 600;
+}
+
+.concepts {
+  margin-top: 2.5rem;
+}
+
+.concept-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.quiz {
+  min-width: 0;
+  margin: 1.25rem 0 0;
+  padding: 0;
+  border: 0;
+}
+
+.quiz + .quiz {
+  margin-top: 1.7rem;
+}
+
+.quiz legend {
+  margin-bottom: 0.7rem;
+  padding: 0;
+  font-weight: 500;
+}
+
+.quiz-feedback {
+  margin-top: 0.7rem;
+  padding: 0.5rem;
+  background: #fff0b8;
+}
+
+.sim-page table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.sim-page th,
+.sim-page td {
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--color-line);
+  text-align: left;
+}
+
+/* 표마다 접히기 시작하는 폭이 달라 --table-min으로 시뮬레이터가 정한다. */
+.table-scroll {
+  overflow-x: auto;
+}
+
+.table-scroll table {
+  min-width: var(--table-min, 620px);
+}
+
+.empty-state {
+  padding: 1.5rem 0;
+}
+
+.chart {
+  width: 100%;
+  height: 340px;
+  min-width: 0;
+}
+
+@media (max-width: 767px) {
+  .concept-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sim-tabs button {
+    padding-inline: 0.35rem;
+    font-size: 0.9rem;
+  }
+}

@@ -1,4 +1,4 @@
-import { Quiz } from "../shared/Quiz"
+import { Quiz } from "../../shared/Quiz"
 
 const questions = [
   {
@@ -17,17 +17,17 @@ const questions = [
 
 export function ChangeConcept() {
   return (
-    <section className="ps-concepts" aria-labelledby="change-concept-title">
+    <section className="concepts" aria-labelledby="change-concept-title">
       <h2 id="change-concept-title">지금 가장 좋아 보이는 선택이 끝에도 좋을까?</h2>
-      <div className="ps-concept-grid">
-        <article className="ps-card">
+      <div className="concept-grid">
+        <article className="sim-card">
           <h3>한 번 고르면 뒤돌아보지 않기</h3>
           <p>
             욕심쟁이 방법은 그 순간 고를 수 있는 가장 큰 동전을 택합니다. 규칙이 단순해서 매 단계의
             계산이 적지만, 먼저 고른 동전을 나중에 바꾸지 않습니다.
           </p>
         </article>
-        <article className="ps-card">
+        <article className="sim-card">
           <h3>동전 종류가 결과를 바꾼다</h3>
           <p>
             120원을 100·60·10원 동전으로 만들면 욕심쟁이는 100+10+10으로 3개를 씁니다. 60+60은 2개면
@@ -35,9 +35,7 @@ export function ChangeConcept() {
           </p>
         </article>
       </div>
-      <Quiz
-        questions={questions.map(question => ({ ...question, options: [...question.options] }))}
-      />
+      <Quiz questions={questions} />
     </section>
   )
 }

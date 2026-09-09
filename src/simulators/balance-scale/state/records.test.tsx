@@ -2,8 +2,9 @@ import { act, cleanup, fireEvent, render, renderHook, screen } from "@testing-li
 import { afterEach, expect, it, vi } from "vitest"
 import { ExperimentTable } from "../components/ExperimentTable"
 import { useState } from "react"
-import { mergeRecords, readRecords, STORAGE_KEY, type Experiment } from "./records"
-import { useRecords } from "./useRecords"
+import { mergeRecords } from "../../shared/records"
+import { useRecords } from "../../shared/useRecords"
+import { readRecords, STORAGE_KEY, type Experiment } from "./records"
 afterEach(() => {
   cleanup()
   vi.restoreAllMocks()
@@ -31,7 +32,7 @@ it("저장이 차단되어도 기록을 유지하고 다음 저장 성공 시 �
   const write = vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
     throw new Error("Storage unavailable")
   })
-  const { result, unmount } = renderHook(useRecords)
+  const { result, unmount } = renderHook(() => useRecords(STORAGE_KEY, readRecords))
   act(() => result.current.save([record]))
   expect(result.current.records).toEqual([record])
   expect(result.current.storageError).toBe(true)
@@ -42,7 +43,7 @@ it("저장이 차단되어도 기록을 유지하고 다음 저장 성공 시 �
   expect(readRecords()).toHaveLength(2)
   unmount()
 
-  const restored = renderHook(useRecords)
+  const restored = renderHook(() => useRecords(STORAGE_KEY, readRecords))
   expect(restored.result.current.records).toHaveLength(2)
   act(() => restored.result.current.remove(record.id))
   expect(readRecords().map(item => item.id)).toEqual(["second"])

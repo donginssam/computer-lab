@@ -26,15 +26,15 @@ export function ChangeView({
   const greedyBetter =
     state.finished && !state.stuck && optimal && state.used.length === optimal.count
   return (
-    <section className="ps-card change-scene">
-      <div className="ps-section-title">
+    <section className="sim-card change-scene">
+      <div className="section-title">
         <div>
           <p className="ps-kicker">욕심쟁이 방법</p>
           <h2>지금 고를 수 있는 가장 큰 동전</h2>
         </div>
         <span className="strategy-chip change-chip">빠른 판단</span>
       </div>
-      <dl className="ps-stats">
+      <dl className="stats">
         <div>
           <dt>처음 금액</dt>
           <dd>{state.amount.toLocaleString()}원</dd>
@@ -72,10 +72,10 @@ export function ChangeView({
             </span>
           ))
         ) : (
-          <span className="ps-note">고른 동전이 여기에 놓입니다.</span>
+          <span className="small-note">고른 동전이 여기에 놓입니다.</span>
         )}
       </div>
-      <p className="ps-result" role="status" aria-live="polite">
+      <p className="result" role="status" aria-live="polite">
         {state.stuck
           ? `${state.remaining.toLocaleString()}원이 남았지만 쓸 수 있는 동전이 없어 막힙니다.`
           : state.finished

@@ -53,21 +53,21 @@ export function ExperimentTable({
   clear: () => void
 }) {
   return (
-    <section className="ps-card">
-      <div className="ps-section-title">
+    <section className="sim-card">
+      <div className="section-title">
         <h2>실험 기록 ({records.length})</h2>
         <button type="button" disabled={!records.length} onClick={clear}>
           전체 삭제
         </button>
       </div>
-      <p className="ps-note">
+      <p className="small-note">
         이 컴퓨터의 이 브라우저에만 최근 {MAX_RECORDS}개가 남습니다. 숨겨진 값은 실험을 끝낸 뒤에만
         기록됩니다.
       </p>
       {!records.length ? (
-        <p className="ps-empty">세 전략 중 하나를 끝까지 실행하면 여기에 기록이 쌓입니다.</p>
+        <p className="empty-state">세 전략 중 하나를 끝까지 실행하면 여기에 기록이 쌓입니다.</p>
       ) : (
-        <div className="ps-table-scroll">
+        <div className="table-scroll">
           <table>
             <caption className="sr-only">완료된 문제 해결 전략 실험 기록</caption>
             <thead>

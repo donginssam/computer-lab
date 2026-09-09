@@ -1,3 +1,4 @@
+import { AMOUNT_MAX, AMOUNT_MIN, AMOUNT_STEP, isAmountInRange } from "../bounds"
 import type { StepEngine } from "../shared/stepper"
 
 export type CoinSetId = "korea" | "labA" | "labB"
@@ -29,6 +30,8 @@ export const coinPresets: readonly CoinPreset[] = [
   { id: "labB", name: "실험용 동전 B", coins: [50, 30, 20], exampleAmount: 60 },
 ]
 
+export const coinSetIds: readonly CoinSetId[] = coinPresets.map(preset => preset.id)
+
 export function normalizeCoins(values: readonly number[]) {
   const coins = [...new Set(values)]
     .filter(value => Number.isInteger(value) && value > 0 && value % 10 === 0)
@@ -39,13 +42,8 @@ export function normalizeCoins(values: readonly number[]) {
 }
 
 function validate(options: ChangeOptions) {
-  if (
-    !Number.isInteger(options.amount) ||
-    options.amount < 10 ||
-    options.amount > 9990 ||
-    options.amount % 10 !== 0
-  )
-    throw new RangeError("금액은 10~9990원의 10원 단위여야 합니다.")
+  if (!isAmountInRange(options.amount))
+    throw new RangeError(`금액은 ${AMOUNT_MIN}~${AMOUNT_MAX}원의 ${AMOUNT_STEP}원 단위여야 합니다.`)
   const normalized = normalizeCoins(options.coins)
   if (
     normalized.length !== options.coins.length ||

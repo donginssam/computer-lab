@@ -1,7 +1,8 @@
 import { act, cleanup, renderHook } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { mergeRecords, readRecords, STORAGE_KEY, type Experiment } from "./records"
-import { useRecords } from "./useRecords"
+import { mergeRecords } from "../../shared/records"
+import { useRecords } from "../../shared/useRecords"
+import { readRecords, STORAGE_KEY, type Experiment } from "./records"
 
 const records: Experiment[] = [
   { id: "lock", strategy: "lock", digits: 2, placement: "worst", secret: 99, attempts: 100 },
@@ -50,7 +51,7 @@ describe("문제 해결 전략 기록", () => {
     const write = vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
       throw new Error("blocked")
     })
-    const { result } = renderHook(useRecords)
+    const { result } = renderHook(() => useRecords(STORAGE_KEY, readRecords))
     act(() => result.current.save([records[0]]))
     expect(result.current.records).toEqual([records[0]])
     expect(result.current.storageError).toBe(true)

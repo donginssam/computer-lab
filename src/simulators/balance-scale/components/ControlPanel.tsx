@@ -1,3 +1,4 @@
+import { blurOnEnter } from "../../shared/blurOnEnter"
 import type { Options } from "../state/reducer"
 import { algorithms } from "../engine"
 import { clampCoinCount, COIN_MAX, COIN_MIN } from "../engine/core"
@@ -32,9 +33,7 @@ export function ControlPanel({
             e.currentTarget.value = value
             change("n", value)
           }}
-          onKeyDown={e => {
-            if (e.key === "Enter") e.currentTarget.blur()
-          }}
+          onKeyDown={blurOnEnter}
         />
       </label>
       <label className="range-label">

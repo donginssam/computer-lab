@@ -51,15 +51,15 @@ export function SortView({ state }: { state: SortState }) {
   const sorted = state.trace.at(-1)
 
   return (
-    <section className="ps-card sort-scene">
-      <div className="ps-section-title">
+    <section className="sim-card sort-scene">
+      <div className="section-title">
         <div>
           <p className="ps-kicker">작은 문제로 나누어 해결하기</p>
           <h2>나누고, 정리하고, 합치기</h2>
         </div>
         <span className="strategy-chip sort-chip">많아도 빠름</span>
       </div>
-      <dl className="ps-stats">
+      <dl className="stats">
         <div>
           <dt>나눈 횟수</dt>
           <dd>{splits}회</dd>
@@ -87,14 +87,14 @@ export function SortView({ state }: { state: SortState }) {
           </div>
         ))}
       </div>
-      <p className="ps-result" role="status" aria-live="polite">
+      <p className="result" role="status" aria-live="polite">
         {state.finished && sorted?.kind === "merged"
           ? `${sorted.values.join(" → ")} 순서로 정리했습니다. 비교는 ${state.comparisons}회입니다.`
           : current
             ? sortStepText(current)
             : "다음 단계를 눌러 카드 묶음을 나눠 보세요."}
       </p>
-      <p className="ps-note">지금까지 합치기를 끝낸 묶음은 {merges}개입니다.</p>
+      <p className="small-note">지금까지 합치기를 끝낸 묶음은 {merges}개입니다.</p>
     </section>
   )
 }
