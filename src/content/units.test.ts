@@ -16,6 +16,14 @@ describe("units", () => {
 
   it("가짜 동전 찾기 시뮬레이터 경로를 만든다", () => {
     const algo = unitById("algorithm")!
-    expect(simulatorPath(algo, algo.simulators[0])).toBe("/units/algorithm/balance-scale")
+    const simulator = algo.simulators.find(item => item.slug === "balance-scale")!
+    expect(simulatorPath(algo, simulator)).toBe("/units/algorithm/balance-scale")
+  })
+
+  it("문제 해결 전략 실험실 경로를 만든다", () => {
+    const algorithm = unitById("algorithm")!
+    const simulator = algorithm.simulators.find(item => item.slug === "problem-solving")!
+    expect(simulatorPath(algorithm, simulator)).toBe("/units/algorithm/problem-solving")
+    expect(simulator.status).toBe("ready")
   })
 })

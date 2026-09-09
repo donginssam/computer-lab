@@ -52,6 +52,13 @@ export const units: Unit[] = [
     color: "var(--color-unit-algo)",
     simulators: [
       {
+        slug: "problem-solving",
+        title: "문제 해결 전략 실험실",
+        summary:
+          "자물쇠·거스름돈·숫자 카드 문제를 풀며 시행착오, 욕심쟁이, 작은 문제로 나누어 해결하기를 비교합니다.",
+        status: "ready",
+      },
+      {
         slug: "balance-scale",
         title: "양팔저울로 가짜 동전 찾기",
         summary:

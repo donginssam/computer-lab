@@ -14,13 +14,19 @@ pnpm exec prettier --check README.md docs
 
 전체 저장소 형식 검사는 `pnpm format:check`이며 `pnpm build`의 첫 단계에서도 실행합니다. 타입 검사만 필요하면 `pnpm typecheck`를 실행합니다. 문서만 변경할 때는 문서 범위의 검사와 링크 확인으로 검증하고, 기존 파일의 포맷을 일괄 수정하지 않습니다.
 
-| 테스트 파일                                                                | 확인하는 행동                                                                                                     |
-| -------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| [units.test.ts](../src/content/units.test.ts)                              | 5개 단원 순서, slug 중복, 시뮬레이터 경로                                                                         |
-| [engine.test.ts](../src/simulators/balance-scale/engine/engine.test.ts)    | N=2~100의 모든 가짜 위치에서 정답·종료·불변성·상한·최악 위치·종료 후 멱등성, 입력 오류                            |
-| [reducer.test.ts](../src/simulators/balance-scale/state/reducer.test.ts)   | 먼저 끝난 알고리즘 정지, 공통 tick 되감기                                                                         |
-| [records.test.tsx](../src/simulators/balance-scale/state/records.test.tsx) | 저장 형식·500개 제한·중복 병합, 저장 실패와 복구, 행별·전체 삭제                                                  |
-| [simulation.test.tsx](../src/simulators/balance-scale/simulation.test.tsx) | 같은 조건 비교와 중복 저장 방지, 타이머 정리, URL·저장값 오류, 단축키, N=100 자동 종료, 숫자 입력, 탭 키보드 이동 |
+| 테스트 파일                                                                      | 확인하는 행동                                                                                                     |
+| -------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| [units.test.ts](../src/content/units.test.ts)                                    | 5개 단원 순서, slug 중복, 시뮬레이터 경로                                                                         |
+| [engine.test.ts](../src/simulators/balance-scale/engine/engine.test.ts)          | N=2~100의 모든 가짜 위치에서 정답·종료·불변성·상한·최악 위치·종료 후 멱등성, 입력 오류                            |
+| [reducer.test.ts](../src/simulators/balance-scale/state/reducer.test.ts)         | 먼저 끝난 알고리즘 정지, 공통 tick 되감기                                                                         |
+| [records.test.tsx](../src/simulators/balance-scale/state/records.test.tsx)       | 저장 형식·500개 제한·중복 병합, 저장 실패와 복구, 행별·전체 삭제                                                  |
+| [simulation.test.tsx](../src/simulators/balance-scale/simulation.test.tsx)       | 같은 조건 비교와 중복 저장 방지, 타이머 정리, URL·저장값 오류, 단축키, N=100 자동 종료, 숫자 입력, 탭 키보드 이동 |
+| [stepper.test.ts](../src/simulators/problem-solving/shared/stepper.test.ts)      | 완료 후 멱등성, batch 진행과 tick 되감기, 실행 설정을 유지하는 초기화                                             |
+| [lock/engine.test.ts](../src/simulators/problem-solving/lock/engine.test.ts)     | 1~3자리 모든 비밀번호와 4자리 경계·표본의 정확한 시도 횟수, 이전 단계, 입력 오류                                  |
+| [change/engine.test.ts](../src/simulators/problem-solving/change/engine.test.ts) | 한국 동전 10~9,990원 전수 최적성, 실험용 A·B 반례, 직접 동전 입력 검증                                            |
+| [sort/engine.test.ts](../src/simulators/problem-solving/sort/engine.test.ts)     | N≤7 모든 순열 정렬, N=2~16 상한과 가장 많이 비교하는 순서, trace 되감기, 입력 오류                                |
+| [records.test.tsx](../src/simulators/problem-solving/shared/records.test.tsx)    | 전략별 저장 형식, 500개 제한과 중복 병합, 손상 값, 저장 실패와 복구                                               |
+| [simulation.test.tsx](../src/simulators/problem-solving/simulation.test.tsx)     | 전략 탭·URL, 세 실험 결과, 중복 저장 방지, 타이머 정리, 입력 중 단축키 무시                                       |
 
 엔진 전수 검사는 알고리즘당 5,049개 `(N, fakeIndex)` 조합을 다룹니다. 정확한 테스트 개수와 통과 여부는 실행 결과를 기준으로 기록합니다.
 
@@ -42,6 +48,13 @@ pnpm exec prettier --check README.md docs
 | 앱 설치 후 온라인 접속                      | 브라우저에서 standalone 앱으로 실행                                    |
 | 설치한 앱에서 오프라인 새로고침             | 홈·단원·시뮬레이터가 캐시에서 열림                                     |
 | 새 버전 배포 후 기존 앱 재접속              | 업데이트 알림이 나타나고, 선택하면 최신 버전으로 다시 열림             |
+| 자물쇠 4자리, 가장 늦게 찾는 곳, 끝까지     | 10,000회에 열리고 3초 기준 8시간 20분으로 환산                         |
+| 자물쇠 2자리, 직접 입력 07                  | 8회에 열리고 주소에는 비밀번호가 포함되지 않음                         |
+| 실험용 동전 A 120원                         | 욕심쟁이 3개, 가장 적은 개수 2개                                       |
+| 실험용 동전 B 60원                          | 50원을 고른 뒤 막히고, 비교 기준은 30원 2개를 제시                     |
+| 카드 8장, 가장 많이 비교하는 순서           | 나누기 7회, 비교 17회로 종료                                           |
+| 카드 8장, 거꾸로                            | 비교 12회로 상한 17회보다 적게 종료                                    |
+| 문제 해결 기록 탭 → 새로고침                | 세 전략 기록이 유지되고 표와 그래프가 열림                             |
 
 N=3의 무작위 위치는 원하는 값이 보장되지 않으므로 브라우저에서 한 번 실행한 결과만으로 균형 분기를 검증하지 않습니다.
 
@@ -49,6 +62,22 @@ N=3의 무작위 위치는 원하는 값이 보장되지 않으므로 브라우�
 
 ## 검증 이력과 한계
 
+2026-09-09 헤더 설치 버튼 추가: 설치 이벤트의 사용자 클릭 처리·일회성 사용, 설치 안내, 설치 완료 및 standalone 버튼 숨김을 포함해 12개 파일·51개 테스트가 통과했습니다. lint·타입·빌드·PWA 검사도 통과했습니다. 360px 브라우저에서 버튼이 우측 상단에 배치되고 가로 넘침이 없으며, 안내창을 Escape로 닫으면 설치 버튼으로 초점이 돌아오는 것을 확인했습니다.
+
+2026-09-09 오프라인 재검증에서는 기존 캐시와 분리된 로컬 포트 4189에서 `/computer-lab/` 홈만 온라인으로 연 뒤 preview 서버를 종료했습니다. curl 연결 실패로 서버 종료를 확인하고 기존 탭을 닫은 다음 새 탭에서 앱을 다시 열었습니다. 시뮬레이터와 기록 탭을 온라인에서 미리 방문하지 않은 조건에서 다음 결과를 확인했습니다.
+
+- 홈 새 탭 재열기와 두 시뮬레이터의 쿼리 포함 깊은 링크 직접 진입 성공
+- 자물쇠 2자리 99: 100회에 완료
+- 실험용 동전 B 60원: 50원 뒤 남은 10원에서 막힘
+- 카드 4장 가장 많이 비교하는 순서: 5회 비교로 정렬 완료
+- 문제 해결 전략 기록 3개가 새로고침 후 유지되고 지연 로딩 그래프 3개 표시
+- 양팔저울 동전 8개 차례로 비교: 4회에 완료, 기록과 지연 로딩 그래프 표시
+- 확인한 실행에서 브라우저 콘솔 오류 없음
+
+`verify:pwa`는 모든 빌드 JS·CSS·WOFF2 파일과 manifest 아이콘의 사전 캐시 포함 여부, 깊은 링크의 `index.html` 폴백까지 검사하도록 보강했습니다. 이 검증은 앱 서버 연결을 차단한 로컬 브라우저 검증입니다. OS에 설치한 standalone 창에서의 재실행, 기기 전체 네트워크 차단, 실제 GitHub Pages 배포 검증은 포함하지 않습니다. 외부 Google Fonts가 아직 캐시되지 않았다면 완전 오프라인에서는 시스템 대체 서체가 사용되며 앱 기능은 외부 API에 의존하지 않습니다.
+
 2026-09-08 PWA 전환에서 frozen lockfile 설치, `pnpm lint`·`pnpm test`·루트와 `/computer-lab/` 경로 빌드·`pnpm verify:pwa`를 실행하여 **lint 통과, 5개 파일·16개 테스트 통과, 두 경로의 PWA 검사 통과**를 확인했습니다. 프로덕션 미리 보기에서는 서버를 끈 뒤 홈 새로고침과 `/computer-lab/units/algorithm/balance-scale` 직접 진입이 모두 서비스 워커 캐시에서 열렸습니다.
+
+2026-09-08 문제 해결 전략 실험실 구현에서 `pnpm lint`·`pnpm typecheck`·`pnpm test`를 실행하여 **lint 경고 없음, 타입 검사 통과, 11개 파일·48개 테스트 통과**를 확인했습니다. 루트와 `/computer-lab/` 경로의 프로덕션 빌드 및 PWA 검사가 모두 통과했습니다. `/computer-lab/units/algorithm/problem-solving?strategy=lock&d=4&pos=worst&speed=1000` 직접 진입과 서버 종료 후 오프라인 새로고침도 성공했습니다. 360px 카드 16장, 768px 실험용 동전 B, 1280px 기록 표·그래프에서 문서 전체 가로 넘침과 브라우저 콘솔 오류가 없음을 확인했습니다.
 
 실제 GitHub Pages 배포·업데이트 감지, 정량 FPS·프레임 드랍, 실기기별 성능 검증은 대기 항목입니다. jsdom 테스트와 로컬 미리 보기로 이 항목의 완료를 대신하지 않습니다.

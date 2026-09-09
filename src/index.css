@@ -87,6 +87,73 @@
 }
 
 @layer utilities {
+  .pwa-install {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    min-height: 44px;
+    padding: 0.4rem 0.65rem;
+    border: 1px solid var(--color-line);
+    border-radius: 7px;
+    background: var(--color-ink);
+    color: white;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  .pwa-install:disabled {
+    opacity: 0.6;
+    cursor: wait;
+  }
+
+  .pwa-install-help {
+    position: fixed;
+    inset: 0;
+    margin: auto;
+    width: min(30rem, calc(100vw - 2rem));
+    max-height: calc(100dvh - 2rem);
+    overflow-y: auto;
+    padding: 1.4rem;
+    border: 1px solid var(--color-line);
+    border-radius: 12px;
+    background: var(--color-paper);
+    color: var(--color-ink);
+    box-shadow: 0 16px 48px #16213a30;
+  }
+
+  .pwa-install-help::backdrop {
+    background: #16213a70;
+  }
+  .pwa-install-help h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .pwa-install-help ul {
+    margin: 1rem 0;
+    padding-left: 1.2rem;
+    list-style: disc;
+  }
+  .pwa-install-help li + li {
+    margin-top: 0.6rem;
+  }
+  .pwa-install-note {
+    font-size: 0.85rem;
+    color: var(--color-ink-2);
+  }
+  .pwa-install-help form {
+    margin-top: 1rem;
+    text-align: right;
+  }
+  .pwa-install-help button {
+    min-height: 44px;
+    padding: 0.4rem 1rem;
+    border: 1px solid var(--color-line);
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+  }
+
   /* 단원 폴더 타일 위의 탭 */
   .folder-tab::before {
     content: "";

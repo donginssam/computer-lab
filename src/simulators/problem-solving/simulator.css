@@ -1,0 +1,592 @@
+.problem-page {
+  min-width: 0;
+}
+
+.ps-header {
+  margin-top: 1.5rem;
+}
+
+.ps-header h1 {
+  font-size: clamp(2rem, 5vw, 3rem);
+}
+
+.ps-kicker {
+  color: var(--color-ink-2);
+  font-size: 0.8rem;
+  margin: 0.5rem 0;
+}
+
+.problem-page button,
+.problem-page select,
+.problem-page input[type="number"],
+.problem-page input[type="text"],
+.problem-page input:not([type]) {
+  max-width: 100%;
+  min-height: 44px;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #a5b1c5;
+  border-radius: 6px;
+  background: white;
+  color: var(--color-ink);
+  font: inherit;
+  /* font: inherit이 본문 line-height(1.6)까지 가져와 컨트롤마다 높이가 달라진다. */
+  line-height: 1.2;
+}
+
+/* 브라우저가 select에는 line-height를 적용하지 않아, 높이를 직접 맞춘다. */
+.problem-page select {
+  height: 44px;
+}
+
+.problem-page button {
+  cursor: pointer;
+}
+
+.problem-page button:hover:not(:disabled) {
+  background: var(--color-paper-2);
+}
+
+.problem-page button:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+
+.problem-page button.primary,
+.problem-page button[aria-selected="true"],
+.problem-page button[aria-pressed="true"] {
+  border-color: var(--color-ink);
+  background: var(--color-ink);
+  color: white;
+}
+
+.problem-page button.primary:hover:not(:disabled),
+.problem-page button[aria-selected="true"]:hover:not(:disabled),
+.problem-page button[aria-pressed="true"]:hover:not(:disabled) {
+  background: #2a3e64;
+  color: white;
+}
+
+.ps-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.4rem;
+  margin: 2rem 0 1rem;
+}
+
+.ps-card {
+  min-width: 0;
+  margin-bottom: 1rem;
+  padding: clamp(0.8rem, 2vw, 1.4rem);
+  border: 1px solid var(--color-line);
+  border-radius: 10px;
+  background: #ffffffdc;
+}
+
+.ps-card h2,
+.ps-concepts > h2,
+.ps-record-charts > h2 {
+  margin-bottom: 0.7rem;
+  font-size: 1.55rem;
+}
+
+.ps-card h3 {
+  margin-bottom: 0.7rem;
+  font-size: 1.3rem;
+}
+
+.ps-settings,
+.ps-run-controls,
+.ps-button-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+/* 설정 라벨은 캡션이 컨트롤 위에 쌓이므로, 캡션 없는 버튼과는 아래 선을 맞춘다. */
+.ps-settings {
+  align-items: end;
+}
+
+.ps-section-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ps-settings label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.9rem;
+}
+
+.ps-settings input[type="number"] {
+  width: 7rem;
+}
+
+.ps-inline-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.ps-wide-field {
+  flex: 1 1 18rem;
+}
+
+.ps-wide-field input {
+  width: 100%;
+}
+
+.ps-settings > .ps-note,
+.ps-run-controls > .ps-note,
+.ps-settings > .ps-input-error {
+  flex-basis: 100%;
+}
+
+.ps-note {
+  margin: 0.5rem 0;
+  color: var(--color-ink-2);
+  font-size: 0.8rem;
+}
+
+.ps-input-error {
+  padding: 0.65rem 0.8rem;
+  border-left: 4px solid #b4233b;
+  background: #fff0f1;
+  color: #701329;
+}
+
+.ps-section-title {
+  justify-content: space-between;
+}
+
+.strategy-chip {
+  padding: 0.25rem 0.65rem;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.lock-chip {
+  color: #a52a43;
+}
+
+.change-chip {
+  color: #9a5b00;
+}
+
+.sort-chip {
+  color: #6331ba;
+}
+
+.ps-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.3rem;
+  padding: 0.8rem 0;
+  border-block: 1px solid var(--color-line);
+}
+
+.ps-stats div {
+  min-width: 0;
+}
+
+.ps-stats dt {
+  color: var(--color-ink-2);
+  font-size: 0.8rem;
+}
+
+.ps-stats dd {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.ps-progress-label {
+  display: grid;
+  grid-template-columns: auto minmax(5rem, 1fr) auto;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 1rem 0;
+  font-size: 0.82rem;
+}
+
+.ps-progress-label progress {
+  width: 100%;
+  height: 0.8rem;
+  accent-color: #b54a0b;
+}
+
+.ps-result {
+  margin: 0.8rem 0;
+  padding: 0.8rem;
+  border-left: 4px solid #b54a0b;
+  background: #fff0b8;
+}
+
+.lock-visual {
+  position: relative;
+  display: grid;
+  justify-content: center;
+  min-height: 210px;
+  padding-top: 50px;
+}
+
+.lock-shackle {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  width: 128px;
+  height: 120px;
+  transform: translateX(-50%);
+  border: 16px solid #69758b;
+  border-bottom: 0;
+  border-radius: 70px 70px 0 0;
+  transition: transform 450ms var(--ease-out-soft);
+}
+
+.lock-scene.is-open .lock-shackle {
+  transform: translate(-24%, -14px) rotate(18deg);
+}
+
+.lock-body {
+  z-index: 1;
+  align-self: end;
+  padding: 1.2rem;
+  border: 3px solid #6d260b;
+  border-radius: 12px;
+  background: #d6591f;
+  box-shadow: 0 8px 0 #8a3513;
+}
+
+.lock-dials {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.lock-dial {
+  display: grid;
+  width: clamp(42px, 10vw, 58px);
+  aspect-ratio: 0.78;
+  place-items: center;
+  border: 2px solid #38445c;
+  border-radius: 7px;
+  background: linear-gradient(#d9dee8, #fff 45%, #c3cbd8);
+  font-size: clamp(1.5rem, 5vw, 2rem);
+  font-weight: 700;
+  transition: transform 180ms var(--ease-out-soft);
+}
+
+.coin-shelf,
+.coin-tray {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 68px;
+  margin: 0.75rem 0;
+  padding: 0.7rem;
+  border: 1px dashed #a5b1c5;
+  border-radius: 9px;
+}
+
+.coin-tray {
+  background: #f7ead1;
+  box-shadow: inset 0 -5px 0 #d9b879;
+}
+
+.change-coin {
+  display: grid;
+  width: 52px;
+  height: 52px;
+  place-items: center;
+  border: 2px solid var(--coin-edge);
+  border-radius: 50%;
+  background: var(--coin-face);
+  box-shadow: inset 0 0 0 4px var(--coin-ring);
+  color: var(--coin-ink);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+/* 액면가가 큰 쪽이 tier 0. 금액값이 아니라 순위로 칠해야 동전 구성이 바뀌어도 색이 겹치지 않는다. */
+.change-coin[data-tier="0"] {
+  --coin-face: #f2cc67;
+  --coin-ring: #ffe7a5;
+  --coin-edge: #95610e;
+  --coin-ink: #533706;
+}
+
+.change-coin[data-tier="1"] {
+  --coin-face: #cbd6e6;
+  --coin-ring: #edf2f9;
+  --coin-edge: #51637e;
+  --coin-ink: #26364d;
+}
+
+.change-coin[data-tier="2"] {
+  --coin-face: #eaa987;
+  --coin-ring: #fbdccb;
+  --coin-edge: #9c4a22;
+  --coin-ink: #5b2810;
+}
+
+.change-coin[data-tier="3"] {
+  --coin-face: #9fd8b4;
+  --coin-ring: #d9f2e3;
+  --coin-edge: #2f7b52;
+  --coin-ink: #16412c;
+}
+
+.change-coin[data-tier="4"] {
+  --coin-face: #c3b3e8;
+  --coin-ring: #e6dffa;
+  --coin-edge: #5b3fa3;
+  --coin-ink: #2f2059;
+}
+
+.change-coin.available {
+  opacity: 0.7;
+}
+
+.change-coin.chosen {
+  animation: coin-drop 260ms var(--ease-out-soft);
+}
+
+@keyframes coin-drop {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+}
+
+.optimal-row {
+  display: grid;
+  gap: 0.25rem;
+  margin-top: 1rem;
+  padding: 0.8rem;
+  border: 1px solid #8ba3cf;
+  border-radius: 8px;
+  background: #edf3ff;
+}
+
+.optimal-row.different {
+  border-color: #d8952d;
+  background: #fff5df;
+}
+
+.sort-workspace {
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 0.75rem 0 0.4rem;
+}
+
+.sort-depth-row {
+  display: flex;
+  width: max-content;
+  min-width: 100%;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.55rem;
+  border-bottom: 1px solid var(--color-line);
+  opacity: 0.58;
+}
+
+.sort-depth-row.current:last-child,
+.sort-depth-row:first-child {
+  opacity: 1;
+}
+
+.sort-depth-row > strong {
+  width: 6rem;
+  flex: 0 0 6rem;
+  color: var(--color-ink-2);
+  font-size: 0.72rem;
+}
+
+.sort-groups,
+.sort-card-row {
+  display: flex;
+  align-items: center;
+  gap: 0.32rem;
+}
+
+.sort-groups {
+  gap: 0.65rem;
+}
+
+.sort-card {
+  display: grid;
+  width: 38px;
+  height: 48px;
+  flex: 0 0 38px;
+  place-items: center;
+  border: 2px solid #52617c;
+  border-radius: 5px;
+  background: white;
+  box-shadow: 0 2px 0 #c5ccd8;
+  font-size: 0.82rem;
+  font-weight: 700;
+  transition:
+    transform 220ms var(--ease-out-soft),
+    background 220ms;
+}
+
+.sort-card.active {
+  transform: translateY(-5px);
+  border-color: #6331ba;
+  background: #eee5ff;
+}
+
+.ps-step-log summary {
+  cursor: pointer;
+  padding: 0.4rem 0;
+}
+
+.ps-step-log ol {
+  max-height: 250px;
+  overflow-y: auto;
+  font-size: 0.84rem;
+}
+
+.ps-step-log li {
+  padding: 0.4rem;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.ps-step-log li.latest {
+  background: #edf3ff;
+  font-weight: 600;
+}
+
+.ps-concepts,
+.ps-record-charts {
+  margin-top: 2.5rem;
+}
+
+.ps-concept-grid,
+.ps-chart-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.ps-chart-grid > :last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
+.ps-quiz {
+  min-width: 0;
+  margin: 1.25rem 0 0;
+  padding: 0;
+  border: 0;
+}
+
+.ps-quiz + .ps-quiz {
+  margin-top: 1.7rem;
+}
+
+.ps-quiz legend {
+  margin-bottom: 0.7rem;
+  padding: 0;
+  font-weight: 500;
+}
+
+.ps-feedback {
+  margin-top: 0.7rem;
+  padding: 0.5rem;
+  background: #fff0b8;
+}
+
+.problem-page table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.problem-page th,
+.problem-page td {
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--color-line);
+  text-align: left;
+}
+
+.ps-table-scroll {
+  overflow-x: auto;
+}
+
+.ps-table-scroll table {
+  min-width: 700px;
+}
+
+.ps-empty {
+  padding: 1.5rem 0;
+}
+
+.ps-chart {
+  width: 100%;
+  height: 340px;
+  min-width: 0;
+}
+
+.ps-share-note {
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 767px) {
+  .ps-tabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ps-tabs button {
+    padding-inline: 0.35rem;
+    font-size: 0.84rem;
+  }
+
+  .ps-concept-grid,
+  .ps-chart-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ps-chart-grid > :last-child:nth-child(odd) {
+    grid-column: auto;
+  }
+
+  .ps-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .ps-stats > :last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+
+  .ps-run-controls label {
+    flex-basis: 100%;
+  }
+
+  .ps-progress-label {
+    grid-template-columns: 1fr auto;
+  }
+
+  .ps-progress-label progress {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lock-shackle,
+  .lock-dial,
+  .sort-card {
+    transition: none;
+  }
+
+  .change-coin.chosen {
+    animation: none;
+  }
+}

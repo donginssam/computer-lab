@@ -1,6 +1,6 @@
 # 아키텍처
 
-[문서 목록](README.md) · [양팔저울 구현](theory/balance-scale.md)
+[문서 목록](README.md) · [양팔저울 이론](theory/balance-scale.md) · [문제 해결 전략 이론](theory/problem-solving.md)
 
 ## 책임 분리
 
@@ -24,6 +24,14 @@ src/
 │   ├── engine/                     타입·저울 판정·알고리즘·이론값
 │   ├── state/                      reducer·실행 훅·기록 저장 훅·저장 형식
 │   └── components/                 설정·저울·결과·비교·표·그래프·개념
+├── simulators/problem-solving/
+│   ├── index.tsx                   전략 URL·직접 입력·화면 조립
+│   ├── strategies.ts · copy.ts     전략 탭과 학생용 공통 문구
+│   ├── simulator.css               자물쇠·동전·카드 장면과 반응형 배치
+│   ├── shared/                     공용 실행기·기록·표·그래프·질문
+│   ├── lock/                       시행착오 자물쇠 엔진과 화면
+│   ├── change/                     욕심쟁이 거스름돈 엔진과 화면
+│   └── sort/                       합병 정렬 trace 엔진과 화면
 └── test/setup.ts                   테스트 환경 초기화
 ```
 
@@ -33,16 +41,17 @@ src/
 
 ## 페이지와 경로
 
-| 경로                             | 페이지 / 상태                        |
-| -------------------------------- | ------------------------------------ |
-| `/`                              | 홈: 단원 타일과 시뮬레이터 안내      |
-| `/units/computing-system`        | 컴퓨팅 시스템, 시뮬레이터 준비 중    |
-| `/units/data`                    | 데이터, 시뮬레이터 준비 중           |
-| `/units/algorithm`               | 알고리즘과 프로그래밍, 양팔저울 진입 |
-| `/units/ai`                      | 인공지능, 시뮬레이터 준비 중         |
-| `/units/digital-culture`         | 디지털 문화, 시뮬레이터 준비 중      |
-| `/units/algorithm/balance-scale` | 양팔저울 시뮬레이터                  |
-| 일치하지 않는 경로               | NotFoundPage                         |
+| 경로                               | 페이지 / 상태                          |
+| ---------------------------------- | -------------------------------------- |
+| `/`                                | 홈: 단원 타일과 시뮬레이터 안내        |
+| `/units/computing-system`          | 컴퓨팅 시스템, 시뮬레이터 준비 중      |
+| `/units/data`                      | 데이터, 시뮬레이터 준비 중             |
+| `/units/algorithm`                 | 알고리즘과 프로그래밍, 시뮬레이터 목록 |
+| `/units/ai`                        | 인공지능, 시뮬레이터 준비 중           |
+| `/units/digital-culture`           | 디지털 문화, 시뮬레이터 준비 중        |
+| `/units/algorithm/balance-scale`   | 양팔저울 시뮬레이터                    |
+| `/units/algorithm/problem-solving` | 문제 해결 전략 실험실                  |
+| 일치하지 않는 경로                 | NotFoundPage                           |
 
 [router.tsx](../src/router.tsx)는 `AppShell` 아래 중첩 라우트를 선언합니다. `basename`은 `import.meta.env.BASE_URL`에서 마지막 `/`를 제거한 값입니다. 프로젝트 하위 배포에서는 [배포 설정](deployment.md)과 일치해야 합니다.
 
@@ -69,6 +78,18 @@ URL 설정 → BalanceScalePage → Simulation → useSimulation
 무작위 위치 생성, 타이머, 브라우저 저장은 엔진 밖에서 처리합니다. 비교 모드는 같은 가짜 동전 위치로 생성한 두 엔진 상태를 사용합니다. Recharts 컴포넌트는 기록 탭에서 `lazy`와 `Suspense`로 불러옵니다.
 
 `Simulation`은 실행 제어와 완료 기록 수집을 담당하고, `ModeTabs`는 모드 선택과 키보드 이동을 담당합니다. `useRecords`는 저장·삭제와 저장 실패 상태를 관리합니다. `mergeRecords`는 ID 중복을 제거하고 공통 제한 `MAX_RECORDS`에 맞춰 최신 기록만 남깁니다.
+
+문제 해결 전략 실험실은 세 엔진을 하나씩 같은 실행기에 연결합니다. `shared/stepper.ts`의 reducer가 tick 단위 진행과 되감기를 맡고, 각 전략의 `Experiment` 컴포넌트가 완료 결과를 한 번만 기록합니다. 자물쇠는 한 tick에 여러 시도를 묶을 수 있고, 합병 정렬은 초기화할 때 만든 짧은 trace의 현재 위치만 이동합니다. 기록은 `strategy` 판별 필드가 있는 합 타입으로 저장하며 그래프는 기록 탭에서만 지연 로딩합니다.
+
+```text
+URL 설정 → ProblemSolvingPage → 전략 Experiment → 공용 stepper → 순수 엔진
+                                      ↓ 완료
+                          전략별 Experiment → localStorage
+                                      ↓
+                               기록 표 + 지연 로딩 그래프
+```
+
+직접 입력한 비밀번호·카드, 무작위 결과, 현재 진행 단계는 URL에 넣지 않습니다. `docs/`와 개발 계획 파일은 앱에서 import하지 않으므로 문서의 존재 여부가 빌드 결과를 바꾸지 않습니다.
 
 ## 스타일 재사용
 

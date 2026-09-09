@@ -1,5 +1,6 @@
 import { Link, NavLink } from "react-router"
 import { units, unitPath, unitStyle } from "../../content/units"
+import { PwaInstallButton } from "../PwaInstallButton"
 
 function Mark() {
   return (
@@ -24,15 +25,17 @@ export function Header() {
       >
         본문으로 건너가기
       </a>
-      <div className="mx-auto flex max-w-[1100px] flex-wrap items-center gap-x-8 gap-y-2 px-5 py-3 sm:px-8">
+      <div className="mx-auto flex max-w-[1100px] flex-wrap items-center gap-x-3 gap-y-2 px-5 py-3 sm:px-8">
         <Link to="/" className="flex items-center gap-2.5">
           <Mark />
-          <span className="font-display text-[1.45rem] leading-none">동인쌤의 컴퓨터실</span>
+          <span className="font-display text-[1.05rem] leading-none sm:text-[1.45rem]">
+            동인쌤의 컴퓨터실
+          </span>
         </Link>
 
         <nav
           aria-label="단원"
-          className="-mx-5 w-[calc(100%+2.5rem)] overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:w-auto sm:flex-1"
+          className="order-3 -mx-5 w-[calc(100%+2.5rem)] overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:w-full min-[1100px]:order-none min-[1100px]:w-auto min-[1100px]:min-w-0 min-[1100px]:flex-1"
         >
           <ul className="flex min-w-max gap-1 px-5 sm:justify-end sm:px-0">
             {units.map(u => (
@@ -53,6 +56,9 @@ export function Header() {
             ))}
           </ul>
         </nav>
+        <div className="ml-auto shrink-0">
+          <PwaInstallButton />
+        </div>
       </div>
     </header>
   )

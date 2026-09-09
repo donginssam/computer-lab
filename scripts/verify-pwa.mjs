@@ -78,10 +78,24 @@ if (!scripts.some(script => script.includes(`${publicBase}sw.js`))) {
   throw new Error(`Service worker registration does not use the public base path: ${publicBase}`)
 }
 
-for (const asset of ["index.html", "manifest.webmanifest", "pwa-192x192.png", "pwa-512x512.png"]) {
+// Lazy-loaded charts must work even when first opened after going offline.
+const offlineAssets = assetNames
+  .filter(file => /\.(?:js|css|woff2)$/.test(file))
+  .map(file => `assets/${file}`)
+
+for (const asset of [
+  "index.html",
+  "manifest.webmanifest",
+  ...manifest.icons.map(icon => icon.src),
+  ...offlineAssets,
+]) {
   if (!worker.includes(`url:${JSON.stringify(asset)}`)) {
     throw new Error(`Service worker does not precache ${asset}`)
   }
+}
+
+if (!worker.includes('createHandlerBoundToURL("index.html")')) {
+  throw new Error("Service worker must serve index.html for offline deep links")
 }
 
 if (index !== fallback) {

@@ -11,6 +11,12 @@
   min-height: 44px;
   max-width: 100%;
   font: inherit;
+  /* font: inherit이 본문 line-height(1.6)까지 가져와 컨트롤마다 높이가 달라진다. */
+  line-height: 1.2;
+}
+/* 브라우저가 select에는 line-height를 적용하지 않아, 높이를 직접 맞춘다. */
+.balance-page select {
+  height: 44px;
 }
 .balance-page button {
   cursor: pointer;

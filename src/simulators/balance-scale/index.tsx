@@ -42,7 +42,7 @@ export function BalanceScalePage() {
         items={[{ label: unit.title, to: unitPath(unit) }, { label: "양팔저울로 가짜 동전 찾기" }]}
       />
       <header className="mt-6">
-        <p className="small-note">알고리즘 실험실 · 01</p>
+        <p className="small-note">알고리즘 실험실 · 02</p>
         <h1 className="text-[clamp(2rem,5vw,3rem)]">양팔저울로 가짜 동전 찾기</h1>
         <p className="mt-4">
           겉모양이 같은 동전 여러 개 중 <strong>진짜보다 가벼운 가짜 동전이 딱 하나</strong>
