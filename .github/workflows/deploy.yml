@@ -2,8 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -16,7 +15,13 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # CI를 이 워크플로의 job으로 호출한다. needs가 배포를 CI 성공에 고정하므로,
+  # 검사와 배포가 같은 커밋 위에서 순서대로 일어난다.
+  ci:
+    uses: ./.github/workflows/ci.yml
+
   deploy:
+    needs: ci
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -37,21 +42,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Test
-        run: pnpm test
-
-      - name: Lint
-        run: pnpm lint
-
       - name: Configure GitHub Pages
         id: pages
         uses: actions/configure-pages@v6
 
       - name: Build
         run: pnpm build --base="${{ steps.pages.outputs.base_path }}/"
-
-      - name: Verify PWA
-        run: pnpm verify:pwa
 
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v5

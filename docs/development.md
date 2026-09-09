@@ -25,6 +25,7 @@ pnpm dev
 | `pnpm test`         | `vitest run`: 전체 테스트 1회                                     |
 | `pnpm test:watch`   | `vitest`: 감시 모드                                               |
 | `pnpm lint`         | `oxlint`: 정적 검사                                               |
+| `pnpm check`        | `pnpm lint`과 `pnpm format:check`를 함께 실행                     |
 | `pnpm format`       | `prettier --write .`: 저장소 전체 포맷 적용                       |
 | `pnpm format:check` | `prettier --check .`: 저장소 전체 포맷 검사                       |
 
@@ -40,7 +41,8 @@ pnpm dev
 | [tsconfig.json](../tsconfig.json)                               | 앱·테스트·Vite 설정의 공통 TypeScript 설정         |
 | [.prettierrc](../.prettierrc)                                   | 세미콜론 없음, 한 인자 화살표 괄호 생략, 줄 폭 100 |
 | [src/test/setup.ts](../src/test/setup.ts)                       | 테스트 공통 초기화                                 |
-| [.github/workflows/deploy.yml](../.github/workflows/deploy.yml) | CI 검사와 Pages 배포                               |
+| [.github/workflows/ci.yml](../.github/workflows/ci.yml)         | 모든 커밋의 검사·테스트·빌드·PWA 확인              |
+| [.github/workflows/deploy.yml](../.github/workflows/deploy.yml) | CI 성공 후 Pages 배포                              |
 
 TypeScript 설정은 하나로 관리합니다. 별도 Node 실행 프로그램 없이 Vite가 설정 파일도 번들링하므로 앱과 설정에 `moduleResolution: bundler`를 적용합니다. DOM·Node 타입을 함께 포함하며 `strict` 검사를 켭니다. 독립적인 서버 프로그램이 생기면 실행 환경별 설정 분리를 검토합니다.
 

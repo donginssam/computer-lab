@@ -22,6 +22,7 @@ React 19 · TypeScript 6 · Vite 8 · React Router 8 · Tailwind CSS 4 · Rechar
 자주 쓰는 검사와 빌드 명령입니다.
 
 ```bash
+pnpm check         # oxlint + Prettier 검사
 pnpm lint          # oxlint
 pnpm test          # 엔진 전수 검사 및 상태/UI 검증
 pnpm test:watch    # 테스트 감시 실행
