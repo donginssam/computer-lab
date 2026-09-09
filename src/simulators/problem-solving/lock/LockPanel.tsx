@@ -1,6 +1,8 @@
+import { blurOnEnter } from "../../shared/blurOnEnter"
+import { DIGIT_MAX, DIGIT_MIN, type LockPlacement } from "../bounds"
 import { formatCode, lockLimit } from "./engine"
 
-export type LockPlacement = "worst" | "random" | "manual"
+const digitChoices = Array.from({ length: DIGIT_MAX - DIGIT_MIN + 1 }, (_, i) => DIGIT_MIN + i)
 
 export function LockPanel({
   digits,
@@ -16,11 +18,11 @@ export function LockPanel({
   setManualSecret: (secret: number) => void
 }) {
   return (
-    <section className="ps-card ps-settings" aria-label="자물쇠 실험 설정">
+    <section className="sim-card ps-settings" aria-label="자물쇠 실험 설정">
       <label>
         자릿수{" "}
         <select value={digits} onChange={event => change({ d: event.target.value })}>
-          {[1, 2, 3, 4].map(value => (
+          {digitChoices.map(value => (
             <option value={value} key={value}>
               {value}자리
             </option>
@@ -50,13 +52,11 @@ export function LockPanel({
               event.currentTarget.value = formatCode(secret, digits)
               setManualSecret(secret)
             }}
-            onKeyDown={event => {
-              if (event.key === "Enter") event.currentTarget.blur()
-            }}
+            onKeyDown={blurOnEnter}
           />
         </label>
       )}
-      <p className="ps-note">
+      <p className="small-note">
         0부터 차례로 시도합니다. 비밀번호는 실험이 끝날 때까지 장면에 표시하지 않습니다. 직접 입력한
         값은 주소에 저장하지 않습니다.
       </p>

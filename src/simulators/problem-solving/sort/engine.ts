@@ -1,6 +1,8 @@
+import { CARD_MAX, CARD_MIN } from "../bounds"
 import type { StepEngine } from "../shared/stepper"
 
 export type SortOrder = "random" | "worst" | "reverse" | "manual"
+export const sortOrders: readonly SortOrder[] = ["random", "worst", "reverse", "manual"]
 export type SortRange = [start: number, end: number]
 
 interface SortStepBase {
@@ -57,7 +59,8 @@ export const mergeSortComparisonLimit = (n: number) => {
 }
 
 export function worstCaseOrder(n: number) {
-  if (!Number.isInteger(n) || n < 2 || n > 16) throw new RangeError("카드 수는 2~16이어야 합니다.")
+  if (!Number.isInteger(n) || n < CARD_MIN || n > CARD_MAX)
+    throw new RangeError(`카드 수는 ${CARD_MIN}~${CARD_MAX}이어야 합니다.`)
   const arrange = (values: number[]): number[] => {
     if (values.length <= 1) return values
     const leftParity = values.length % 2 === 0 ? 0 : 1

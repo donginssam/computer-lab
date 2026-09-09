@@ -35,7 +35,7 @@ it("자동 실행은 속도 변경, 일시 정지, 탭 전환 시 타이머를 �
   fireEvent.click(screen.getByRole("button", { name: "▶ 자동 실행" }))
   act(() => vi.advanceTimersByTime(800))
   expect(screen.getByText("단계 기록 (1)")).toBeInTheDocument()
-  fireEvent.change(screen.getByLabelText("속도"), { target: { value: "400" } })
+  fireEvent.change(screen.getByLabelText("진행 속도"), { target: { value: "400:1" } })
   act(() => vi.advanceTimersByTime(400))
   expect(screen.getByText("단계 기록 (2)")).toBeInTheDocument()
   fireEvent.click(screen.getByRole("button", { name: "Ⅱ 일시 정지" }))
@@ -68,7 +68,7 @@ it("단축키는 입력 중 방해하지 않고 본문에서 실행된다", () =
 it("N=100 빠른 자동 실행이 50회에서 종료하고 기록을 저장한다", () => {
   vi.useFakeTimers()
   open("n=100&algorithm=sequential-pair")
-  fireEvent.change(screen.getByLabelText("속도"), { target: { value: "400" } })
+  fireEvent.change(screen.getByLabelText("진행 속도"), { target: { value: "400:1" } })
   fireEvent.click(screen.getByRole("button", { name: "▶ 자동 실행" }))
   for (let i = 0; i < 50; i++) act(() => vi.advanceTimersByTime(400))
   expect(screen.getByRole("status")).toHaveTextContent("저울질 50회")

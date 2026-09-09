@@ -1,6 +1,18 @@
-import { normalizeCoins, type CoinSetId } from "../change/engine"
+import { MAX_RECORDS, readStoredRecords } from "../../shared/records"
+import {
+  CARD_MAX,
+  CARD_MIN,
+  DIGIT_MAX,
+  DIGIT_MIN,
+  isAmountInRange,
+  lockPlacements,
+  type LockPlacement,
+} from "../bounds"
+import { coinSetIds, normalizeCoins, type CoinSetId } from "../change/engine"
 import { lockLimit } from "../lock/engine"
-import { mergeSortComparisonLimit, type SortOrder } from "../sort/engine"
+import { mergeSortComparisonLimit, sortOrders, type SortOrder } from "../sort/engine"
+
+export { MAX_RECORDS }
 
 interface BaseExperiment {
   id: string
@@ -10,7 +22,7 @@ interface BaseExperiment {
 export interface LockExperimentRecord extends BaseExperiment {
   strategy: "lock"
   digits: number
-  placement: "worst" | "random" | "manual"
+  placement: LockPlacement
   secret: number
   attempts: number
 }
@@ -35,17 +47,6 @@ export interface SortExperimentRecord extends BaseExperiment {
 export type Experiment = LockExperimentRecord | ChangeExperimentRecord | SortExperimentRecord
 
 export const STORAGE_KEY = "computer-lab.problem-solving.v1"
-export const MAX_RECORDS = 500
-
-export function mergeRecords(current: Experiment[], additions: Experiment[]) {
-  const ids = new Set(current.map(record => record.id))
-  const unique = additions.filter(record => {
-    if (ids.has(record.id)) return false
-    ids.add(record.id)
-    return true
-  })
-  return [...current, ...unique].slice(-MAX_RECORDS)
-}
 
 function validBase(value: unknown): value is Record<string, unknown> & BaseExperiment {
   if (!value || typeof value !== "object") return false
@@ -59,9 +60,9 @@ function validLock(record: Record<string, unknown>) {
   return (
     record.strategy === "lock" &&
     Number.isInteger(record.digits) &&
-    Number(record.digits) >= 1 &&
-    Number(record.digits) <= 4 &&
-    ["worst", "random", "manual"].includes(String(record.placement)) &&
+    Number(record.digits) >= DIGIT_MIN &&
+    Number(record.digits) <= DIGIT_MAX &&
+    lockPlacements.includes(String(record.placement) as LockPlacement) &&
     Number.isInteger(record.secret) &&
     Number(record.secret) >= 0 &&
     Number(record.secret) < lockLimit(Number(record.digits)) &&
@@ -73,11 +74,8 @@ function validLock(record: Record<string, unknown>) {
 function validChange(record: Record<string, unknown>) {
   if (
     record.strategy !== "change" ||
-    !Number.isInteger(record.amount) ||
-    Number(record.amount) < 10 ||
-    Number(record.amount) > 9990 ||
-    Number(record.amount) % 10 !== 0 ||
-    !["korea", "labA", "labB"].includes(String(record.coinSet)) ||
+    !isAmountInRange(Number(record.amount)) ||
+    !coinSetIds.includes(String(record.coinSet) as CoinSetId) ||
     !Array.isArray(record.coins) ||
     !Number.isInteger(record.greedyCount) ||
     Number(record.greedyCount) < 0 ||
@@ -101,9 +99,9 @@ function validSort(record: Record<string, unknown>) {
   return (
     record.strategy === "sort" &&
     Number.isInteger(record.n) &&
-    Number(record.n) >= 2 &&
-    Number(record.n) <= 16 &&
-    ["random", "worst", "reverse", "manual"].includes(String(record.order)) &&
+    Number(record.n) >= CARD_MIN &&
+    Number(record.n) <= CARD_MAX &&
+    sortOrders.includes(String(record.order) as SortOrder) &&
     Number.isInteger(record.comparisons) &&
     Number(record.comparisons) >= 1 &&
     Number(record.comparisons) <= mergeSortComparisonLimit(Number(record.n))
@@ -117,10 +115,5 @@ export function isExperiment(value: unknown): value is Experiment {
 }
 
 export function readRecords() {
-  try {
-    const value: unknown = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "[]")
-    return Array.isArray(value) ? value.filter(isExperiment).slice(-MAX_RECORDS) : []
-  } catch {
-    return []
-  }
+  return readStoredRecords(STORAGE_KEY, isExperiment)
 }

@@ -2,7 +2,7 @@ import { useState } from "react"
 
 export interface QuizQuestion {
   text: string
-  options: string[]
+  options: readonly string[]
   answer: number
   why: string
 }
@@ -10,14 +10,14 @@ export interface QuizQuestion {
 export function Quiz({ questions }: { questions: readonly QuizQuestion[] }) {
   const [answers, setAnswers] = useState<Record<number, number>>({})
   return (
-    <section className="ps-card ps-quiz-card">
+    <section className="sim-card">
       <h3>생각을 정리해 보세요</h3>
       {questions.map((question, questionIndex) => (
-        <fieldset className="ps-quiz" key={question.text}>
+        <fieldset className="quiz" key={question.text}>
           <legend>
             {questionIndex + 1}. {question.text}
           </legend>
-          <div className="ps-button-row">
+          <div className="button-row">
             {question.options.map((option, optionIndex) => (
               <button
                 type="button"
@@ -32,7 +32,7 @@ export function Quiz({ questions }: { questions: readonly QuizQuestion[] }) {
             ))}
           </div>
           {answers[questionIndex] !== undefined && (
-            <p className="ps-feedback" role="status">
+            <p className="quiz-feedback" role="status">
               {answers[questionIndex] === question.answer ? "✓ 맞아요!" : "다시 생각해 보세요."}{" "}
               {question.why}
             </p>

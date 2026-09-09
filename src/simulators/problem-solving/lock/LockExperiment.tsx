@@ -1,12 +1,13 @@
-import { useCallback, useEffect, useRef } from "react"
-import { RunControls, type SpeedChoice } from "../shared/RunControls"
+import { useCallback } from "react"
+import { RunControls, type SpeedChoice } from "../../shared/RunControls"
+import { useSaveOnce } from "../../shared/useSaveOnce"
 import { StepLog } from "../shared/StepLog"
 import type { Experiment } from "../shared/records"
 import { useStepper } from "../shared/useStepper"
 import { LockConcept } from "./LockConcept"
 import { LockView } from "./LockView"
 import { formatCode, lockEngine, lockLimit, type LockOptions } from "./engine"
-import type { LockPlacement } from "./LockPanel"
+import type { LockPlacement } from "../bounds"
 
 const lockSpeeds: readonly SpeedChoice[] = [
   { label: "천천히 (1회씩)", speed: 800, batch: 1 },
@@ -36,27 +37,28 @@ export function LockExperiment({
     if (placement === "manual") return manualSecret
     return Math.floor(Math.random() * lockLimit(digits))
   }, [digits, placement, manualSecret])
-  const { run, dispatch, done, step, reset } = useStepper({
+  const { run, dispatch, done, step, reset, toggle } = useStepper({
     engine: lockEngine,
     options,
     createSeed,
     initialBatch,
   })
-  const saved = useRef(new Set<string>())
-  useEffect(() => {
-    if (!done || saved.current.has(run.runId)) return
-    saved.current.add(run.runId)
-    save([
-      {
-        id: `${run.runId}:lock`,
-        strategy: "lock",
-        digits,
-        placement,
-        secret: run.state.secret,
-        attempts: run.state.attempts,
-      },
-    ])
-  }, [done, run, digits, placement, save])
+
+  useSaveOnce<Experiment>(
+    save,
+    done
+      ? [
+          {
+            id: `${run.runId}:lock`,
+            strategy: "lock",
+            digits,
+            placement,
+            secret: run.state.secret,
+            attempts: run.state.attempts,
+          },
+        ]
+      : [],
+  )
 
   const entries = run.state.recent.map(value =>
     value === run.state.secret
@@ -73,13 +75,17 @@ export function LockExperiment({
         speed={run.speed}
         batch={run.batch}
         speeds={lockSpeeds}
-        dispatch={dispatch}
-        step={step}
-        reset={reset}
-        onSpeedChange={(_, batch) => onBatchChange(batch)}
+        onStep={step}
+        onBack={() => dispatch({ type: "back" })}
+        onReset={reset}
+        onToggle={toggle}
+        onSpeed={(speed, batch) => {
+          dispatch({ type: "speed", speed, batch })
+          onBatchChange(batch)
+        }}
       />
       <LockView state={run.state} />
-      <section className="ps-card">
+      <section className="sim-card">
         <StepLog entries={entries} total={run.state.attempts} />
       </section>
       <LockConcept />

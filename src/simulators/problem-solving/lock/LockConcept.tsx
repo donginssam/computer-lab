@@ -1,4 +1,4 @@
-import { Quiz } from "../shared/Quiz"
+import { Quiz } from "../../shared/Quiz"
 
 const questions = [
   {
@@ -17,17 +17,17 @@ const questions = [
 
 export function LockConcept() {
   return (
-    <section className="ps-concepts" aria-labelledby="lock-concept-title">
+    <section className="concepts" aria-labelledby="lock-concept-title">
       <h2 id="lock-concept-title">왜 반드시 찾지만 오래 걸릴까?</h2>
-      <div className="ps-concept-grid">
-        <article className="ps-card">
+      <div className="concept-grid">
+        <article className="sim-card">
           <h3>가능한 답을 하나씩 모두 확인</h3>
           <p>
             시행착오 방법은 빠뜨리지 않고 차례로 시도합니다. 답이 가능한 범위 안에 있다면 언젠가는
             반드시 찾습니다. 앞에서 확인한 답을 다시 볼 필요도 없습니다.
           </p>
         </article>
-        <article className="ps-card">
+        <article className="sim-card">
           <h3>자릿수 하나가 만드는 10배</h3>
           <table>
             <thead>
@@ -49,9 +49,7 @@ export function LockConcept() {
           </table>
         </article>
       </div>
-      <Quiz
-        questions={questions.map(question => ({ ...question, options: [...question.options] }))}
-      />
+      <Quiz questions={questions} />
     </section>
   )
 }

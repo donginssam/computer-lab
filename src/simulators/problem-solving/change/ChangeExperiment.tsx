@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useMemo, useRef } from "react"
-import { RunControls } from "../shared/RunControls"
+import { useCallback, useMemo } from "react"
+import { RunControls } from "../../shared/RunControls"
+import { useSaveOnce } from "../../shared/useSaveOnce"
 import { StepLog } from "../shared/StepLog"
 import type { Experiment } from "../shared/records"
 import { useStepper } from "../shared/useStepper"
@@ -35,30 +36,30 @@ export function ChangeExperiment({
 }) {
   const options = useMemo<ChangeOptions>(() => ({ amount, coins }), [amount, coins])
   const createSeed = useCallback(() => 0, [])
-  const { run, dispatch, done, step, reset } = useStepper({
+  const { run, dispatch, done, step, reset, toggle } = useStepper({
     engine: changeEngine,
     options,
     createSeed,
   })
   const optimal = useMemo(() => optimalChange(amount, coins), [amount, coins])
-  const saved = useRef(new Set<string>())
 
-  useEffect(() => {
-    if (!done || saved.current.has(run.runId)) return
-    saved.current.add(run.runId)
-    save([
-      {
-        id: `${run.runId}:change`,
-        strategy: "change",
-        amount,
-        coinSet,
-        coins,
-        greedyCount: run.state.used.length,
-        optimalCount: optimal?.count ?? null,
-        stuck: run.state.stuck,
-      },
-    ])
-  }, [done, run, amount, coinSet, coins, optimal, save])
+  useSaveOnce<Experiment>(
+    save,
+    done
+      ? [
+          {
+            id: `${run.runId}:change`,
+            strategy: "change",
+            amount,
+            coinSet,
+            coins,
+            greedyCount: run.state.used.length,
+            optimalCount: optimal?.count ?? null,
+            stuck: run.state.stuck,
+          },
+        ]
+      : [],
+  )
 
   const entries = changeStepEntries(run.state)
   return (
@@ -69,12 +70,14 @@ export function ChangeExperiment({
         tick={run.tick}
         speed={run.speed}
         batch={run.batch}
-        dispatch={dispatch}
-        step={step}
-        reset={reset}
+        onStep={step}
+        onBack={() => dispatch({ type: "back" })}
+        onReset={reset}
+        onToggle={toggle}
+        onSpeed={(speed, batch) => dispatch({ type: "speed", speed, batch })}
       />
       <ChangeView state={run.state} optimal={optimal} />
-      <section className="ps-card">
+      <section className="sim-card">
         <StepLog entries={entries} total={entries.length} />
       </section>
       <ChangeConcept />

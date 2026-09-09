@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { Quiz } from "../../shared/Quiz"
 import { algorithms } from "../engine"
 const sequential = algorithms["sequential-pair"]
 const divide = algorithms["divide-half"]
@@ -15,9 +15,8 @@ const questions = [
     answer: 0,
     why: "가짜 동전은 딱 하나뿐입니다. 저울에 올린 6개는 무게가 같으니, 저울 밖에 있던 1개가 진짜보다 가벼운 가짜 동전입니다.",
   },
-]
+] as const
 export function ConceptCards() {
-  const [answers, setAnswers] = useState<Record<number, number>>({})
   return (
     <section className="concepts">
       <h2>왜 이런 차이가 날까?</h2>
@@ -53,32 +52,7 @@ export function ConceptCards() {
           <p className="small-note">가장 많이 걸려도 이만큼 저울질합니다.</p>
         </article>
       </div>
-      <div className="sim-card">
-        <h3>생각을 정리해 보세요</h3>
-        {questions.map((q, i) => (
-          <fieldset className="quiz" key={q.text}>
-            <legend>
-              {i + 1}. {q.text}
-            </legend>
-            <div className="button-row">
-              {q.options.map((o, j) => (
-                <button
-                  key={o}
-                  aria-pressed={answers[i] === j}
-                  onClick={() => setAnswers(a => ({ ...a, [i]: j }))}
-                >
-                  {o}
-                </button>
-              ))}
-            </div>
-            {answers[i] !== undefined && (
-              <p role="status">
-                {answers[i] === q.answer ? "✓ 맞아요!" : "다시 생각해 보세요."} {q.why}
-              </p>
-            )}
-          </fieldset>
-        ))}
-      </div>
+      <Quiz questions={questions} />
     </section>
   )
 }

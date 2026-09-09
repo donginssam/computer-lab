@@ -14,15 +14,15 @@ export function LockView({ state }: { state: LockState }) {
   const total = lockLimit(state.digits)
   const code = formatCode(state.current, state.digits)
   return (
-    <section className={`ps-card lock-scene ${state.finished ? "is-open" : ""}`}>
-      <div className="ps-section-title">
+    <section className={`sim-card lock-scene ${state.finished ? "is-open" : ""}`}>
+      <div className="section-title">
         <div>
           <p className="ps-kicker">시행착오 방법</p>
           <h2>0부터 하나씩 돌려 보기</h2>
         </div>
         <span className="strategy-chip lock-chip">반드시 찾음</span>
       </div>
-      <dl className="ps-stats">
+      <dl className="stats">
         <div>
           <dt>시도 횟수</dt>
           <dd>{state.attempts.toLocaleString()}회</dd>
@@ -53,7 +53,7 @@ export function LockView({ state }: { state: LockState }) {
         <progress max={total} value={state.attempts} />
         <span>{((state.attempts / total) * 100).toFixed(state.digits >= 3 ? 1 : 0)}%</span>
       </label>
-      <p className="ps-result" role="status" aria-live="polite">
+      <p className="result" role="status" aria-live="polite">
         {state.finished
           ? `${formatCode(state.secret, state.digits)}에서 열렸습니다. ${state.attempts.toLocaleString()}회 시도했습니다.`
           : state.attempts

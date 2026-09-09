@@ -1,4 +1,5 @@
-import { useEffect, useRef } from "react"
+import { RunControls } from "../../shared/RunControls"
+import { useSaveOnce } from "../../shared/useSaveOnce"
 import { useSimulation } from "../state/useSimulation"
 import { activeAlgorithms, type Options } from "../state/reducer"
 import type { Experiment } from "../state/records"
@@ -14,61 +15,34 @@ export function Simulation({
   compare: boolean
   save: (records: Experiment[]) => void
 }) {
-  const { state, dispatch, done, step, reset } = useSimulation(options, compare)
-  const saved = useRef(new Set<string>())
-  useEffect(() => {
-    const ids = activeAlgorithms(options, compare)
-    const additions: Experiment[] = []
-    for (const algorithm of ids) {
-      const sim = state.pair[algorithm]
-      const id = `${state.runId}:${algorithm}`
-      if (sim.finished && !saved.current.has(id)) {
-        saved.current.add(id)
-        additions.push({
-          id,
-          n: options.n,
-          algorithm,
-          fakePlacement: options.placement,
-          fakeIndex: sim.fakeIndex,
-          comparisons: sim.comparisons,
-        })
-      }
-    }
-    if (additions.length) save(additions)
-  }, [state, options, compare, save])
+  const { state, dispatch, done, step, reset, toggle } = useSimulation(options, compare)
+
+  // 나란히 비교는 두 알고리즘이 서로 다른 시점에 끝나므로, 끝난 쪽부터 기록한다.
+  const finished = activeAlgorithms(options, compare)
+    .filter(algorithm => state.pair[algorithm].finished)
+    .map(algorithm => ({
+      id: `${state.runId}:${algorithm}`,
+      n: options.n,
+      algorithm,
+      fakePlacement: options.placement,
+      fakeIndex: state.pair[algorithm].fakeIndex,
+      comparisons: state.pair[algorithm].comparisons,
+    }))
+  useSaveOnce(save, finished)
+
   return (
     <>
-      <div className="sim-card button-row">
-        <label>
-          속도{" "}
-          <select
-            value={state.speed}
-            onChange={e => dispatch({ type: "speed", speed: Number(e.target.value) })}
-          >
-            <option value={400}>빠름 (0.4초)</option>
-            <option value={800}>보통 (0.8초)</option>
-            <option value={1500}>느림 (1.5초)</option>
-          </select>
-        </label>
-        <button onClick={reset}>초기화</button>
-        <button disabled={!state.tick} onClick={() => dispatch({ type: "back" })}>
-          ◀ 이전
-        </button>
-        <button disabled={done || state.running} onClick={step}>
-          다음 단계 ▶
-        </button>
-        <button
-          className="primary"
-          disabled={done}
-          onClick={() => dispatch({ type: "auto", running: !state.running })}
-        >
-          {state.running ? "Ⅱ 일시 정지" : "▶ 자동 실행"}
-        </button>
-        <p className="small-note">
-          단축키: Space 다음 단계 · R 초기화 · A 자동 실행/정지 (입력 칸이나 버튼을 클릭한 상태가
-          아닐 때)
-        </p>
-      </div>
+      <RunControls
+        running={state.running}
+        done={done}
+        tick={state.tick}
+        speed={state.speed}
+        onStep={step}
+        onBack={() => dispatch({ type: "back" })}
+        onReset={reset}
+        onToggle={toggle}
+        onSpeed={speed => dispatch({ type: "speed", speed })}
+      />
       {compare ? (
         <SideBySide state={state} />
       ) : (

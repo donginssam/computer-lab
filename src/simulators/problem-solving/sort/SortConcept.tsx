@@ -1,4 +1,4 @@
-import { Quiz } from "../shared/Quiz"
+import { Quiz } from "../../shared/Quiz"
 
 const questions = [
   {
@@ -23,31 +23,31 @@ const questions = [
 
 export function SortConcept() {
   return (
-    <section className="ps-concepts" aria-labelledby="sort-concept-title">
+    <section className="concepts" aria-labelledby="sort-concept-title">
       <h2 id="sort-concept-title">작은 문제의 답을 어떻게 다시 모을까?</h2>
-      <div className="ps-concept-grid">
-        <article className="ps-card">
+      <div className="concept-grid">
+        <article className="sim-card">
           <h3>한 장은 이미 정리되어 있다</h3>
           <p>
             카드 묶음을 반으로 계속 나누면 한 장짜리 묶음이 됩니다. 한 장에는 순서를 바꿀 일이
             없으므로 이미 정리된 작은 문제입니다.
           </p>
         </article>
-        <article className="ps-card">
+        <article className="sim-card">
           <h3>정리된 두 묶음은 앞끼리 비교</h3>
           <p>
             두 묶음의 맨 앞 카드 중 작은 것을 새 줄에 놓는 일을 반복하면 전체가 정리됩니다. 하나씩
             차례로 비교하며 정리하면 최대 N(N−1)/2회가 들지만, 합병 정렬은 훨씬 적게 비교합니다.
           </p>
         </article>
-        <article className="ps-card">
+        <article className="sim-card">
           <h3>거꾸로가 가장 어렵지는 않다</h3>
           <p>
             8장 거꾸로 순서는 12회 비교하지만 가장 많이 비교하는 순서는 17회입니다. 두 묶음의 값이
             번갈아 나오면 어느 한쪽도 빨리 비지 않아 비교가 더 오래 이어집니다.
           </p>
         </article>
-        <article className="ps-card">
+        <article className="sim-card">
           <h3>양팔저울의 나누기와 다른 점</h3>
           <p>
             양팔저울 실험은 답이 있는 한쪽만 계속 살폈습니다. 여기서는 나눈 양쪽을 모두 정리한 뒤
@@ -55,9 +55,7 @@ export function SortConcept() {
           </p>
         </article>
       </div>
-      <Quiz
-        questions={questions.map(question => ({ ...question, options: [...question.options] }))}
-      />
+      <Quiz questions={questions} />
     </section>
   )
 }
