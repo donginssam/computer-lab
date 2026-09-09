@@ -1,17 +1,23 @@
-name: Pull request checks
+name: CI
 
 on:
+  push:
   pull_request:
 
 permissions:
   contents: read
 
 concurrency:
-  group: pr-${{ github.event.pull_request.number }}
+  group: ci-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  check:
+  verify:
+    # 같은 저장소의 브랜치는 push 이벤트로 이미 검사하므로, pull_request는
+    # 포크에서 온 것만 실행해 같은 커밋을 두 번 돌리지 않는다.
+    if: >-
+      github.event_name != 'pull_request' ||
+      github.event.pull_request.head.repo.full_name != github.repository
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -30,6 +36,15 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       # oxlint는 포매터가 아니라 포맷을 보지 않으므로 check가 둘을 함께 돌린다.
-      # 배포 워크플로에서는 pnpm build의 첫 단계가 포맷 검사를 대신한다.
       - name: Lint and check formatting
         run: pnpm check
+
+      - name: Test
+        run: pnpm test
+
+      # 배포는 Pages 경로로 다시 빌드하므로, 여기서는 기본 경로로 검사한다.
+      - name: Build
+        run: pnpm build
+
+      - name: Verify PWA
+        run: pnpm verify:pwa

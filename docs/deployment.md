@@ -4,7 +4,9 @@
 
 ## 현재 구성
 
-[deploy.yml](../.github/workflows/deploy.yml)은 `main` 푸시와 `workflow_dispatch` 수동 실행을 받습니다. 작업 순서는 checkout → pnpm 설정 → Node.js 24와 pnpm 캐시 → lockfile 고정 설치 → test → Pages 구성 → build → PWA 검사 → `dist` 업로드 → 배포입니다. 정적 검사는 [pr.yml](../.github/workflows/pr.yml)이 PR에서 `pnpm check`로 맡습니다.
+검사는 [ci.yml](../.github/workflows/ci.yml)이 모든 푸시에서 `pnpm check` → `pnpm test` → `pnpm build` → `pnpm verify:pwa` 순으로 실행합니다. 같은 저장소 브랜치는 push 이벤트로 이미 검사하므로 `pull_request`는 포크에서 온 것만 돌려 같은 커밋을 두 번 검사하지 않습니다.
+
+[deploy.yml](../.github/workflows/deploy.yml)은 `main`의 CI가 **성공했을 때만** `workflow_run`으로 실행되고, `workflow_dispatch` 수동 실행도 받습니다. 작업 순서는 CI가 통과시킨 커밋 checkout → pnpm 설정 → Node.js 24와 pnpm 캐시 → lockfile 고정 설치 → Pages 구성 → build → PWA 검사 → `dist` 업로드 → 배포입니다. `workflow_run`은 기본 브랜치에 있는 워크플로 정의를 쓰므로, 이 설정은 `main`에 병합된 뒤부터 동작합니다.
 
 권한은 `contents: read`, `pages: write`, `id-token: write`이며 배포 환경은 `github-pages`입니다. `github-pages` 동시 실행 그룹은 이전 실행을 취소합니다. 실제 Actions 버전과 설정은 워크플로 파일을 기준으로 합니다.
 
