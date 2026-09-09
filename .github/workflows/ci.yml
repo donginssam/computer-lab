@@ -46,9 +46,17 @@ jobs:
       - name: Test
         run: pnpm test
 
-      # 배포는 Pages 경로로 다시 빌드하므로, 여기서는 기본 경로로 검사한다.
       - name: Build
         run: pnpm build
 
       - name: Verify PWA
+        run: pnpm verify:pwa
+
+      # 배포는 프로젝트 하위 경로로 빌드한다. manifest의 scope·start_url과 서비스
+      # 워커 등록 경로는 --base를 따라가므로, 루트가 아닌 경로에서도 서로 맞는지
+      # 같은 검사를 한 번 더 돌린다. GITHUB_REPOSITORY는 "owner/repo" 형식이다.
+      - name: Build for the Pages subpath
+        run: pnpm build --base="/${GITHUB_REPOSITORY#*/}/"
+
+      - name: Verify PWA on the subpath build
         run: pnpm verify:pwa
