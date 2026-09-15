@@ -57,18 +57,3 @@ pnpm build --base="/computer-lab/" && pnpm verify:pwa
 [package.json](../package.json)의 빌드 명령은 `dist/index.html`을 `dist/404.html`로 복사합니다. `public/404.html`을 별도로 유지하지 않습니다. Browser Router의 `basename`은 Vite 공개 경로에서 가져옵니다.
 
 GitHub Pages에서 `/units/algorithm/balance-scale`이나 `/units/algorithm/problem-solving` 같은 깊은 링크에 직접 진입하면 복사된 404 문서가 앱을 렌더링할 수 있지만 **HTTP 응답 코드는 404일 수 있습니다**. 화면 렌더링 성공과 HTTP 200 응답은 별도로 확인합니다. 로컬 preview 성공만으로 호스팅의 fallback 동작을 보증하지 않습니다.
-
-## 배포 후 확인
-
-- [ ] 실제 배포 URL에서 홈·5개 단원·시뮬레이터 진입
-- [ ] CSS·JS·지연 로딩 시뮬레이터·그래프 자산의 하위 경로 정상 로딩
-- [ ] 시뮬레이터 깊은 링크 직접 진입과 새로고침, 응답 코드 기록
-- [ ] 공유 쿼리 `?mode=compare&n=16`, `?strategy=lock&d=4&speed=1000` 복원
-- [ ] 기록 저장과 새로고침 후 유지
-- [ ] 브라우저 설치 메뉴에서 앱 설치, standalone 실행
-- [ ] 설치 후 오프라인에서 홈·단원·시뮬레이터 새로고침
-- [ ] 새 버전 배포 후 업데이트 알림과 **업데이트** 동작
-- [ ] manifest와 서비스 워커가 배포 하위 경로에서 200 응답
-- [ ] 360px 화면과 브라우저 콘솔 확인
-
-2026-09-08 문서 정리 시 `git remote -v` 출력은 비어 있었습니다. 실제 Pages 배포와 URL 검증은 수행하지 않았습니다.

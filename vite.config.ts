@@ -13,7 +13,7 @@ export default defineConfig({
       includeManifestIcons: false,
       manifest: {
         name: "동인쌤의 컴퓨터실",
-        short_name: "동인쌤의 컴퓨터실",
+        short_name: "컴퓨터실",
         description: "눌러 보고, 돌려 보고, 비교해 보며 배우는 중학교 정보 시뮬레이터",
         lang: "ko",
         display: "standalone",
