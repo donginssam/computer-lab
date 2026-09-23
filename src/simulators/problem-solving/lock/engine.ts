@@ -1,3 +1,4 @@
+import { DIGIT_MAX, DIGIT_MIN } from "../bounds"
 import type { StepEngine } from "../shared/stepper"
 
 export interface LockOptions {
@@ -20,22 +21,23 @@ export function formatCode(value: number, digits: number) {
 }
 
 function validate(options: LockOptions, secret: number) {
-  if (!Number.isInteger(options.digits) || options.digits < 1 || options.digits > 4)
-    throw new RangeError("자릿수는 1~4여야 합니다.")
+  if (!Number.isInteger(options.digits) || options.digits < DIGIT_MIN || options.digits > DIGIT_MAX)
+    throw new RangeError(`자릿수는 ${DIGIT_MIN}~${DIGIT_MAX}여야 합니다.`)
   if (!Number.isInteger(secret) || secret < 0 || secret >= lockLimit(options.digits))
     throw new RangeError("비밀번호가 자릿수 범위를 벗어났습니다.")
 }
 
+/** 장면과 단계 기록에 남기는 최근 시도 수. step과 back이 같은 값을 써야 되감은 결과가 같다. */
+const RECENT_ATTEMPTS = 20
+
 function recentAttempts(attempts: number) {
   return Array.from(
-    { length: Math.min(attempts, 20) },
-    (_, index) => Math.max(0, attempts - 20) + index,
+    { length: Math.min(attempts, RECENT_ATTEMPTS) },
+    (_, index) => Math.max(0, attempts - RECENT_ATTEMPTS) + index,
   )
 }
 
 export const lockEngine: StepEngine<LockOptions, LockState> = {
-  id: "lock",
-  name: "시행착오 방법",
   init(options, secret) {
     validate(options, secret)
     return {
@@ -57,7 +59,7 @@ export const lockEngine: StepEngine<LockOptions, LockState> = {
       attempts,
       current: finished ? attempted : attempted + 1,
       finished,
-      recent: [...state.recent, attempted].slice(-20),
+      recent: [...state.recent, attempted].slice(-RECENT_ATTEMPTS),
     }
   },
   back(state) {

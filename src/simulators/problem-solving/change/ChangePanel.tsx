@@ -1,5 +1,6 @@
 import { blurOnEnter } from "../../shared/blurOnEnter"
-import { AMOUNT_MAX, AMOUNT_MIN, AMOUNT_STEP, clampAmount } from "../bounds"
+import { clampedParam } from "../../shared/params"
+import { AMOUNT_MAX, AMOUNT_MIN, AMOUNT_STEP, clampAmount, randomAmount } from "../bounds"
 import { coinPresets, type CoinSetId } from "./engine"
 
 export function ChangePanel({
@@ -11,9 +12,10 @@ export function ChangePanel({
   coinSet: CoinSetId
   change: (updates: Record<string, string>) => void
 }) {
+  const exampleAmount = (id: CoinSetId) => coinPresets.find(item => item.id === id)!.exampleAmount
+
   function chooseSet(next: CoinSetId) {
-    const preset = coinPresets.find(item => item.id === next)!
-    change({ coins: next, amount: String(preset.exampleAmount) })
+    change({ coins: next, amount: String(exampleAmount(next)) })
   }
 
   return (
@@ -29,7 +31,8 @@ export function ChangePanel({
             key={amount}
             defaultValue={amount}
             onBlur={event => {
-              const value = clampAmount(Number(event.target.value) || AMOUNT_MIN)
+              // 주소와 같은 함수로 읽는다. 빈칸은 주소에 금액이 없을 때처럼 예시 금액이 된다.
+              const value = clampedParam(event.target.value, exampleAmount(coinSet), clampAmount)
               event.currentTarget.value = String(value)
               change({ amount: String(value) })
             }}
@@ -38,18 +41,7 @@ export function ChangePanel({
           원
         </span>
       </label>
-      <button
-        type="button"
-        onClick={() =>
-          change({
-            amount: String(
-              clampAmount(
-                AMOUNT_MIN + Math.floor(Math.random() * (AMOUNT_MAX / AMOUNT_STEP)) * AMOUNT_STEP,
-              ),
-            ),
-          })
-        }
-      >
+      <button type="button" onClick={() => change({ amount: String(randomAmount()) })}>
         금액 무작위
       </button>
       <label>

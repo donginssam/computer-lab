@@ -1,8 +1,7 @@
 import { blurOnEnter } from "../../shared/blurOnEnter"
-import { DIGIT_MAX, DIGIT_MIN, type LockPlacement } from "../bounds"
+import { DIGIT_CHOICES, lockPlacements, type LockPlacement } from "../bounds"
+import { lockPlacementLabel } from "../copy"
 import { formatCode, lockLimit } from "./engine"
-
-const digitChoices = Array.from({ length: DIGIT_MAX - DIGIT_MIN + 1 }, (_, i) => DIGIT_MIN + i)
 
 export function LockPanel({
   digits,
@@ -22,7 +21,7 @@ export function LockPanel({
       <label>
         자릿수{" "}
         <select value={digits} onChange={event => change({ d: event.target.value })}>
-          {digitChoices.map(value => (
+          {DIGIT_CHOICES.map(value => (
             <option value={value} key={value}>
               {value}자리
             </option>
@@ -32,9 +31,11 @@ export function LockPanel({
       <label>
         비밀번호 위치{" "}
         <select value={placement} onChange={event => change({ pos: event.target.value })}>
-          <option value="worst">가장 늦게 찾는 곳</option>
-          <option value="random">무작위</option>
-          <option value="manual">직접 입력</option>
+          {lockPlacements.map(value => (
+            <option value={value} key={value}>
+              {lockPlacementLabel[value]}
+            </option>
+          ))}
         </select>
       </label>
       {placement === "manual" && (

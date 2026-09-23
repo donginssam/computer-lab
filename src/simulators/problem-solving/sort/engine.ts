@@ -1,4 +1,4 @@
-import { CARD_MAX, CARD_MIN } from "../bounds"
+import { CARD_MAX, CARD_MIN, CARD_VALUE_MAX, CARD_VALUE_MIN } from "../bounds"
 import type { StepEngine } from "../shared/stepper"
 
 export type SortOrder = "random" | "worst" | "reverse" | "manual"
@@ -82,34 +82,36 @@ function shuffledCards(n: number, seed: number) {
   return cards
 }
 
+/** 직접 입력 카드는 개수가 맞고, 서로 다르고, 모두 쓸 수 있는 값이어야 한다. */
+function isValidCardSet(cards: readonly number[], n: number) {
+  return (
+    cards.length === n &&
+    new Set(cards).size === cards.length &&
+    cards.every(
+      value => Number.isInteger(value) && value >= CARD_VALUE_MIN && value <= CARD_VALUE_MAX,
+    )
+  )
+}
+
 export function parseCardInput(input: string, n: number) {
   if (!/^\s*\d+(?:\s*-\s*\d+)+\s*$/.test(input))
     throw new RangeError("예: 35-12-90-7처럼 입력해 주세요.")
   const cards = input.split("-").map(value => Number(value.trim()))
-  if (
-    cards.length !== n ||
-    new Set(cards).size !== cards.length ||
-    cards.some(value => !Number.isInteger(value) || value < 1 || value > 99)
-  )
-    throw new RangeError(`1~99 사이의 서로 다른 숫자 ${n}개를 입력해 주세요.`)
+  if (!isValidCardSet(cards, n))
+    throw new RangeError(
+      `${CARD_VALUE_MIN}~${CARD_VALUE_MAX} 사이의 서로 다른 숫자 ${n}개를 입력해 주세요.`,
+    )
   return cards
 }
 
 function makeCards(options: SortOptions, seed: number) {
-  if (!Number.isInteger(options.n) || options.n < 2 || options.n > 16)
-    throw new RangeError("카드 수는 2~16이어야 합니다.")
+  if (!Number.isInteger(options.n) || options.n < CARD_MIN || options.n > CARD_MAX)
+    throw new RangeError(`카드 수는 ${CARD_MIN}~${CARD_MAX}이어야 합니다.`)
   if (options.order === "worst") return worstCaseOrder(options.n)
   if (options.order === "reverse")
     return Array.from({ length: options.n }, (_, index) => options.n - index)
-  if (options.order === "manual" && options.cards) {
-    const cards = [...options.cards]
-    if (
-      cards.length === options.n &&
-      new Set(cards).size === cards.length &&
-      cards.every(value => Number.isInteger(value) && value >= 1 && value <= 99)
-    )
-      return cards
-  }
+  if (options.order === "manual" && options.cards && isValidCardSet(options.cards, options.n))
+    return [...options.cards]
   return shuffledCards(options.n, seed)
 }
 
@@ -188,8 +190,6 @@ export function createSortTrace(cards: readonly number[]) {
 }
 
 export const sortEngine: StepEngine<SortOptions, SortState> = {
-  id: "sort",
-  name: "작은 문제로 나누어 해결하기",
   init(options, seed) {
     const cards = makeCards(options, seed)
     const { trace } = createSortTrace(cards)

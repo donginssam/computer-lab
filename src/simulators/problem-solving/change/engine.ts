@@ -53,8 +53,6 @@ function validate(options: ChangeOptions) {
 }
 
 export const changeEngine: StepEngine<ChangeOptions, ChangeState> = {
-  id: "change",
-  name: "욕심쟁이 방법",
   init(options) {
     validate(options)
     return {

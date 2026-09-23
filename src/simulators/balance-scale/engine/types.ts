@@ -16,7 +16,6 @@ export interface SimState {
   history: Weighing[]
   finished: boolean
   answer?: CoinId
-  cursor: number
 }
 export interface Algorithm {
   id: AlgorithmId

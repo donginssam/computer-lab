@@ -21,7 +21,10 @@ src/
 │   ├── useRunLoop.ts               자동 실행 타이머와 Space/R/A 단축키
 │   ├── useRecords.ts · records.ts  기록 저장 훅과 병합·읽기 helper
 │   ├── useSaveOnce.ts              완료된 실험을 실험당 한 번만 저장
+│   ├── params.ts                   주소 값과 입력칸 값을 같은 규칙으로 읽고 범위 보정
+│   ├── SimulatorHeader.tsx         units.ts에서 만드는 브레드크럼·번호·제목
 │   ├── RunControls · TabList · Quiz  실행 제어·탭·질문 컴포넌트
+│   ├── StepLog · RecordTable · RecordsPanel  단계 기록·기록 표 뼈대·기록 탭
 │   ├── blurOnEnter.ts              Enter로 입력값 확정
 │   └── simulator-base.css          카드·표·탭·통계 등 공용 뼈대
 ├── simulators/balance-scale/
@@ -33,8 +36,8 @@ src/
 │   └── components/                 설정·저울·결과·비교·표·그래프·개념
 ├── simulators/problem-solving/
 │   ├── index.tsx                   전략 URL·직접 입력·화면 조립
-│   ├── strategies.ts · copy.ts     전략 탭과 학생용 공통 문구
-│   ├── bounds.ts                   자릿수·금액·카드 수의 허용 범위와 보정
+│   ├── strategies.ts · copy.ts     전략 이름과 학생용 문구·설정 라벨
+│   ├── bounds.ts                   자릿수·금액·카드 수·자물쇠 batch의 허용 범위와 보정
 │   ├── simulator.css               자물쇠·동전·카드 전용 장면과 반응형 배치
 │   ├── shared/                     세 전략이 공유하는 실행기·기록·표·그래프
 │   ├── lock/                       시행착오 자물쇠 엔진과 화면
@@ -43,7 +46,7 @@ src/
 └── test/setup.ts                   테스트 환경 초기화
 ```
 
-`StatsBar`, `CoinGrid`, `StepLog`는 [SimulationView.tsx](../src/simulators/balance-scale/components/SimulationView.tsx)에 함께 정의되어 있습니다.
+`StatsBar`와 `CoinGrid`는 [SimulationView.tsx](../src/simulators/balance-scale/components/SimulationView.tsx)에 함께 정의되어 있고, 단계 기록은 공용 [StepLog](../src/simulators/shared/StepLog.tsx)를 씁니다.
 
 [vite.config.ts](../vite.config.ts)는 manifest와 Workbox 서비스 워커를 생성합니다. [main.tsx](../src/main.tsx)의 `PwaUpdatePrompt`가 서비스 워커를 등록하고 새 버전이 있을 때 알립니다. 설치 아이콘은 `public/`, 빌드 산출물 검사는 [verify-pwa.mjs](../scripts/verify-pwa.mjs)에 있습니다.
 
@@ -61,11 +64,11 @@ src/
 | `/units/algorithm/problem-solving` | 문제 해결 전략 실험실                  |
 | 일치하지 않는 경로                 | NotFoundPage                           |
 
-[router.tsx](../src/router.tsx)는 `BrowserRouter`와 `Routes`로 `AppShell` 아래 중첩 라우트를 선언합니다. loader·action을 쓰지 않으므로 데이터 라우터 런타임(31 kB gzip)을 최초 로드에서 뺐고, 대신 `AppShell`이 [useScrollRestoration](../src/components/layout/useScrollRestoration.ts)으로 새 화면에서는 맨 위로, 뒤로 가기에서는 떠날 때 위치로 스크롤을 돌립니다. 두 시뮬레이터는 `lazy`와 `Suspense`로 각각 별도 청크가 되며, 청크는 모두 서비스 워커가 precache하므로 오프라인에서도 열립니다. `basename`은 `import.meta.env.BASE_URL`에서 마지막 `/`를 제거한 값입니다. 프로젝트 하위 배포에서는 [배포 설정](deployment.md)과 일치해야 합니다.
+[router.tsx](../src/router.tsx)는 `BrowserRouter`와 `Routes`로 `AppShell` 아래 중첩 라우트를 선언합니다. loader·action을 쓰지 않으므로 데이터 라우터 런타임(31 kB gzip)을 최초 로드에서 뺐고, 대신 `AppShell`이 [useScrollRestoration](../src/components/layout/useScrollRestoration.ts)으로 새 화면에서는 맨 위로, 뒤로 가기에서는 떠날 때 위치로 스크롤을 돌립니다. 경로는 그대로이고 주소의 `?` 뒤만 바뀌는 설정·모드 탭 변경에서는 스크롤도 저장된 위치도 건드리지 않습니다. 두 시뮬레이터는 `lazy`와 `Suspense`로 각각 별도 청크가 되며, 청크는 모두 서비스 워커가 precache하므로 오프라인에서도 열립니다. `basename`은 `import.meta.env.BASE_URL`에서 마지막 `/`를 제거한 값입니다. 프로젝트 하위 배포에서는 [배포 설정](deployment.md)과 일치해야 합니다.
 
 ## 메타데이터
 
-[units.ts](../src/content/units.ts)의 `Unit`은 `id`, `order`, `title`, `lead`, `blurb`, `color`, `simulators`를 가집니다. `SimulatorMeta`는 `slug`, `title`, `summary`, `status`로 구성됩니다.
+[units.ts](../src/content/units.ts)의 `Unit`은 `id`, `order`, `title`, `lead`, `blurb`, `color`, `simulators`와 선택 항목 `lab`을 가집니다. 시뮬레이터 페이지 머리의 제목은 `SimulatorMeta.title`, 번호는 `simulators` 배열의 순서, 앞의 실험실 이름은 `lab`(없으면 단원 이름)에서 가져옵니다. `SimulatorMeta`는 `slug`, `title`, `summary`, `status`로 구성됩니다.
 
 상태는 `ready`(해 보기), `in-progress`(만드는 중), `coming-soon`(준비 중)입니다. `unitPath`와 `simulatorPath`가 링크 경로를 만들지만 **페이지 라우트를 자동 등록하지는 않습니다**.
 
@@ -85,7 +88,7 @@ URL 설정 → BalanceScalePage → Simulation → useSimulation
 
 무작위 위치 생성, 타이머, 브라우저 저장은 엔진 밖에서 처리합니다. 비교 모드는 같은 가짜 동전 위치로 생성한 두 엔진 상태를 사용합니다. Recharts 컴포넌트는 기록 탭에서 `lazy`와 `Suspense`로 불러옵니다.
 
-`Simulation`은 실행 제어와 완료 기록 수집을 담당하고, 공용 `TabList`가 모드 선택과 키보드 이동을 담당합니다. 공용 `useRecords`는 저장소 키를 받아 저장·삭제와 저장 실패 상태를 관리하고, `mergeRecords`는 ID 중복을 제거하고 공통 제한 `MAX_RECORDS`에 맞춰 최신 기록만 남깁니다. 두 시뮬레이터의 자동 실행 타이머와 단축키는 `useRunLoop`, 완료 기록의 중복 저장 방지는 `useSaveOnce`가 함께 맡습니다.
+`Simulation`은 실행 제어와 완료 기록 수집을 담당하고, 공용 `TabList`가 모드 선택과 키보드 이동을 담당합니다. 공용 `useRecords`는 저장소 키를 받아 저장·삭제와 저장 실패 상태를 관리하고, `mergeRecords`는 ID 중복을 제거하고 공통 제한 `MAX_RECORDS`에 맞춰 최신 기록만 남깁니다. 두 시뮬레이터의 자동 실행 타이머와 단축키는 `useRunLoop`, 완료 기록의 중복 저장 방지는 `useSaveOnce`가 함께 맡습니다. 기록 탭은 공용 `RecordsPanel`이 저장 실패 안내·기록 표·지연 로딩 그래프를 같은 순서와 문구로 보여 주고, 표의 뼈대는 `RecordTable`이 맡아 시뮬레이터는 열과 안내 문구만 정합니다. 주소의 숫자 설정과 설정 패널의 입력칸은 공용 `clampedParam`으로 같은 값을 같은 결과로 읽습니다.
 
 문제 해결 전략 실험실은 세 엔진을 하나씩 같은 실행기에 연결합니다. `shared/stepper.ts`의 reducer가 tick 단위 진행과 되감기를 맡고, 각 전략의 `Experiment` 컴포넌트가 완료 결과를 한 번만 기록합니다. 자물쇠는 한 tick에 여러 시도를 묶을 수 있고, 합병 정렬은 초기화할 때 만든 짧은 trace의 현재 위치만 이동합니다. 기록은 `strategy` 판별 필드가 있는 합 타입으로 저장하며 그래프는 기록 탭에서만 지연 로딩합니다.
 
@@ -107,9 +110,9 @@ Tailwind CSS 4와 일반 CSS를 유지합니다. [공식 호환성 문서](https
 
 ## 새 시뮬레이터 추가
 
-1. `src/simulators/<slug>/`에 페이지 진입점과 필요한 `engine/`, `state/`, `components/`를 만들고, 실행 루프·기록·탭·질문은 `src/simulators/shared/`를 재사용합니다.
-2. `src/content/units.ts`의 해당 단원에 고유한 slug와 상태·제목·요약을 추가합니다.
+1. `src/simulators/<slug>/`에 페이지 진입점과 필요한 `engine/`, `state/`, `components/`를 만들고, 실행 루프·기록·탭·질문·단계 기록·페이지 머리·주소 값 읽기는 `src/simulators/shared/`를 재사용합니다.
+2. `src/content/units.ts`의 해당 단원에 고유한 slug와 상태·제목·요약을 추가합니다. 페이지 제목과 번호도 여기서 가져옵니다.
 3. `src/router.tsx`에 `units/<unitId>/<slug>` 경로를 `lazy`로 연결하고, 페이지 루트에 `sim-page` 클래스를 붙입니다.
-4. 공용 `Breadcrumb`, 단원 색 `--unit`, [용어·접근성 기준](ui-guidelines.md)을 적용합니다.
+4. 공용 `SimulatorHeader`(브레드크럼·번호·제목), 단원 색 `--unit`, [용어·접근성 기준](ui-guidelines.md)을 적용합니다.
 5. 엔진의 입력·종료 조건과 사용자 동작을 검증하고 홈·단원 링크·직접 진입을 확인합니다.
 6. 시뮬레이터의 이론과 구현 문서를 `docs/theory/`에 추가하고 [문서 목록](README.md)을 갱신합니다.

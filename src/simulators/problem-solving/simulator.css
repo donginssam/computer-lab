@@ -1,21 +1,5 @@
 /* 공용 뼈대는 src/simulators/shared/simulator-base.css에 있다. */
 
-.ps-header {
-  margin-top: 1.5rem;
-}
-
-.ps-header h1 {
-  font-size: clamp(2rem, 5vw, 3rem);
-}
-
-.ps-kicker {
-  color: var(--color-ink-2);
-  font-size: 0.8rem;
-  margin: 0.5rem 0;
-}
-
-/* 브라우저가 select에는 line-height를 적용하지 않아, 높이를 직접 맞춘다. */
-
 .ps-settings {
   display: flex;
   flex-wrap: wrap;
@@ -54,15 +38,8 @@
 }
 
 .ps-settings > .small-note,
-.ps-settings > .ps-input-error {
+.ps-settings > .sim-error {
   flex-basis: 100%;
-}
-
-.ps-input-error {
-  padding: 0.65rem 0.8rem;
-  border-left: 4px solid #b4233b;
-  background: #fff0f1;
-  color: #701329;
 }
 
 .strategy-chip {

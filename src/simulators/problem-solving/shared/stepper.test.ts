@@ -7,8 +7,6 @@ interface CountState {
 }
 
 const engine: StepEngine<{ limit: number }, CountState> = {
-  id: "count",
-  name: "count",
   init: options => ({ value: 0, limit: options.limit }),
   step: state =>
     state.value >= state.limit

@@ -1,20 +1,26 @@
 import { useCallback } from "react"
 import { RunControls, type SpeedChoice } from "../../shared/RunControls"
 import { useSaveOnce } from "../../shared/useSaveOnce"
-import { StepLog } from "../shared/StepLog"
+import { StepLog } from "../../shared/StepLog"
 import type { Experiment } from "../shared/records"
 import { useStepper } from "../shared/useStepper"
 import { LockConcept } from "./LockConcept"
 import { LockView } from "./LockView"
 import { formatCode, lockEngine, lockLimit, type LockOptions } from "./engine"
-import type { LockPlacement } from "../bounds"
+import { LOCK_BATCHES, type LockBatch, type LockPlacement } from "../bounds"
 
-const lockSpeeds: readonly SpeedChoice[] = [
-  { label: "천천히 (1회씩)", speed: 800, batch: 1 },
-  { label: "빠르게 (10회씩)", speed: 800, batch: 10 },
-  { label: "아주 빠르게 (100회씩)", speed: 800, batch: 100 },
-  { label: "끝까지 (1,000회씩)", speed: 800, batch: 1000 },
-]
+const batchLabel: Record<LockBatch, string> = {
+  1: "천천히 (1회씩)",
+  10: "빠르게 (10회씩)",
+  100: "아주 빠르게 (100회씩)",
+  1000: "끝까지 (1,000회씩)",
+}
+
+const lockSpeeds: readonly SpeedChoice[] = LOCK_BATCHES.map(batch => ({
+  label: batchLabel[batch],
+  speed: 800,
+  batch,
+}))
 
 export function LockExperiment({
   digits,

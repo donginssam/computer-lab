@@ -21,6 +21,8 @@ export interface Unit {
   /** 홈 타일에 쓰는 짧은 설명 */
   blurb: string
   color: string
+  /** 시뮬레이터 페이지 머리에 붙는 실험실 이름. 없으면 단원 이름을 쓴다. */
+  lab?: string
   simulators: SimulatorMeta[]
 }
 
@@ -50,6 +52,7 @@ export const units: Unit[] = [
     lead: "같은 문제를 푸는 여러 방법을 만들고, 어느 쪽이 더 나은지 따져 봅니다.",
     blurb: "문제 해결 절차와 효율",
     color: "var(--color-unit-algo)",
+    lab: "알고리즘 실험실",
     simulators: [
       {
         slug: "problem-solving",

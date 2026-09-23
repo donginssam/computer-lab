@@ -1,4 +1,4 @@
-import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
+import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react"
 import { afterEach, beforeEach, expect, it, vi } from "vitest"
 import { MemoryRouter, useLocation } from "react-router"
 import { ProblemSolvingPage } from "."
@@ -67,6 +67,32 @@ it("욕심쟁이 반례와 합병 정렬 상한을 화면에 보여 준다", () 
   for (let index = 0; index < steps; index += 1)
     fireEvent.click(screen.getByRole("button", { name: "다음 단계 ▶" }))
   expect(screen.getByText(/비교는 17회/)).toHaveClass("result")
+})
+
+it("긴 단계 기록은 최근 단계만 보여 주되 전체에서의 번호를 붙인다", () => {
+  open("strategy=lock&d=2&pos=worst&speed=10")
+  for (let index = 0; index < 3; index += 1)
+    fireEvent.click(screen.getByRole("button", { name: "다음 단계 ▶" }))
+  const log = screen.getByText("단계 기록 (30)").closest("details")!
+  const items = within(log).getAllByRole("listitem")
+  expect(items).toHaveLength(20)
+  expect(items[0]).toHaveTextContent("11. 10 시도 → 열리지 않았습니다.")
+  expect(items.at(-1)).toHaveTextContent("30. 29 시도 → 열리지 않았습니다.")
+})
+
+it("주소와 입력칸에 같은 값을 넣으면 같은 카드 수와 금액이 된다", () => {
+  const sort = open("strategy=sort&n=0")
+  expect(screen.getByLabelText("카드 수")).toHaveValue(2)
+  fireEvent.change(screen.getByLabelText("카드 수"), { target: { value: "0" } })
+  fireEvent.blur(screen.getByLabelText("카드 수"))
+  expect(screen.getByLabelText("카드 수")).toHaveValue(2)
+  sort.unmount()
+
+  open("strategy=change&coins=korea&amount=")
+  expect(screen.getByLabelText(/거스름돈 금액/)).toHaveValue(870)
+  fireEvent.change(screen.getByLabelText(/거스름돈 금액/), { target: { value: "" } })
+  fireEvent.blur(screen.getByLabelText(/거스름돈 금액/))
+  expect(screen.getByLabelText(/거스름돈 금액/)).toHaveValue(870)
 })
 
 it("단축키는 입력을 방해하지 않고 전략 전환 시 자동 실행 타이머를 정리한다", () => {

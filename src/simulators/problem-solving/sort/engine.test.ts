@@ -68,6 +68,9 @@ describe("합병 정렬 엔진", () => {
     expect(() => parseCardInput("1-1", 2)).toThrow()
     expect(() => parseCardInput("1-100", 2)).toThrow()
     expect(() => parseCardInput("1-2", 3)).toThrow()
+    // 형식에 맞지 않는 직접 입력 카드는 무작위 카드로 대신한다.
+    const fallback = sortEngine.init({ n: 3, order: "manual", cards: [1, 1, 2] }, 7).cards
+    expect([...fallback].sort((a, b) => a - b)).toEqual([1, 2, 3])
     expect(createSortTrace([2, 1]).sorted).toEqual([1, 2])
   })
 })

@@ -111,7 +111,7 @@ N=7에서 세 개씩 양쪽에 올렸는데 무게가 같다면, 저울 밖의 �
 
 ### 알고리즘과 위치 선택
 
-[engine/index.ts](../../src/simulators/balance-scale/engine/index.ts)의 `sequential-pair`는 순차 탐색, `divide-half`는 절반씩 나누는 분할 정복 방식입니다. 두 `step`은 입력을 변경하지 않으며, 종료 상태에서는 같은 객체를 반환합니다. 순차 알고리즘의 `cursor`는 2씩 증가하지만 다음 짝은 `candidates`에서 선택합니다.
+[engine/index.ts](../../src/simulators/balance-scale/engine/index.ts)의 `sequential-pair`는 순차 탐색, `divide-half`는 절반씩 나누는 분할 정복 방식입니다. 두 `step`은 입력을 변경하지 않으며, 종료 상태에서는 같은 객체를 반환합니다. 순차 알고리즘은 따로 위치를 세지 않고, 매번 `candidates`의 앞 두 개를 다음 짝으로 올립니다.
 
 [worstCase.ts](../../src/simulators/balance-scale/engine/worstCase.ts)는 순차 최악 위치를 짝수 N에서 `n-1`, 홀수 N에서 `n-2`로 정합니다. 절반 나누기는 오른쪽 절반을 계속 따라가는 위치를 계산합니다.
 

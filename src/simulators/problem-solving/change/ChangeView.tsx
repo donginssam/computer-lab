@@ -1,3 +1,4 @@
+import { strategyNames } from "../strategies"
 import type { ChangeSolution } from "./optimal"
 import type { ChangeState } from "./engine"
 
@@ -23,13 +24,13 @@ export function ChangeView({
   state: ChangeState
   optimal: ChangeSolution | null
 }) {
-  const greedyBetter =
+  const greedyIsOptimal =
     state.finished && !state.stuck && optimal && state.used.length === optimal.count
   return (
     <section className="sim-card change-scene">
       <div className="section-title">
         <div>
-          <p className="ps-kicker">욕심쟁이 방법</p>
+          <p className="small-note">{strategyNames.change.longTitle}</p>
           <h2>지금 고를 수 있는 가장 큰 동전</h2>
         </div>
         <span className="strategy-chip change-chip">빠른 판단</span>
@@ -85,7 +86,7 @@ export function ChangeView({
               : "다음 단계를 눌러 첫 동전을 골라 보세요."}
       </p>
       {state.finished && (
-        <div className={`optimal-row ${greedyBetter ? "same" : "different"}`}>
+        <div className={`optimal-row ${greedyIsOptimal ? "same" : "different"}`}>
           <strong>가장 적은 개수</strong>
           {optimal ? (
             <span>
@@ -95,7 +96,9 @@ export function ChangeView({
             <span>이 동전들로는 금액을 만들 수 없습니다.</span>
           )}
           {optimal && (
-            <span>{greedyBetter ? "욕심쟁이 결과와 같습니다." : "욕심쟁이 결과와 다릅니다."}</span>
+            <span>
+              {greedyIsOptimal ? "욕심쟁이 결과와 같습니다." : "욕심쟁이 결과와 다릅니다."}
+            </span>
           )}
         </div>
       )}

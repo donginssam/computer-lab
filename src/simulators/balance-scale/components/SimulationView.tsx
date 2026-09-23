@@ -1,6 +1,7 @@
-import type { AlgorithmId, SimState } from "../engine/types"
+import type { AlgorithmId, SimState, Weighing } from "../engine/types"
 import { algorithms } from "../engine"
 import { resultLabel, coinLabel, coinList, term } from "../copy"
+import { StepLog } from "../../shared/StepLog"
 import { BalanceScale } from "./BalanceScale"
 function StatsBar({ state, algorithm }: { state: SimState; algorithm: AlgorithmId }) {
   return (
@@ -46,21 +47,9 @@ function CoinGrid({ state }: { state: SimState }) {
     </>
   )
 }
-function StepLog({ state }: { state: SimState }) {
-  return (
-    <details className="step-log" open>
-      <summary>단계 기록 ({state.history.length})</summary>
-      <ol>
-        {state.history.map((w, i) => (
-          <li key={i} className={i === state.history.length - 1 ? "latest" : ""}>
-            {i + 1}. [{coinList(w.left)}] 대 [{coinList(w.right)}] → {resultLabel[w.result]}
-            {w.result === "balanced" ? " → 저울 밖 후보만 남깁니다." : " → 가벼운 쪽만 남깁니다."}
-          </li>
-        ))}
-      </ol>
-      {!state.history.length && <p>다음 단계를 눌러 첫 {term.weighing}을 시작하세요.</p>}
-    </details>
-  )
+function weighingText(w: Weighing) {
+  const kept = w.result === "balanced" ? "저울 밖 후보만 남깁니다." : "가벼운 쪽만 남깁니다."
+  return `[${coinList(w.left)}] 대 [${coinList(w.right)}] → ${resultLabel[w.result]} → ${kept}`
 }
 export function SimulationView({ state, algorithm }: { state: SimState; algorithm: AlgorithmId }) {
   const { name, bigO, bigOPlain } = algorithms[algorithm]
@@ -87,7 +76,10 @@ export function SimulationView({ state, algorithm }: { state: SimState; algorith
         {message}
       </p>
       <CoinGrid state={state} />
-      <StepLog state={state} />
+      <StepLog
+        entries={state.history.map(weighingText)}
+        empty={`다음 단계를 눌러 첫 ${term.weighing}을 시작하세요.`}
+      />
     </section>
   )
 }

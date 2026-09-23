@@ -1,10 +1,19 @@
-import { lazy, Suspense, useCallback, useState } from "react"
+import { lazy, useCallback, useState } from "react"
 import { useSearchParams } from "react-router"
-import { Breadcrumb } from "../../components/layout/Breadcrumb"
-import { unitById, unitPath, unitStyle } from "../../content/units"
+import { unitById, unitStyle } from "../../content/units"
+import { clampedParam, oneOfParam } from "../shared/params"
+import { RecordsPanel } from "../shared/RecordsPanel"
+import { SimulatorHeader } from "../shared/SimulatorHeader"
 import { TabList } from "../shared/TabList"
 import { useRecords } from "../shared/useRecords"
-import { clampAmount, clampCardCount, clampDigits, lockPlacements } from "./bounds"
+import {
+  CARD_DEFAULT,
+  clampAmount,
+  clampCardCount,
+  clampDigits,
+  LOCK_BATCHES,
+  lockPlacements,
+} from "./bounds"
 import { ChangeExperiment } from "./change/ChangeExperiment"
 import { ChangePanel } from "./change/ChangePanel"
 import { coinPresets, coinSetIds } from "./change/engine"
@@ -24,29 +33,9 @@ const RecordCharts = lazy(() =>
   import("./shared/RecordCharts").then(module => ({ default: module.RecordCharts })),
 )
 
-/**
- * `Number(null)` and `Number("")` are both 0, so an absent parameter has to be
- * rejected before parsing — otherwise every default collapses to the minimum.
- */
-function numericParam(value: string | null) {
-  if (value === null || value.trim() === "") return null
-  const parsed = Number(value)
-  return Number.isFinite(parsed) ? parsed : null
-}
-
-/** 주소에 값이 없으면 기본값을, 있으면 설정 패널과 같은 범위로 보정해 쓴다. */
-function clampedParam<T>(value: string | null, fallback: T, clamp: (value: number) => T) {
-  const parsed = numericParam(value)
-  return parsed === null ? fallback : clamp(parsed)
-}
-
-function oneOfParam<T extends string>(value: string | null, allowed: readonly T[], fallback: T): T {
-  return allowed.includes(value as T) ? (value as T) : fallback
-}
-
 function lockBatchParam(value: string | null) {
   const parsed = Number(value)
-  return [1, 10, 100, 1000].includes(parsed) ? parsed : 1
+  return LOCK_BATCHES.find(batch => batch === parsed) ?? 1
 }
 
 export function ProblemSolvingPage() {
@@ -65,7 +54,7 @@ export function ProblemSolvingPage() {
   const amount = clampedParam(params.get("amount"), preset.exampleAmount, clampAmount)
   const coins = preset.coins
 
-  const n = clampedParam(params.get("n"), 8, clampCardCount)
+  const n = clampedParam(params.get("n"), CARD_DEFAULT, clampCardCount)
   const order = oneOfParam(params.get("order"), sortOrders, "random")
   const [manualCards, setManualCards] = useState<number[] | undefined>()
   const { records, storageError, save, remove, clear } = useRecords(STORAGE_KEY, readRecords)
@@ -86,14 +75,9 @@ export function ProblemSolvingPage() {
 
   return (
     <div className="sim-page problem-page" style={unitStyle(unit)}>
-      <Breadcrumb
-        items={[{ label: unit.title, to: unitPath(unit) }, { label: problemSolvingCopy.title }]}
-      />
-      <header className="ps-header">
-        <p className="ps-kicker">알고리즘 실험실 · 01</p>
-        <h1>{problemSolvingCopy.title}</h1>
-        <p className="mt-4">{problemSolvingCopy.lead}</p>
-      </header>
+      <SimulatorHeader unit={unit} slug="problem-solving">
+        {problemSolvingCopy.lead}
+      </SimulatorHeader>
       <TabList
         items={strategies}
         current={strategy}
@@ -158,17 +142,11 @@ export function ProblemSolvingPage() {
           </>
         )}
         {strategy === "records" && (
-          <>
-            {storageError && (
-              <p className="ps-input-error" role="status">
-                기록을 저장할 수 없어 이 화면을 벗어나면 현재 기록이 사라집니다.
-              </p>
-            )}
-            <ExperimentTable records={records} remove={remove} clear={clear} />
-            <Suspense fallback={<p>그래프를 불러오는 중…</p>}>
-              <RecordCharts records={records} />
-            </Suspense>
-          </>
+          <RecordsPanel
+            storageError={storageError}
+            table={<ExperimentTable records={records} remove={remove} clear={clear} />}
+            chart={<RecordCharts records={records} />}
+          />
         )}
       </section>
       {strategy !== "records" && (

@@ -1,4 +1,5 @@
 import { Quiz } from "../../shared/Quiz"
+import { lockLimit } from "./engine"
 
 const questions = [
   {
@@ -41,8 +42,8 @@ export function LockConcept() {
               {[1, 2, 3, 4, 5, 6].map(digits => (
                 <tr key={digits}>
                   <td>{digits}자리</td>
-                  <td>{(10 ** digits).toLocaleString()}개</td>
-                  <td>{(10 ** digits).toLocaleString()}회</td>
+                  <td>{lockLimit(digits).toLocaleString()}개</td>
+                  <td>{lockLimit(digits).toLocaleString()}회</td>
                 </tr>
               ))}
             </tbody>

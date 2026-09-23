@@ -55,6 +55,16 @@ it("손상된 저장값과 잘못된 URL을 안전하게 처리한다", () => {
   expect(screen.getByLabelText("동전 수")).toHaveValue(7)
   expect(screen.getByRole("tab", { name: "시뮬레이션" })).toHaveAttribute("aria-selected", "true")
 })
+it("자동 실행 중에는 Space로 단계를 끼워 넣지 않는다", () => {
+  vi.useFakeTimers()
+  open("n=8&algorithm=sequential-pair")
+  fireEvent.click(screen.getByRole("button", { name: "▶ 자동 실행" }))
+  fireEvent.keyDown(document.body, { code: "Space", key: " " })
+  expect(screen.getByText("단계 기록 (0)")).toBeInTheDocument()
+  act(() => vi.advanceTimersByTime(800))
+  expect(screen.getByText("단계 기록 (1)")).toBeInTheDocument()
+})
+
 it("단축키는 입력 중 방해하지 않고 본문에서 실행된다", () => {
   open("n=3")
   fireEvent.keyDown(screen.getByLabelText("동전 수"), { code: "Space", key: " " })

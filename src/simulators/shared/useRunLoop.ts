@@ -39,12 +39,13 @@ export function useRunLoop({ running, speed, tick, done, step, reset, toggle }: 
       if (isInteractiveTarget(event.target)) return
       if (event.code === "Space") {
         event.preventDefault()
-        step()
+        // "다음 단계" 버튼과 같은 조건이다. 자동 실행 중에 한 단계를 끼워 넣지 않는다.
+        if (!running && !done) step()
       }
       if (event.key.toLowerCase() === "r") reset()
       if (event.key.toLowerCase() === "a" && !done) toggle()
     }
     window.addEventListener("keydown", onKey)
     return () => window.removeEventListener("keydown", onKey)
-  }, [step, reset, toggle, done])
+  }, [step, reset, toggle, done, running])
 }

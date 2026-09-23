@@ -1,10 +1,11 @@
-import { lazy, Suspense, useMemo } from "react"
+import { lazy, useMemo } from "react"
 import { useSearchParams } from "react-router"
-import { Breadcrumb } from "../../components/layout/Breadcrumb"
-import { unitById, unitPath, unitStyle } from "../../content/units"
+import { unitById, unitStyle } from "../../content/units"
 import { clampCoinCount } from "./engine/core"
 import { ControlPanel } from "./components/ControlPanel"
 import { Simulation } from "./components/Simulation"
+import { RecordsPanel } from "../shared/RecordsPanel"
+import { SimulatorHeader } from "../shared/SimulatorHeader"
 import { TabList } from "../shared/TabList"
 import { useRecords } from "../shared/useRecords"
 import { modes } from "./modes"
@@ -39,18 +40,11 @@ export function BalanceScalePage() {
   }
   return (
     <div className="sim-page balance-page" style={unitStyle(unit)}>
-      <Breadcrumb
-        items={[{ label: unit.title, to: unitPath(unit) }, { label: "양팔저울로 가짜 동전 찾기" }]}
-      />
-      <header className="mt-6">
-        <p className="small-note">알고리즘 실험실 · 02</p>
-        <h1 className="text-[clamp(2rem,5vw,3rem)]">양팔저울로 가짜 동전 찾기</h1>
-        <p className="mt-4">
-          겉모양이 같은 동전 여러 개 중 <strong>진짜보다 가벼운 가짜 동전이 딱 하나</strong>
-          있습니다. 저울은 ‘왼쪽이 가볍다 / 오른쪽이 가볍다 / 양쪽이 같다’만 알려 줍니다. 가장 적은
-          저울질로 가짜 동전을 찾아보세요.
-        </p>
-      </header>
+      <SimulatorHeader unit={unit} slug="balance-scale">
+        겉모양이 같은 동전 여러 개 중 <strong>진짜보다 가벼운 가짜 동전이 딱 하나</strong>
+        있습니다. 저울은 ‘왼쪽이 가볍다 / 오른쪽이 가볍다 / 양쪽이 같다’만 알려 줍니다. 가장 적은
+        저울질로 가짜 동전을 찾아보세요.
+      </SimulatorHeader>
       <TabList
         items={modes}
         current={mode}
@@ -72,15 +66,11 @@ export function BalanceScalePage() {
           />
         )}
         {mode === "records" && (
-          <>
-            {storageError && (
-              <p role="status">기록을 저장할 수 없어서, 이 화면을 벗어나면 기록이 사라집니다.</p>
-            )}
-            <ExperimentTable records={records} remove={remove} clear={clear} />
-            <Suspense fallback={<p>그래프를 불러오는 중…</p>}>
-              <ComplexityChart records={records} />
-            </Suspense>
-          </>
+          <RecordsPanel
+            storageError={storageError}
+            table={<ExperimentTable records={records} remove={remove} clear={clear} />}
+            chart={<ComplexityChart records={records} />}
+          />
         )}
       </section>
       <p className="small-note">

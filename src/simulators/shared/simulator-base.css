@@ -116,6 +116,14 @@
   font-size: 0.8rem;
 }
 
+/* 입력값이나 저장소 문제를 알리는 강조 상자. */
+.sim-error {
+  padding: 0.65rem 0.8rem;
+  border-left: 4px solid #b4233b;
+  background: #fff0f1;
+  color: #701329;
+}
+
 .section-title {
   display: flex;
   flex-wrap: wrap;

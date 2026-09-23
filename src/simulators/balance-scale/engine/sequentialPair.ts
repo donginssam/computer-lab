@@ -14,6 +14,6 @@ export const sequentialPair: Algorithm = {
   step(state) {
     if (state.finished) return state
     const [left, right, ...outside] = state.candidates
-    return { ...weigh(state, [left!], [right!], outside), cursor: state.cursor + 2 }
+    return weigh(state, [left!], [right!], outside)
   },
 }

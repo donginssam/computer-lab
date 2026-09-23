@@ -1,6 +1,6 @@
 import { useCallback, useReducer } from "react"
 import { useRunLoop } from "../../shared/useRunLoop"
-import { createRun, reduceRun, type StepEngine } from "./stepper"
+import { createRun, reduceRun, type RunState, type StepAction, type StepEngine } from "./stepper"
 
 function runId() {
   return crypto.randomUUID()
@@ -20,8 +20,7 @@ export function useStepper<O, S>({
   initialBatch?: number
 }) {
   const [run, dispatch] = useReducer(
-    (state: ReturnType<typeof createRun<O, S>>, action: Parameters<typeof reduceRun<O, S>>[3]) =>
-      reduceRun(engine, options, state, action),
+    (state: RunState<S>, action: StepAction) => reduceRun(engine, options, state, action),
     undefined,
     () => createRun(engine, options, createSeed(), runId(), initialSpeed, initialBatch),
   )

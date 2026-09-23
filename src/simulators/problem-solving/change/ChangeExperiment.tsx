@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react"
 import { RunControls } from "../../shared/RunControls"
 import { useSaveOnce } from "../../shared/useSaveOnce"
-import { StepLog } from "../shared/StepLog"
+import { StepLog } from "../../shared/StepLog"
 import type { Experiment } from "../shared/records"
 import { useStepper } from "../shared/useStepper"
 import { ChangeConcept } from "./ChangeConcept"

@@ -1,3 +1,4 @@
+import { strategyNames } from "../strategies"
 import { mergeSortComparisonLimit, sortStepText, type SortState, type SortStep } from "./engine"
 
 function CardRow({
@@ -54,7 +55,7 @@ export function SortView({ state }: { state: SortState }) {
     <section className="sim-card sort-scene">
       <div className="section-title">
         <div>
-          <p className="ps-kicker">작은 문제로 나누어 해결하기</p>
+          <p className="small-note">{strategyNames.sort.longTitle}</p>
           <h2>나누고, 정리하고, 합치기</h2>
         </div>
         <span className="strategy-chip sort-chip">많아도 빠름</span>

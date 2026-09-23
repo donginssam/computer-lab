@@ -1,10 +1,8 @@
-import { MAX_RECORDS, readStoredRecords } from "../../shared/records"
+import { readStoredRecords } from "../../shared/records"
 import { algorithms } from "../engine"
 import { COIN_MAX, COIN_MIN } from "../engine/core"
 import { algorithmIds, type AlgorithmId } from "../engine/types"
 import type { Placement } from "./reducer"
-
-export { MAX_RECORDS }
 
 export interface Experiment {
   id: string

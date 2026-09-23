@@ -1,7 +1,8 @@
-import { act, cleanup, renderHook } from "@testing-library/react"
+import { act, cleanup, render, renderHook, screen } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { mergeRecords } from "../../shared/records"
 import { useRecords } from "../../shared/useRecords"
+import { ExperimentTable } from "./ExperimentTable"
 import { readRecords, STORAGE_KEY, type Experiment } from "./records"
 
 const records: Experiment[] = [
@@ -45,6 +46,18 @@ describe("문제 해결 전략 기록", () => {
     expect(merged).toHaveLength(500)
     expect(merged[0].id).toBe("1")
     expect(merged.at(-1)).toEqual(records[1])
+  })
+
+  it("기록 표가 설정 패널과 같은 전략 이름과 라벨을 쓴다", () => {
+    render(<ExperimentTable records={records} remove={() => {}} clear={() => {}} />)
+    expect(screen.getByRole("heading", { name: "실험 기록 (3)" })).toBeInTheDocument()
+    for (const name of [
+      "시행착오 2자리 · 가장 늦게 찾는 곳 기록 삭제",
+      "욕심쟁이 120원 · 100·60·10원 기록 삭제",
+      "나누어 해결하기 8장 · 가장 많이 비교하는 순서 기록 삭제",
+    ])
+      expect(screen.getByRole("button", { name })).toBeInTheDocument()
+    expect(screen.getByRole("cell", { name: "가장 많이 걸려도 100회" })).toBeInTheDocument()
   })
 
   it("저장 실패를 알리고 다음 저장에서 복구한다", () => {

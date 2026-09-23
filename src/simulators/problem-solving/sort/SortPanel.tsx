@@ -1,14 +1,9 @@
 import { useState } from "react"
 import { blurOnEnter } from "../../shared/blurOnEnter"
-import { CARD_MAX, CARD_MIN, clampCardCount } from "../bounds"
-import { parseCardInput, type SortOrder } from "./engine"
-
-const orderNames: Record<SortOrder, string> = {
-  random: "무작위",
-  worst: "가장 많이 비교하는 순서",
-  reverse: "거꾸로",
-  manual: "직접 입력",
-}
+import { clampedParam } from "../../shared/params"
+import { CARD_DEFAULT, CARD_MAX, CARD_MIN, clampCardCount } from "../bounds"
+import { sortOrderLabel } from "../copy"
+import { parseCardInput, sortOrders, type SortOrder } from "./engine"
 
 export function SortPanel({
   n,
@@ -34,7 +29,7 @@ export function SortPanel({
           key={n}
           defaultValue={n}
           onBlur={event => {
-            const value = clampCardCount(Number(event.target.value) || 8)
+            const value = clampedParam(event.target.value, CARD_DEFAULT, clampCardCount)
             event.currentTarget.value = String(value)
             setManualCards(undefined)
             change({ n: String(value) })
@@ -52,9 +47,9 @@ export function SortPanel({
             change({ order: event.target.value })
           }}
         >
-          {Object.entries(orderNames).map(([value, label]) => (
+          {sortOrders.map(value => (
             <option value={value} key={value}>
-              {label}
+              {sortOrderLabel[value]}
             </option>
           ))}
         </select>
@@ -81,7 +76,7 @@ export function SortPanel({
         </label>
       )}
       {error && (
-        <p className="ps-input-error" role="alert">
+        <p className="sim-error" role="alert">
           {error} 이번 실험은 무작위 카드로 시작합니다.
         </p>
       )}

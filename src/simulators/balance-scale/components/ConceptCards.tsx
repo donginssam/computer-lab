@@ -43,8 +43,8 @@ export function ConceptCards() {
               {[8, 16, 32, 64, 128].map(n => (
                 <tr key={n}>
                   <td>{n}개</td>
-                  <td>{n / 2}회</td>
-                  <td>{Math.log2(n)}회</td>
+                  <td>{sequential.maxComparisons(n)}회</td>
+                  <td>{divide.maxComparisons(n)}회</td>
                 </tr>
               ))}
             </tbody>

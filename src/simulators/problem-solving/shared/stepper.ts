@@ -1,6 +1,4 @@
 export interface StepEngine<O, S> {
-  id: string
-  name: string
   init(options: O, seed: number): S
   step(state: S): S
   isFinished(state: S): boolean

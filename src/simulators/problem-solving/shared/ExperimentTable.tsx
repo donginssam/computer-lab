@@ -1,21 +1,18 @@
-import { formatCode } from "../lock/engine"
+import { lockPlacementLabel, sortOrderLabel } from "../copy"
+import { formatCode, lockLimit } from "../lock/engine"
 import { mergeSortComparisonLimit } from "../sort/engine"
-import { MAX_RECORDS, type Experiment } from "./records"
-
-const strategyName = {
-  lock: "시행착오",
-  change: "욕심쟁이",
-  sort: "나누어 해결하기",
-}
+import { strategyNames } from "../strategies"
+import { RecordTable, type RecordColumn } from "../../shared/RecordTable"
+import type { Experiment } from "./records"
 
 function problem(record: Experiment) {
   switch (record.strategy) {
     case "lock":
-      return `${record.digits}자리 · ${record.placement === "worst" ? "가장 늦게 찾는 곳" : record.placement === "random" ? "무작위" : "직접 입력"}`
+      return `${record.digits}자리 · ${lockPlacementLabel[record.placement]}`
     case "change":
       return `${record.amount.toLocaleString()}원 · ${record.coins.join("·")}원`
     case "sort":
-      return `${record.n}장 · ${record.order === "worst" ? "가장 많이 비교" : record.order === "reverse" ? "거꾸로" : record.order === "manual" ? "직접 입력" : "무작위"}`
+      return `${record.n}장 · ${sortOrderLabel[record.order]}`
   }
 }
 
@@ -33,7 +30,7 @@ function result(record: Experiment) {
 function comparison(record: Experiment) {
   switch (record.strategy) {
     case "lock":
-      return `가장 많이 걸려도 ${(10 ** record.digits).toLocaleString()}회`
+      return `가장 많이 걸려도 ${lockLimit(record.digits).toLocaleString()}회`
     case "change":
       return record.optimalCount === null
         ? "만들 수 있는 답 없음"
@@ -42,6 +39,13 @@ function comparison(record: Experiment) {
       return `가장 많이 걸려도 ${mergeSortComparisonLimit(record.n)}회`
   }
 }
+
+const columns: readonly RecordColumn<Experiment>[] = [
+  { header: "전략", cell: record => strategyNames[record.strategy].title },
+  { header: "문제", cell: problem },
+  { header: "실험 결과", cell: result },
+  { header: "비교 기준", cell: comparison },
+]
 
 export function ExperimentTable({
   records,
@@ -53,54 +57,15 @@ export function ExperimentTable({
   clear: () => void
 }) {
   return (
-    <section className="sim-card">
-      <div className="section-title">
-        <h2>실험 기록 ({records.length})</h2>
-        <button type="button" disabled={!records.length} onClick={clear}>
-          전체 삭제
-        </button>
-      </div>
-      <p className="small-note">
-        이 컴퓨터의 이 브라우저에만 최근 {MAX_RECORDS}개가 남습니다. 숨겨진 값은 실험을 끝낸 뒤에만
-        기록됩니다.
-      </p>
-      {!records.length ? (
-        <p className="empty-state">세 전략 중 하나를 끝까지 실행하면 여기에 기록이 쌓입니다.</p>
-      ) : (
-        <div className="table-scroll">
-          <table>
-            <caption className="sr-only">완료된 문제 해결 전략 실험 기록</caption>
-            <thead>
-              <tr>
-                <th scope="col">전략</th>
-                <th scope="col">문제</th>
-                <th scope="col">실험 결과</th>
-                <th scope="col">비교 기준</th>
-                <th scope="col">삭제</th>
-              </tr>
-            </thead>
-            <tbody>
-              {records.map(record => (
-                <tr key={record.id}>
-                  <td>{strategyName[record.strategy]}</td>
-                  <td>{problem(record)}</td>
-                  <td>{result(record)}</td>
-                  <td>{comparison(record)}</td>
-                  <td>
-                    <button
-                      type="button"
-                      aria-label={`${strategyName[record.strategy]} ${problem(record)} 기록 삭제`}
-                      onClick={() => remove(record.id)}
-                    >
-                      삭제
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </section>
+    <RecordTable
+      records={records}
+      remove={remove}
+      clear={clear}
+      columns={columns}
+      caption="완료된 문제 해결 전략 실험 기록"
+      note="숨겨진 값은 실험을 끝낸 뒤에만 기록됩니다."
+      empty="세 전략 중 하나를 끝까지 실행하면 여기에 기록이 쌓입니다."
+      deleteLabel={record => `${strategyNames[record.strategy].title} ${problem(record)} 기록 삭제`}
+    />
   )
 }

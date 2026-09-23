@@ -1,3 +1,4 @@
+import { strategyNames } from "../strategies"
 import { formatCode, lockLimit, type LockState } from "./engine"
 
 function elapsed(attempts: number) {
@@ -17,7 +18,7 @@ export function LockView({ state }: { state: LockState }) {
     <section className={`sim-card lock-scene ${state.finished ? "is-open" : ""}`}>
       <div className="section-title">
         <div>
-          <p className="ps-kicker">시행착오 방법</p>
+          <p className="small-note">{strategyNames.lock.longTitle}</p>
           <h2>0부터 하나씩 돌려 보기</h2>
         </div>
         <span className="strategy-chip lock-chip">반드시 찾음</span>

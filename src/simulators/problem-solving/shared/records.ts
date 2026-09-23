@@ -1,4 +1,4 @@
-import { MAX_RECORDS, readStoredRecords } from "../../shared/records"
+import { readStoredRecords } from "../../shared/records"
 import {
   CARD_MAX,
   CARD_MIN,
@@ -11,8 +11,6 @@ import {
 import { coinSetIds, normalizeCoins, type CoinSetId } from "../change/engine"
 import { lockLimit } from "../lock/engine"
 import { mergeSortComparisonLimit, sortOrders, type SortOrder } from "../sort/engine"
-
-export { MAX_RECORDS }
 
 interface BaseExperiment {
   id: string

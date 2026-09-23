@@ -14,19 +14,22 @@ pnpm exec prettier --check README.md docs
 
 전체 저장소 형식 검사는 `pnpm format:check`이며 `pnpm build`의 첫 단계에서도 실행합니다. `pnpm lint`는 oxlint의 정적 검사만 하고 포맷은 보지 않으므로, 둘을 함께 실행하는 `pnpm check`를 CI 워크플로가 사용합니다. 타입 검사만 필요하면 `pnpm typecheck`를 실행합니다. 문서만 변경할 때는 문서 범위의 검사와 링크 확인으로 검증하고, 기존 파일의 포맷을 일괄 수정하지 않습니다.
 
-| 테스트 파일                                                                      | 확인하는 행동                                                                                                     |
-| -------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| [units.test.ts](../src/content/units.test.ts)                                    | 5개 단원 순서, slug 중복, 시뮬레이터 경로                                                                         |
-| [engine.test.ts](../src/simulators/balance-scale/engine/engine.test.ts)          | N=2~100의 모든 가짜 위치에서 정답·종료·불변성·상한·최악 위치·종료 후 멱등성, 입력 오류                            |
-| [reducer.test.ts](../src/simulators/balance-scale/state/reducer.test.ts)         | 먼저 끝난 알고리즘 정지, 공통 tick 되감기                                                                         |
-| [records.test.tsx](../src/simulators/balance-scale/state/records.test.tsx)       | 저장 형식·500개 제한·중복 병합, 저장 실패와 복구, 행별·전체 삭제                                                  |
-| [simulation.test.tsx](../src/simulators/balance-scale/simulation.test.tsx)       | 같은 조건 비교와 중복 저장 방지, 타이머 정리, URL·저장값 오류, 단축키, N=100 자동 종료, 숫자 입력, 탭 키보드 이동 |
-| [stepper.test.ts](../src/simulators/problem-solving/shared/stepper.test.ts)      | 완료 후 멱등성, batch 진행과 tick 되감기, 실행 설정을 유지하는 초기화                                             |
-| [lock/engine.test.ts](../src/simulators/problem-solving/lock/engine.test.ts)     | 1~3자리 모든 비밀번호와 4자리 경계·표본의 정확한 시도 횟수, 이전 단계, 입력 오류                                  |
-| [change/engine.test.ts](../src/simulators/problem-solving/change/engine.test.ts) | 한국 동전 10~9,990원 전수 최적성, 실험용 A·B 반례, 직접 동전 입력 검증                                            |
-| [sort/engine.test.ts](../src/simulators/problem-solving/sort/engine.test.ts)     | N≤7 모든 순열 정렬, N=2~16 상한과 가장 많이 비교하는 순서, trace 되감기, 입력 오류                                |
-| [records.test.tsx](../src/simulators/problem-solving/shared/records.test.tsx)    | 전략별 저장 형식, 500개 제한과 중복 병합, 손상 값, 저장 실패와 복구                                               |
-| [simulation.test.tsx](../src/simulators/problem-solving/simulation.test.tsx)     | 전략 탭·URL, 세 실험 결과, 중복 저장 방지, 타이머 정리, 입력 중 단축키 무시                                       |
+| 테스트 파일                                                                             | 확인하는 행동                                                                                                                              |
+| --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| [useScrollRestoration.test.tsx](../src/components/layout/useScrollRestoration.test.tsx) | 같은 페이지의 설정·탭 변경에서 스크롤·저장소 유지, 다른 페이지로 이동하면 맨 위, 뒤로 가기 위치 복원                                       |
+| [params.test.ts](../src/simulators/shared/params.test.ts)                               | 빈 값·공백·숫자가 아닌 값의 기본값, 범위 보정과 정수화                                                                                     |
+| [bounds.test.ts](../src/simulators/problem-solving/bounds.test.ts)                      | 무작위 금액의 범위·단위와 양 끝값                                                                                                          |
+| [units.test.ts](../src/content/units.test.ts)                                           | 5개 단원 순서, slug 중복, 시뮬레이터 경로                                                                                                  |
+| [engine.test.ts](../src/simulators/balance-scale/engine/engine.test.ts)                 | N=2~100의 모든 가짜 위치에서 정답·종료·불변성·상한·최악 위치·종료 후 멱등성, 입력 오류                                                     |
+| [reducer.test.ts](../src/simulators/balance-scale/state/reducer.test.ts)                | 먼저 끝난 알고리즘 정지, 공통 tick 되감기                                                                                                  |
+| [records.test.tsx](../src/simulators/balance-scale/state/records.test.tsx)              | 저장 형식·500개 제한·중복 병합, 저장 실패와 복구, 행별·전체 삭제                                                                           |
+| [simulation.test.tsx](../src/simulators/balance-scale/simulation.test.tsx)              | 같은 조건 비교와 중복 저장 방지, 타이머 정리, URL·저장값 오류, 단축키, 자동 실행 중 Space 무시, N=100 자동 종료, 숫자 입력, 탭 키보드 이동 |
+| [stepper.test.ts](../src/simulators/problem-solving/shared/stepper.test.ts)             | 완료 후 멱등성, batch 진행과 tick 되감기, 실행 설정을 유지하는 초기화                                                                      |
+| [lock/engine.test.ts](../src/simulators/problem-solving/lock/engine.test.ts)            | 1~3자리 모든 비밀번호와 4자리 경계·표본의 정확한 시도 횟수, 이전 단계와 다시 진행한 상태의 일치, 입력 오류                                 |
+| [change/engine.test.ts](../src/simulators/problem-solving/change/engine.test.ts)        | 한국 동전 10~9,990원 전수 최적성, 실험용 A·B 반례, 직접 동전 입력 검증                                                                     |
+| [sort/engine.test.ts](../src/simulators/problem-solving/sort/engine.test.ts)            | N≤7 모든 순열 정렬, N=2~16 상한과 가장 많이 비교하는 순서, trace 되감기, 입력 오류와 잘못된 직접 입력의 무작위 대체                        |
+| [records.test.tsx](../src/simulators/problem-solving/shared/records.test.tsx)           | 전략별 저장 형식, 500개 제한과 중복 병합, 손상 값, 저장 실패와 복구, 기록 표의 전략 이름·라벨                                              |
+| [simulation.test.tsx](../src/simulators/problem-solving/simulation.test.tsx)            | 전략 탭·URL, 세 실험 결과, 중복 저장 방지, 타이머 정리, 입력 중 단축키 무시, 주소·입력칸 보정 일치, 단계 기록 번호                         |
 
 엔진 전수 검사는 알고리즘당 5,049개 `(N, fakeIndex)` 조합을 다룹니다. 정확한 테스트 개수와 통과 여부는 실행 결과를 기준으로 기록합니다.
 
@@ -61,6 +64,8 @@ N=3의 무작위 위치는 원하는 값이 보장되지 않으므로 브라우�
 360/768/1280px에서 문서 전체의 가로 넘침, 저울과 동전 100개의 배치, 기록 표 내부 스크롤, 그래프 범례, 포커스 표시를 확인합니다. 모션 감소 환경과 콘솔 오류도 확인합니다.
 
 ## 검증 이력과 한계
+
+2026-09-23 리팩터링(스크롤 복원, 주소·입력칸 보정 공용화, 범위 상수와 라벨 정리, 공용 화면 조각, 자잘한 정리 8건): `pnpm check`, 15개 파일·59개 테스트, 루트와 `/computer-lab/` 경로의 빌드(타입 검사 포함)와 `pnpm verify:pwa`가 모두 통과했습니다. 개발 서버의 보이는 브라우저 창에서 페이지를 내린 뒤 동전 수 슬라이더를 클릭·방향키로 바꾸고 모드 탭과 전략 탭을 눌러도 스크롤 위치가 그대로였고(창 본래 폭 1134px와 360px), 단원 페이지로 가면 맨 위로, 뒤로 가면 떠날 때 위치와 모드로 돌아왔습니다. 자동 실행 중 Space는 단계를 끼워 넣지 않고 멈춘 상태의 Space는 한 단계 진행했으며, 나란히 비교 N=8은 차례로 4회·절반씩 3회로 같은 동전을 찾았습니다. 실험용 동전 A 120원은 ‘욕심쟁이 결과와 다릅니다’, 한국 동전 870원은 ‘같습니다’로 표시되고, 금액 무작위는 범위 안의 10원 단위만 골랐으며, 잘못된 직접 입력 카드는 같은 오류 문구와 함께 무작위 카드로 대체되었습니다. 자물쇠 2자리를 10회씩 3단계 진행하면 단계 기록이 11~30번, 이전 단계에서 1~20번, 다시 진행하면 11~30번으로 표시되었습니다. 360/768/1280px에서 두 시뮬레이터의 실험·기록 화면에 문서 전체 가로 넘침이 없고, 기록 표는 폭이 좁을 때만 표 안에서 가로로 스크롤되며, 페이지 머리의 글자 크기·여백이 리팩터링 전과 같았습니다. 확인한 실행에서 콘솔 오류는 없었습니다. 1280px 에뮬레이션은 창보다 커서 축소 표시되므로 이 폭에서는 측정만 하고, 클릭 확인은 창 본래 폭에서 했습니다.
 
 2026-09-09 헤더 설치 버튼 추가: 설치 이벤트의 사용자 클릭 처리·일회성 사용, 설치 안내, 설치 완료 및 standalone 버튼 숨김을 포함해 12개 파일·51개 테스트가 통과했습니다. lint·타입·빌드·PWA 검사도 통과했습니다. 360px 브라우저에서 버튼이 우측 상단에 배치되고 가로 넘침이 없으며, 안내창을 Escape로 닫으면 설치 버튼으로 초점이 돌아오는 것을 확인했습니다.
 

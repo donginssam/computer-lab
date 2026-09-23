@@ -8,18 +8,21 @@ import {
   XAxis,
   YAxis,
 } from "recharts"
+import { CARD_MAX, CARD_MIN, DIGIT_CHOICES, DIGIT_MAX, DIGIT_MIN } from "../bounds"
+import { lockLimit } from "../lock/engine"
 import { mergeSortComparisonLimit } from "../sort/engine"
 import type { Experiment } from "./records"
+
+const lockLimits = DIGIT_CHOICES.map(digits => ({ digits, limit: lockLimit(digits) }))
+const sortLimits = Array.from({ length: CARD_MAX - CARD_MIN + 1 }, (_, index) => {
+  const n = index + CARD_MIN
+  return { n, limit: mergeSortComparisonLimit(n) }
+})
 
 export function RecordCharts({ records }: { records: Experiment[] }) {
   const lock = records.filter(record => record.strategy === "lock")
   const change = records.filter(record => record.strategy === "change")
   const sort = records.filter(record => record.strategy === "sort")
-  const lockLimit = [1, 2, 3, 4].map(digits => ({ digits, limit: 10 ** digits }))
-  const sortLimit = Array.from({ length: 15 }, (_, index) => {
-    const n = index + 2
-    return { n, limit: mergeSortComparisonLimit(n) }
-  })
 
   return (
     <section className="ps-record-charts" aria-labelledby="record-chart-title">
@@ -30,10 +33,15 @@ export function RecordCharts({ records }: { records: Experiment[] }) {
           <p className="small-note">선은 가장 많이 걸려도 필요한 횟수, 점은 내 실험입니다.</p>
           <div className="chart">
             <ResponsiveContainer width="100%" height="100%" minWidth={0}>
-              <ComposedChart data={lockLimit} accessibilityLayer>
+              <ComposedChart data={lockLimits} accessibilityLayer>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="digits" type="number" domain={[1, 4]} ticks={[1, 2, 3, 4]} />
-                <YAxis type="number" scale="log" domain={[1, 10000]} />
+                <XAxis
+                  dataKey="digits"
+                  type="number"
+                  domain={[DIGIT_MIN, DIGIT_MAX]}
+                  ticks={DIGIT_CHOICES}
+                />
+                <YAxis type="number" scale="log" domain={[1, lockLimit(DIGIT_MAX)]} />
                 <Tooltip />
                 <Line
                   dataKey="limit"
@@ -87,9 +95,14 @@ export function RecordCharts({ records }: { records: Experiment[] }) {
           <p className="small-note">선은 가장 많이 비교하는 횟수, 점은 내 실험입니다.</p>
           <div className="chart">
             <ResponsiveContainer width="100%" height="100%" minWidth={0}>
-              <ComposedChart data={sortLimit} accessibilityLayer>
+              <ComposedChart data={sortLimits} accessibilityLayer>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="n" type="number" domain={[2, 16]} allowDecimals={false} />
+                <XAxis
+                  dataKey="n"
+                  type="number"
+                  domain={[CARD_MIN, CARD_MAX]}
+                  allowDecimals={false}
+                />
                 <YAxis type="number" allowDecimals={false} />
                 <Tooltip />
                 <Line

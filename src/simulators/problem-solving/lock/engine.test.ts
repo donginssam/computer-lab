@@ -23,13 +23,19 @@ describe("시행착오 자물쇠 엔진", () => {
   })
 
   it("최근 20회만 남기고 되감기와 종료 후 호출이 안정적이다", () => {
-    let state = lockEngine.init({ digits: 2 }, 99)
-    for (let index = 0; index < 30; index += 1) state = lockEngine.step(state)
+    const stepped = (count: number) => {
+      let state = lockEngine.init({ digits: 2 }, 99)
+      for (let index = 0; index < count; index += 1) state = lockEngine.step(state)
+      return state
+    }
+    let state = stepped(30)
     expect(state.recent).toHaveLength(20)
     expect(state.recent[0]).toBe(10)
     state = lockEngine.back!(state)
     expect(state.attempts).toBe(29)
     expect(state.current).toBe(29)
+    // step과 back이 최근 기록을 다르게 자르면 되감은 상태가 29번 진행한 상태와 어긋난다.
+    expect(state).toEqual(stepped(29))
     const done = finish(1, 0)
     expect(lockEngine.step(done)).toBe(done)
   })

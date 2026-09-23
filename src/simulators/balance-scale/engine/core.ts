@@ -1,3 +1,4 @@
+import { clampedParam, clampInteger } from "../../shared/params"
 import type { SimState, Tilt } from "./types"
 
 export const COIN_MIN = 2
@@ -10,11 +11,8 @@ export const COIN_DEFAULT = 7
  * 기본값으로, 숫자면 COIN_MIN~COIN_MAX 범위로 맞춘다. 두 입구가 같은 함수를
  * 쓰므로 `?n=0`과 입력칸의 `0`이 서로 다른 동전 수가 되는 일이 없다.
  */
-export function clampCoinCount(value: string | number | null | undefined): number {
-  const parsed = Number(value)
-  if (value === null || value === undefined || value === "" || !Number.isFinite(parsed))
-    return COIN_DEFAULT
-  return Math.max(COIN_MIN, Math.min(COIN_MAX, Math.trunc(parsed)))
+export function clampCoinCount(value: string | null | undefined): number {
+  return clampedParam(value, COIN_DEFAULT, n => clampInteger(n, COIN_MIN, COIN_MAX))
 }
 
 export function tilt(left: number[], right: number[], fakeIndex: number): Tilt {
@@ -38,7 +36,6 @@ export function init(n: number, fakeIndex: number): SimState {
     comparisons: 0,
     history: [],
     finished: false,
-    cursor: 0,
   }
 }
 export function weigh(
