@@ -15,6 +15,9 @@ const BalanceScalePage = lazy(() =>
 const ProblemSolvingPage = lazy(() =>
   import("./simulators/problem-solving").then(m => ({ default: m.ProblemSolvingPage })),
 )
+const BinaryNumberPage = lazy(() =>
+  import("./simulators/binary-number").then(m => ({ default: m.BinaryNumberPage })),
+)
 
 /**
  * loader도 action도 쓰지 않으므로 선언형 라우터로 충분하다. createBrowserRouter의
@@ -40,6 +43,14 @@ export function AppRoutes() {
             element={
               <Suspense fallback={null}>
                 <ProblemSolvingPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="units/data/binary-number"
+            element={
+              <Suspense fallback={null}>
+                <BinaryNumberPage />
               </Suspense>
             }
           />

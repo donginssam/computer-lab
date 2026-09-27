@@ -43,7 +43,16 @@ export const units: Unit[] = [
     lead: "글자, 그림, 소리가 숫자로 바뀌고 다시 정보가 되는 과정을 다룹니다.",
     blurb: "표현, 압축, 시각화",
     color: "var(--color-unit-data)",
-    simulators: [],
+    lab: "데이터 실험실",
+    simulators: [
+      {
+        slug: "binary-number",
+        title: "0과 1로 수 나타내기",
+        summary:
+          "자릿값 카드와 2로 나누기로 양의 정수를 이진수로 바꾸고, 두 방법이 같은 답을 내는지 확인합니다.",
+        status: "ready",
+      },
+    ],
   },
   {
     id: "algorithm",

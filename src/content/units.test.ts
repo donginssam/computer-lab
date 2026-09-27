@@ -26,4 +26,11 @@ describe("units", () => {
     expect(simulatorPath(algorithm, simulator)).toBe("/units/algorithm/problem-solving")
     expect(simulator.status).toBe("ready")
   })
+
+  it("0과 1로 수 나타내기 경로를 데이터 단원에 만든다", () => {
+    const data = unitById("data")!
+    const simulator = data.simulators.find(item => item.slug === "binary-number")!
+    expect(simulatorPath(data, simulator)).toBe("/units/data/binary-number")
+    expect(simulator.status).toBe("ready")
+  })
 })
