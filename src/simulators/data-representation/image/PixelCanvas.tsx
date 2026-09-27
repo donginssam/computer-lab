@@ -1,6 +1,6 @@
 import { useState } from "react"
-import { spacedBits } from "../shared/digits"
-import { Quiz } from "../shared/Quiz"
+import { spacedBits } from "../../shared/digits"
+import { Quiz } from "../../shared/Quiz"
 import {
   bitsPerPixel,
   blankPixels,

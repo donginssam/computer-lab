@@ -1,12 +1,10 @@
-import { useCallback, useMemo } from "react"
-import { useSearchParams } from "react-router"
-import { unitById, unitStyle } from "../../content/units"
-import { NumberField } from "../shared/NumberField"
-import { clampedParam, clampInteger, oneOfParam } from "../shared/params"
-import { Quiz } from "../shared/Quiz"
-import { RunControls } from "../shared/RunControls"
-import { SimulatorHeader } from "../shared/SimulatorHeader"
-import { useStepRun } from "../shared/useStepRun"
+import { useMemo } from "react"
+import { NumberField } from "../../shared/NumberField"
+import { clampedParam, clampInteger, oneOfParam } from "../../shared/params"
+import { Quiz } from "../../shared/Quiz"
+import { RunControls } from "../../shared/RunControls"
+import { useStepRun } from "../../shared/useStepRun"
+import type { Change } from "../copy"
 import { soundCopy, stages } from "./copy"
 import {
   averageError,
@@ -48,9 +46,13 @@ const questions = [
   },
 ] as const
 
-export function SoundDigitizePage() {
-  const unit = unitById("data")!
-  const [params, setParams] = useSearchParams()
+export function SoundPanel({
+  params,
+  change: changeAll,
+}: {
+  params: URLSearchParams
+  change: Change
+}) {
   const waveId = oneOfParam(params.get("wave"), waveIds, "smooth")
   const count = clampedParam(params.get("n"), 12, value =>
     clampInteger(value, SAMPLES_MIN, SAMPLES_MAX),
@@ -62,27 +64,13 @@ export function SoundDigitizePage() {
   // 설정을 바꿔도 단계는 그대로 두어, 같은 단계에서 무엇이 달라지는지 바로 비교하게 한다.
   const { tick: stage, controls } = useStepRun(stages.length - 1)
 
-  const change = useCallback(
-    (key: string, value: string) => {
-      setParams(
-        current => {
-          const next = new URLSearchParams(current)
-          next.set(key, value)
-          return next
-        },
-        { replace: true },
-      )
-    },
-    [setParams],
-  )
+  const change = (key: string, value: string) => changeAll({ [key]: value })
 
   const size = totalBits(count, bits)
 
   return (
-    <div className="sim-page sound-page" style={unitStyle(unit)}>
-      <SimulatorHeader unit={unit} slug="sound-digitize">
-        {soundCopy.lead}
-      </SimulatorHeader>
+    <div className="sound-page">
+      <p className="data-lead">{soundCopy.lead}</p>
 
       <section className="sim-card sim-settings sound-settings" aria-label="디지털 변환 설정">
         <div className="button-row" role="group" aria-label="소리 모양">
@@ -245,8 +233,6 @@ export function SoundDigitizePage() {
         </div>
         <Quiz questions={questions} />
       </section>
-
-      <p className="small-note">{soundCopy.hiddenSetting}</p>
     </div>
   )
 }

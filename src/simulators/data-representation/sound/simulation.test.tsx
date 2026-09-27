@@ -1,7 +1,7 @@
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, expect, it, vi } from "vitest"
 import { MemoryRouter, useLocation } from "react-router"
-import { SoundDigitizePage } from "."
+import { DataRepresentationPage } from ".."
 
 function LocationProbe() {
   const location = useLocation()
@@ -10,8 +10,10 @@ function LocationProbe() {
 
 function open(query = "") {
   return render(
-    <MemoryRouter initialEntries={[`/units/data/sound-digitize${query ? `?${query}` : ""}`]}>
-      <SoundDigitizePage />
+    <MemoryRouter
+      initialEntries={[`/units/data/data-representation?kind=sound${query ? `&${query}` : ""}`]}
+    >
+      <DataRepresentationPage />
       <LocationProbe />
     </MemoryRouter>,
   )

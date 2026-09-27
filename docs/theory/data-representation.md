@@ -1,14 +1,14 @@
 # 문자·그림·소리를 0과 1로: 데이터 표현
 
-[문서 목록](../README.md) · [문자](../../src/simulators/text-encoding/index.tsx) · [그림](../../src/simulators/image-pixel/index.tsx) · [소리](../../src/simulators/sound-digitize/index.tsx)
+[문서 목록](../README.md) · [시뮬레이터](../../src/simulators/data-representation/index.tsx)
 
-데이터 단원의 [이진수 시뮬레이터](binary-number.md) 뒤에 이어지는 세 시뮬레이터의 교사용 참고 자료입니다. 세 시뮬레이터 모두 "정보를 수로 약속하고, 그 수를 이진수로 적는다"는 한 가지 생각을 문자·그림·소리에 적용합니다.
+데이터 단원의 [이진수 시뮬레이터](binary-number.md) 뒤에 이어지는 `문자·그림·소리를 0과 1로` 시뮬레이터의 교사용 참고 자료입니다. 한 페이지에 문자·그림·소리 탭을 두고, 세 탭 모두 "정보를 수로 약속하고, 그 수를 이진수로 적는다"는 한 가지 생각을 문자·그림·소리에 적용합니다.
 
-| 시뮬레이터          | 탭·단계                                     | 핵심 질문                                    |
-| ------------------- | ------------------------------------------- | -------------------------------------------- |
-| 문자를 0과 1로      | 문자 → 이진수, 이진수 → 문자                | 글자는 어떤 약속(코드표)으로 수가 될까?      |
-| 그림을 픽셀과 RGB로 | RGB로 색 만들기, 픽셀 그림                  | 색 하나, 그림 한 장은 몇 비트일까?           |
-| 소리를 0과 1로      | 원래 소리 → 표본화 → 양자화 → 부호화 → 복원 | 이어진 소리를 어떻게 셀 수 있는 수로 바꿀까? |
+| 탭   | 보기·단계                                   | 핵심 질문                                    |
+| ---- | ------------------------------------------- | -------------------------------------------- |
+| 문자 | 문자 → 이진수, 이진수 → 문자                | 글자는 어떤 약속(코드표)으로 수가 될까?      |
+| 그림 | RGB로 색 만들기, 픽셀 그림                  | 색 하나, 그림 한 장은 몇 비트일까?           |
+| 소리 | 원래 소리 → 표본화 → 양자화 → 부호화 → 복원 | 이어진 소리를 어떻게 셀 수 있는 수로 바꿀까? |
 
 ## 문자
 
@@ -42,13 +42,13 @@
 
 ## 구현 기준
 
-| 파일                                                                      | 역할                                              |
-| ------------------------------------------------------------------------- | ------------------------------------------------- |
-| [text-encoding/engine.ts](../../src/simulators/text-encoding/engine.ts)   | 글자 → 코드·UTF-8 바이트, 코드 → 글자 종류        |
-| [image-pixel/engine.ts](../../src/simulators/image-pixel/engine.ts)       | RGB·16진수 변환, 흑백 밝기, 용량, 예시 그림       |
-| [sound-digitize/engine.ts](../../src/simulators/sound-digitize/engine.ts) | 파형, 표본화·양자화·부호화, 계단 복원, 평균 차이  |
-| [shared/digits.ts](../../src/simulators/shared/digits.ts)                 | 0을 채운 이진수·16진수, 4비트 띄어 쓰기           |
-| [shared/useStepRun.ts](../../src/simulators/shared/useStepRun.ts)         | 2로 나누기와 소리 변환이 함께 쓰는 단계 실행      |
-| [shared/NumberField.tsx](../../src/simulators/shared/NumberField.tsx)     | 확정할 때 범위로 맞추고 이유를 알리는 정수 입력칸 |
+| 파일                                                                        | 역할                                              |
+| --------------------------------------------------------------------------- | ------------------------------------------------- |
+| [text/engine.ts](../../src/simulators/data-representation/text/engine.ts)   | 글자 → 코드·UTF-8 바이트, 코드 → 글자 종류        |
+| [image/engine.ts](../../src/simulators/data-representation/image/engine.ts) | RGB·16진수 변환, 흑백 밝기, 용량, 예시 그림       |
+| [sound/engine.ts](../../src/simulators/data-representation/sound/engine.ts) | 파형, 표본화·양자화·부호화, 계단 복원, 평균 차이  |
+| [shared/digits.ts](../../src/simulators/shared/digits.ts)                   | 0을 채운 이진수·16진수, 4비트 띄어 쓰기           |
+| [shared/useStepRun.ts](../../src/simulators/shared/useStepRun.ts)           | 2로 나누기와 소리 변환이 함께 쓰는 단계 실행      |
+| [shared/NumberField.tsx](../../src/simulators/shared/NumberField.tsx)       | 확정할 때 범위로 맞추고 이유를 알리는 정수 입력칸 |
 
-세 시뮬레이터 모두 결과가 입력만으로 정해지므로 기록과 저장소를 두지 않습니다. 주소에는 탭과 설정(입력 글자, 코드, 색, 색 깊이, 표본 수, 비트, 파형)만 남기고, 칠한 픽셀 그림·해독 문제·진행 단계는 남기지 않습니다.
+세 탭 모두 결과가 입력만으로 정해지므로 기록과 저장소를 두지 않습니다. 주소에는 탭과 설정(입력 글자, 코드, 색, 색 깊이, 표본 수, 비트, 파형)만 남기고, 칠한 픽셀 그림·해독 문제·진행 단계는 남기지 않습니다.

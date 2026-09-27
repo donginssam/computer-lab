@@ -18,14 +18,8 @@ const ProblemSolvingPage = lazy(() =>
 const BinaryNumberPage = lazy(() =>
   import("./simulators/binary-number").then(m => ({ default: m.BinaryNumberPage })),
 )
-const TextEncodingPage = lazy(() =>
-  import("./simulators/text-encoding").then(m => ({ default: m.TextEncodingPage })),
-)
-const ImagePixelPage = lazy(() =>
-  import("./simulators/image-pixel").then(m => ({ default: m.ImagePixelPage })),
-)
-const SoundDigitizePage = lazy(() =>
-  import("./simulators/sound-digitize").then(m => ({ default: m.SoundDigitizePage })),
+const DataRepresentationPage = lazy(() =>
+  import("./simulators/data-representation").then(m => ({ default: m.DataRepresentationPage })),
 )
 
 /**
@@ -64,26 +58,10 @@ export function AppRoutes() {
             }
           />
           <Route
-            path="units/data/text-encoding"
+            path="units/data/data-representation"
             element={
               <Suspense fallback={null}>
-                <TextEncodingPage />
-              </Suspense>
-            }
-          />
-          <Route
-            path="units/data/image-pixel"
-            element={
-              <Suspense fallback={null}>
-                <ImagePixelPage />
-              </Suspense>
-            }
-          />
-          <Route
-            path="units/data/sound-digitize"
-            element={
-              <Suspense fallback={null}>
-                <SoundDigitizePage />
+                <DataRepresentationPage />
               </Suspense>
             }
           />

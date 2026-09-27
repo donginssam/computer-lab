@@ -1,7 +1,7 @@
 import { useId, useState, type CSSProperties } from "react"
-import { NumberField } from "../shared/NumberField"
-import { Quiz } from "../shared/Quiz"
-import { toBinary, toHex } from "../shared/digits"
+import { NumberField } from "../../shared/NumberField"
+import { Quiz } from "../../shared/Quiz"
+import { toBinary, toHex } from "../../shared/digits"
 import { channelNames } from "./copy"
 import {
   CHANNEL_MAX,
@@ -61,7 +61,7 @@ export function MixColor({
 }) {
   const hex = rgbToHex(color)
   const name = colorName(color)
-  const setColor = (next: Rgb) => change({ c: rgbToHex(next).slice(1) })
+  const setColor = (next: Rgb) => change({ color: rgbToHex(next).slice(1) })
   const setChannel = (channel: Channel, value: number) => setColor({ ...color, [channel]: value })
 
   return (

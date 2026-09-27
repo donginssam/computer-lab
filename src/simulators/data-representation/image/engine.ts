@@ -2,7 +2,7 @@
  * 색과 픽셀 그림의 표현. 화면 상태와 무관한 순수 함수만 둔다.
  * 색은 빛의 삼원색 R·G·B를 각각 0~255(8비트)로 적은 24비트 트루컬러를 쓴다.
  */
-import { toBinary, toHex } from "../shared/digits"
+import { toBinary, toHex } from "../../shared/digits"
 
 export const CHANNEL_MAX = 255
 export const CHANNEL_BITS = 8

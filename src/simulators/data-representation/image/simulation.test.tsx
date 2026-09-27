@@ -1,7 +1,7 @@
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react"
 import { afterEach, expect, it } from "vitest"
 import { MemoryRouter, useLocation } from "react-router"
-import { ImagePixelPage } from "."
+import { DataRepresentationPage } from ".."
 
 function LocationProbe() {
   const location = useLocation()
@@ -10,8 +10,10 @@ function LocationProbe() {
 
 function open(query = "") {
   return render(
-    <MemoryRouter initialEntries={[`/units/data/image-pixel${query ? `?${query}` : ""}`]}>
-      <ImagePixelPage />
+    <MemoryRouter
+      initialEntries={[`/units/data/data-representation?kind=image${query ? `&${query}` : ""}`]}
+    >
+      <DataRepresentationPage />
       <LocationProbe />
     </MemoryRouter>,
   )
@@ -24,12 +26,12 @@ const pixel = (row: number, column: number) =>
 afterEach(cleanup)
 
 it("R·G·B 세기를 바꾸면 16진수와 이진수가 따라 바뀐다", () => {
-  open("c=000000")
+  open("color=000000")
   expect(status()).toHaveTextContent("검정: R 0 · G 0 · B 0 → #000000")
   fireEvent.change(screen.getByLabelText("빨강 세기 슬라이더"), { target: { value: "255" } })
   fireEvent.change(screen.getByLabelText("초록 세기 슬라이더"), { target: { value: "255" } })
   expect(status()).toHaveTextContent("노랑: R 255 · G 255 · B 0 → #FFFF00")
-  expect(screen.getByTestId("location")).toHaveTextContent("c=FFFF00")
+  expect(screen.getByTestId("location")).toHaveTextContent("color=FFFF00")
 
   const blue = screen.getByLabelText("파랑(B)")
   fireEvent.change(blue, { target: { value: "300" } })
@@ -59,7 +61,7 @@ it("자주 쓰는 색 버튼", () => {
 })
 
 it("픽셀을 살펴보고 칠하며, 크기를 계산한다", () => {
-  open("tab=pixels")
+  open("view=pixels")
   expect(status()).toHaveTextContent("64픽셀 × 24비트 = 1,536비트(192바이트)")
   fireEvent.click(pixel(2, 1))
   expect(pixel(2, 1)).toHaveAttribute("aria-pressed", "true")
@@ -74,7 +76,7 @@ it("픽셀을 살펴보고 칠하며, 크기를 계산한다", () => {
 })
 
 it("RGB 탭에서 만든 색을 붓으로 쓴다", () => {
-  open("tab=pixels&c=123456")
+  open("view=pixels&color=123456")
   fireEvent.click(screen.getByRole("button", { name: "칠하기" }))
   fireEvent.click(screen.getByRole("button", { name: "RGB 탭에서 만든 색" }))
   fireEvent.click(pixel(8, 8))
@@ -82,7 +84,7 @@ it("RGB 탭에서 만든 색을 붓으로 쓴다", () => {
 })
 
 it("흑백 1비트로 바꾸면 비트와 용량이 달라진다", () => {
-  open("tab=pixels")
+  open("view=pixels")
   fireEvent.click(screen.getByRole("button", { name: "흑백 1비트" }))
   expect(screen.getByTestId("location")).toHaveTextContent("depth=bw")
   expect(status()).toHaveTextContent("64픽셀 × 1비트 = 64비트(8바이트)")

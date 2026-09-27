@@ -1,4 +1,4 @@
-import type { TabItem } from "../shared/TabList"
+import type { TabItem } from "../../shared/TabList"
 import type { Channel } from "./engine"
 
 /**
@@ -25,6 +25,4 @@ export const channelNames: Record<Channel, { name: string; letter: string }> = {
 
 export const imageCopy = {
   lead: "화면의 그림은 아주 작은 점(픽셀)이 모인 것이고, 픽셀마다 빨강·초록·파랑 빛의 세기를 수로 저장합니다. 색을 섞어 16진수와 이진수로 적고, 그림 한 장이 몇 비트인지 계산해 보세요.",
-  hiddenSetting:
-    "지금 주소를 복사하면 탭, 만든 색, 색 깊이를 그대로 전달할 수 있습니다. 칠한 픽셀 그림은 전달되지 않습니다.",
 } as const

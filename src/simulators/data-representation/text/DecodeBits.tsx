@@ -1,6 +1,6 @@
 import { useId, useState } from "react"
-import { spacedBits, toBinary, toHex } from "../shared/digits"
-import { Quiz } from "../shared/Quiz"
+import { spacedBits, toBinary, toHex } from "../../shared/digits"
+import { Quiz } from "../../shared/Quiz"
 import { ASCII_MAX, decodeCode } from "./engine"
 
 const places = [128, 64, 32, 16, 8, 4, 2, 1]
@@ -40,7 +40,7 @@ export function DecodeBits({
 }) {
   const bits = [...toBinary(code)].map(Number)
   const decoded = decodeCode(code)
-  const setCode = (next: number) => change({ c: String(next) })
+  const setCode = (next: number) => change({ code: String(next) })
 
   return (
     <>

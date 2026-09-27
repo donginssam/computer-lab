@@ -7,7 +7,7 @@
  *
  * 시간 t는 그래프 한 구간을 0~1로, 소리의 높이는 −1~1로 둔다.
  */
-import { toBinary } from "../shared/digits"
+import { toBinary } from "../../shared/digits"
 
 export const SAMPLES_MIN = 4
 export const SAMPLES_MAX = 32

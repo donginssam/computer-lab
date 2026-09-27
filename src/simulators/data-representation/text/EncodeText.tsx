@@ -1,6 +1,6 @@
 import { useId, useState, type CSSProperties } from "react"
-import { spacedBits, toBinary, toHex } from "../shared/digits"
-import { Quiz } from "../shared/Quiz"
+import { spacedBits, toBinary, toHex } from "../../shared/digits"
+import { Quiz } from "../../shared/Quiz"
 import { samples } from "./copy"
 import { byteCount, charLabel, encodeText, MAX_CHARS } from "./engine"
 

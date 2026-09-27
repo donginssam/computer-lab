@@ -1,7 +1,7 @@
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react"
 import { afterEach, expect, it, vi } from "vitest"
 import { MemoryRouter, useLocation } from "react-router"
-import { TextEncodingPage } from "."
+import { DataRepresentationPage } from ".."
 
 function LocationProbe() {
   const location = useLocation()
@@ -10,8 +10,10 @@ function LocationProbe() {
 
 function open(query = "") {
   return render(
-    <MemoryRouter initialEntries={[`/units/data/text-encoding${query ? `?${query}` : ""}`]}>
-      <TextEncodingPage />
+    <MemoryRouter
+      initialEntries={[`/units/data/data-representation?kind=text${query ? `&${query}` : ""}`]}
+    >
+      <DataRepresentationPage />
       <LocationProbe />
     </MemoryRouter>,
   )
@@ -56,7 +58,7 @@ it("예시 버튼과 글자 수 제한", () => {
 })
 
 it("비트를 켜고 끄면 코드와 글자가 바뀌고 코드표와 같은 칸을 가리킨다", () => {
-  open("tab=decode&c=65")
+  open("view=decode&code=65")
   expect(status()).toHaveTextContent("0100 0001 = 65 → ASCII 코드표에서 ‘A’입니다")
   expect(screen.getByRole("button", { name: "A, 코드 65" })).toHaveAttribute("aria-pressed", "true")
   fireEvent.click(bit(2))
@@ -66,11 +68,11 @@ it("비트를 켜고 끄면 코드와 글자가 바뀌고 코드표와 같은 �
   expect(status()).toHaveTextContent("‘c’")
   fireEvent.click(screen.getByRole("button", { name: "z, 코드 122" }))
   expect(bit(64)).toHaveAttribute("aria-pressed", "true")
-  expect(screen.getByTestId("location")).toHaveTextContent("c=122")
+  expect(screen.getByTestId("location")).toHaveTextContent("code=122")
 })
 
 it("128 이상은 ASCII 밖, 31 이하는 제어 문자라고 알려 준다", () => {
-  open("tab=decode&c=200")
+  open("view=decode&code=200")
   expect(status()).toHaveTextContent("200은 ASCII에 없습니다")
   fireEvent.click(screen.getByRole("button", { name: "모두 0으로" }))
   expect(status()).toHaveTextContent("NUL")
@@ -78,7 +80,7 @@ it("128 이상은 ASCII 밖, 31 이하는 제어 문자라고 알려 준다", ()
 
 it("숨은 낱말을 읽어 확인한다", () => {
   vi.spyOn(Math, "random").mockReturnValue(0)
-  open("tab=decode")
+  open("view=decode")
   const bytes = screen.getByRole("list", { name: "숨은 낱말의 바이트" })
   expect(
     within(bytes)
@@ -95,11 +97,11 @@ it("숨은 낱말을 읽어 확인한다", () => {
 })
 
 it("잘못된 주소 값은 기본값과 범위로 맞춘다", () => {
-  open("tab=zzz&c=999")
-  expect(screen.getByRole("tab", { name: "문자 → 이진수" })).toHaveAttribute(
-    "aria-selected",
+  open("view=zzz&code=999")
+  expect(screen.getByRole("button", { name: "문자 → 이진수" })).toHaveAttribute(
+    "aria-pressed",
     "true",
   )
-  fireEvent.click(screen.getByRole("tab", { name: "이진수 → 문자" }))
+  fireEvent.click(screen.getByRole("button", { name: "이진수 → 문자" }))
   expect(status()).toHaveTextContent("255은 ASCII에 없습니다")
 })
