@@ -31,6 +31,12 @@ pnpm exec prettier --check README.md docs
 | [records.test.tsx](../src/simulators/problem-solving/shared/records.test.tsx)           | 전략별 저장 형식, 500개 제한과 중복 병합, 손상 값, 저장 실패와 복구, 기록 표의 전략 이름·라벨                                              |
 | [simulation.test.tsx](../src/simulators/problem-solving/simulation.test.tsx)            | 전략 탭·URL, 세 실험 결과, 중복 저장 방지, 타이머 정리, 입력 중 단축키 무시, 주소·입력칸 보정 일치, 단계 기록 번호                         |
 | [binary/engine.test.ts](../src/simulators/binary-number/engine.test.ts)                 | 0~255 비트 변환 왕복, 1~255 나눗셈과 카드 결과 일치, 0과 범위 밖 입력                                                                      |
+| [text/engine.test.ts](../src/simulators/text-encoding/engine.test.ts)                   | ASCII 1바이트, 한글 UTF-8 3바이트, 이모지 한 글자, 글자 수 제한, 32~126·제어·ASCII 밖 구분, 대소문자 32 차이                               |
+| [text/simulation.test.tsx](../src/simulators/text-encoding/simulation.test.tsx)         | 글자별 코드·비트열, 한글 바이트와 주소, 예시·제한 경고, 비트 토글과 코드표 연동, ASCII 밖·제어 안내, 숨은 낱말, 주소 보정                  |
+| [image/engine.test.ts](../src/simulators/image-pixel/engine.test.ts)                    | RGB↔16진수 왕복·줄임 표기·잘못된 코드, 채널 8비트, 흑백 밝기, 용량 계산, 예시 그림 크기                                                    |
+| [image/simulation.test.tsx](../src/simulators/image-pixel/simulation.test.tsx)          | 슬라이더·입력칸·16진수 입력·색 버튼, 픽셀 살펴보기·칠하기, RGB 탭 색으로 칠하기, 흑백 1비트 전환                                           |
+| [sound/engine.test.ts](../src/simulators/sound-digitize/engine.test.ts)                 | 2ⁿ단계와 양 끝, 가장 가까운 단계, 표본 간격·코드 길이, 데이터 크기, 계단 복원, 표본·비트 증가 시 차이 감소                                 |
+| [sound/simulation.test.tsx](../src/simulators/sound-digitize/simulation.test.tsx)       | 네 단계 진행과 문구, 설정 변경 시 단계 유지·주소, 표본 수 입력 보정, 자동 실행·단축키, 주소 보정                                           |
 | [binary/simulation.test.tsx](../src/simulators/binary-number/simulation.test.tsx)       | 카드 완성·넘침 안내, 2로 나누기 단계·되감기·카드 탭 연결, 자동 실행·단축키, 주소 보정, 확정 시 입력 보정(255·0·1)과 경고, 값 변경 초기화   |
 
 엔진 전수 검사는 알고리즘당 5,049개 `(N, fakeIndex)` 조합을 다룹니다. 정확한 테스트 개수와 통과 여부는 실행 결과를 기준으로 기록합니다.
@@ -62,12 +68,19 @@ pnpm exec prettier --check README.md docs
 | 문제 해결 기록 탭 → 새로고침                | 세 전략 기록이 유지되고 표와 그래프가 열림                             |
 | 이진수 카드, 만들 수 13, 8·4·1 켜기         | 성공과 `0000 1101` 표시                                                |
 | 2로 나누기 13, 끝까지                       | 나머지 1·0·1·1, 아래에서 위로 `1101`, 카드 탭으로 이어짐               |
+| 문자, `Hi안` 입력                           | 72·105는 1바이트, 안은 `EC 95 88` 3바이트, 모두 40비트                 |
+| 코드표에서 A → 32의 자리 바꾸기             | `0110 0001`, 글자 a                                                    |
+| RGB, 빨강·초록 255, 파랑 0                  | 노랑 `#FFFF00`                                                         |
+| 픽셀 그림 하트, 흑백 1비트                  | 64비트(8바이트), 첫 줄 `1001 1001`                                     |
+| 소리, 표본 12·3비트, 부호화까지             | 표본 12개 × 3비트 = 36비트, 그래프에 단계 코드 표시                    |
 
 N=3의 무작위 위치는 원하는 값이 보장되지 않으므로 브라우저에서 한 번 실행한 결과만으로 균형 분기를 검증하지 않습니다.
 
 360/768/1280px에서 문서 전체의 가로 넘침, 저울과 동전 100개의 배치, 기록 표 내부 스크롤, 그래프 범례, 포커스 표시를 확인합니다. 모션 감소 환경과 콘솔 오류도 확인합니다.
 
 ## 검증 이력과 한계
+
+2026-09-27 데이터 표현 시뮬레이터 3종(문자·그림·소리) 추가, `NumberField`·단계 실행·자릿수 표기를 `shared/`로 옮김: `pnpm check`, 23개 파일·118개 테스트, 빌드와 `pnpm verify:pwa`가 통과했습니다. 빌드 결과를 Chromium으로 열어 360px와 1280px에서 세 시뮬레이터와 데이터 단원 페이지에 문서 가로 넘침이 없음을 확인했고, 360px에서 비트 토글의 `128`과 이진수 표시가 한 줄로 읽히도록 고쳤습니다. 소리 `들어 보기`는 테스트 환경에 오디오 장치가 없어 실제 재생을 확인하지 못했습니다.
 
 2026-09-27 이진수 입력칸을 '입력 차단'에서 '확정 시 보정 + 경고'로 변경: 17개 파일·74개 테스트, `pnpm check`, 빌드가 통과했습니다. 브라우저에서 한 키씩 `9 9 9`를 쳐도 칸에 그대로 들어가고, Enter로 확정하면 255로 바뀌며 경고가 떴습니다. `- 7` 뒤 Tab으로 확정하면 0으로 바뀌며 음수 경고가 떴습니다. 아래의 '입력칸 제한' 항목은 바꾸기 전 동작의 기록입니다.
 

@@ -1,0 +1,201 @@
+/* 공용 뼈대는 src/simulators/shared/simulator-base.css에 있다. 여기에는 글자 표·비트·코드표 장면만 둔다. */
+
+.text-page .sim-settings input[type="text"] {
+  width: 12rem;
+}
+
+.text-page .sim-settings .button-row {
+  gap: 0.4rem;
+}
+
+.text-overflow {
+  flex-basis: 100%;
+  order: 3;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.text-mono {
+  font-family: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.text-table th.text-glyph {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.text-row--unicode {
+  background: color-mix(in srgb, var(--unit) 7%, transparent);
+}
+
+.text-tag {
+  margin-left: 0.4rem;
+  padding: 0.05rem 0.35rem;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--unit) 18%, white);
+  font-size: 0.7rem;
+  white-space: nowrap;
+}
+
+.text-label {
+  margin: 0.8rem 0 0.3rem;
+  color: var(--color-ink-2);
+  font-size: 0.85rem;
+}
+
+.text-stream {
+  margin: 0;
+  padding: 0.7rem 0.8rem;
+  border-radius: 8px;
+  background: var(--color-ink);
+  color: #d7e4ff;
+  line-height: 1.8;
+  letter-spacing: 0.03em;
+  overflow-wrap: anywhere;
+}
+
+/* ─── 이진수 → 문자 ─────────────────────────────── */
+
+.byte-toggles {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: 0.4rem;
+  margin: 0.5rem 0 1rem;
+}
+
+.text-page .byte-toggle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.6rem 0.2rem 0.45rem;
+  border: 2px solid var(--color-line);
+  background: var(--color-paper-2);
+  color: var(--color-ink-2);
+}
+
+.text-page .byte-toggle[aria-pressed="true"],
+.text-page .byte-toggle[aria-pressed="true"]:hover:not(:disabled) {
+  border-color: var(--unit);
+  background: var(--unit);
+  color: white;
+}
+
+.byte-toggle__bit {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: clamp(1.3rem, 4vw, 1.9rem);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.byte-toggle__place {
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.decode-readout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+}
+
+.decode-glyph {
+  display: grid;
+  place-items: center;
+  width: 5.5rem;
+  height: 5.5rem;
+  margin: 0;
+  border: 3px solid var(--unit);
+  border-radius: 12px;
+  background: white;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 3rem;
+  font-weight: 700;
+}
+
+.decode-glyph--control,
+.decode-glyph--outside {
+  border-style: dashed;
+  color: var(--color-ink-3);
+}
+
+.ascii-table {
+  --table-min: 640px;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  text-align: center;
+}
+
+.text-page .ascii-table th,
+.text-page .ascii-table td {
+  padding: 0.15rem;
+  text-align: center;
+}
+
+.ascii-table thead th {
+  color: var(--color-ink-2);
+  font-size: 0.65rem;
+  font-weight: 500;
+}
+
+.ascii-table tbody th {
+  color: var(--color-ink-2);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.text-page .ascii-table button {
+  width: 100%;
+  min-height: 36px;
+  padding: 0.2rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+}
+
+.puzzle-bytes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.6rem 0 1rem;
+}
+
+.puzzle-bytes li {
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  background: var(--color-ink);
+  color: #d7e4ff;
+}
+
+@media (max-width: 560px) {
+  .decode-readout {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .decode-readout .stats {
+    width: 100%;
+  }
+
+  .decode-readout .stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* 8비트를 한 줄로 읽도록 이진수 칸에 한 줄을 통째로 준다. */
+  .decode-readout .stats > div:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .decode-readout .stats dd {
+    font-size: 1.2rem;
+    white-space: nowrap;
+  }
+
+  .text-page .byte-toggle {
+    padding-inline: 0;
+  }
+
+  .byte-toggle__place {
+    font-size: 0.65rem;
+  }
+}

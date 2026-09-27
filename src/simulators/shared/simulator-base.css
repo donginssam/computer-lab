@@ -110,6 +110,43 @@
   flex-basis: 100%;
 }
 
+/* 설정 패널: 입력칸과 버튼을 한 줄에 두고, 설명과 경고는 아래 줄 전체를 쓴다. */
+.sim-settings {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 0.65rem;
+}
+
+.sim-settings label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.9rem;
+}
+
+.sim-settings input[type="number"] {
+  width: 7rem;
+}
+
+.sim-settings > p {
+  flex-basis: 100%;
+  order: 2;
+  margin: 0;
+}
+
+/* 입력칸은 버튼과 한 줄에 두고, 경고는 그 아래 줄 전체를 쓴다. */
+.number-field {
+  display: contents;
+}
+
+.number-field__warning {
+  flex-basis: 100%;
+  order: 1;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
 .small-note {
   margin: 0.5rem 0;
   color: var(--color-ink-2);

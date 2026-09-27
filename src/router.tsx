@@ -18,6 +18,15 @@ const ProblemSolvingPage = lazy(() =>
 const BinaryNumberPage = lazy(() =>
   import("./simulators/binary-number").then(m => ({ default: m.BinaryNumberPage })),
 )
+const TextEncodingPage = lazy(() =>
+  import("./simulators/text-encoding").then(m => ({ default: m.TextEncodingPage })),
+)
+const ImagePixelPage = lazy(() =>
+  import("./simulators/image-pixel").then(m => ({ default: m.ImagePixelPage })),
+)
+const SoundDigitizePage = lazy(() =>
+  import("./simulators/sound-digitize").then(m => ({ default: m.SoundDigitizePage })),
+)
 
 /**
  * loader도 action도 쓰지 않으므로 선언형 라우터로 충분하다. createBrowserRouter의
@@ -51,6 +60,30 @@ export function AppRoutes() {
             element={
               <Suspense fallback={null}>
                 <BinaryNumberPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="units/data/text-encoding"
+            element={
+              <Suspense fallback={null}>
+                <TextEncodingPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="units/data/image-pixel"
+            element={
+              <Suspense fallback={null}>
+                <ImagePixelPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="units/data/sound-digitize"
+            element={
+              <Suspense fallback={null}>
+                <SoundDigitizePage />
               </Suspense>
             }
           />

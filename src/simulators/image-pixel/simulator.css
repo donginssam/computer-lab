@@ -1,0 +1,280 @@
+/* 공용 뼈대는 src/simulators/shared/simulator-base.css에 있다. 여기에는 색 섞기·픽셀 장면만 둔다. */
+
+.pixel-mono {
+  font-family: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ─── RGB로 색 만들기 ───────────────────────────── */
+
+.channel-rows {
+  display: grid;
+  gap: 0.4rem;
+  margin: 0.5rem 0 1rem;
+}
+
+.channel-row {
+  --channel: #d0203a;
+  align-items: center;
+  padding: 0.5rem 0.7rem;
+  border-left: 6px solid var(--channel);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--channel) calc(var(--level) * 14%), white);
+}
+
+.channel-row--g {
+  --channel: #139a43;
+}
+
+.channel-row--b {
+  --channel: #1f4fd6;
+}
+
+.image-page .channel-row label {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.image-page .channel-row input[type="number"] {
+  width: 5.5rem;
+}
+
+.channel-slider {
+  flex: 1;
+  min-width: 140px;
+}
+
+.channel-slider input {
+  width: 100%;
+  min-height: 30px;
+  accent-color: var(--channel);
+}
+
+.channel-code {
+  display: inline-flex;
+  gap: 0.6rem;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.channel-code b {
+  color: var(--channel);
+}
+
+.color-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.color-dot {
+  display: inline-block;
+  width: 1.1rem;
+  height: 1.1rem;
+  border: 1px solid #0003;
+  border-radius: 50%;
+}
+
+.mix-result {
+  display: grid;
+  grid-template-columns: 9rem minmax(0, 1fr);
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.mix-swatch {
+  aspect-ratio: 1;
+  border: 1px solid var(--color-line);
+  border-radius: 14px;
+  box-shadow: inset 0 0 0 4px #ffffff80;
+}
+
+.mix-codes {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0;
+}
+
+.mix-codes dt {
+  color: var(--color-ink-2);
+  font-size: 0.8rem;
+}
+
+.mix-codes dd {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 600;
+}
+
+.mix-bits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.6rem;
+  font-size: 1.05rem !important;
+}
+
+.code-r {
+  color: #c01a32;
+}
+
+.code-g {
+  color: #10803a;
+}
+
+.code-b {
+  color: #1d47c4;
+}
+
+.hex-field {
+  margin-top: 1rem;
+}
+
+.image-page .hex-field input[type="text"] {
+  width: 9rem;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+/* ─── 픽셀 그림 ─────────────────────────────── */
+
+.pixel-settings {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.pixel-settings > p {
+  margin: 0;
+}
+
+.pixel-group-label {
+  min-width: 3.5rem;
+  color: var(--color-ink-2);
+  font-size: 0.85rem;
+}
+
+.pixel-stage {
+  display: grid;
+  grid-template-columns: minmax(0, 22rem) minmax(0, 1fr);
+  gap: 1.2rem;
+  align-items: start;
+  margin-bottom: 1rem;
+}
+
+.pixel-grid {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  aspect-ratio: 1;
+  border: 2px solid var(--color-ink);
+  background: var(--color-ink);
+  gap: 1px;
+}
+
+/* 공용 스타일은 aria-pressed 버튼을 진한 버튼으로 칠하므로, 픽셀은 배경색을 인라인으로 둔다. */
+.image-page .pixel {
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  aspect-ratio: 1;
+}
+
+.image-page .pixel:hover:not(:disabled) {
+  outline: 2px solid var(--color-marker);
+  outline-offset: -2px;
+}
+
+.image-page .pixel[aria-pressed="true"] {
+  border: 0;
+  outline: 3px solid var(--color-marker);
+  outline-offset: -3px;
+  box-shadow: inset 0 0 0 4px var(--color-ink);
+}
+
+.pixel-info {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr);
+  gap: 0.4rem 1rem;
+  padding: 0.8rem;
+  border: 1px solid var(--color-line);
+  border-radius: 10px;
+  background: white;
+}
+
+.pixel-info__title {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-weight: 700;
+}
+
+.pixel-info__swatch {
+  width: 4.5rem;
+  height: 4.5rem;
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+}
+
+.pixel-info__codes {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0;
+}
+
+.pixel-info__codes dt {
+  color: var(--color-ink-2);
+  font-size: 0.75rem;
+}
+
+.pixel-info__codes dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.pixel-info__bits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 0.5rem;
+  font-size: 0.85rem;
+}
+
+.pixel-bytes {
+  color: var(--color-ink-2);
+  font-size: 0.8rem;
+  font-weight: 400;
+}
+
+.pixel-dump__table {
+  --table-min: 560px;
+}
+
+.image-page .pixel-dump__table td {
+  padding: 0.3rem;
+  font-size: 0.8rem;
+}
+
+.pixel-dump__bits li {
+  padding: 0.15rem 0;
+  letter-spacing: 0.08em;
+}
+
+@media (max-width: 640px) {
+  .mix-result {
+    grid-template-columns: 6rem minmax(0, 1fr);
+  }
+
+  .pixel-stage {
+    grid-template-columns: 1fr;
+  }
+
+  .pixel-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pixel-stats > div:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .pixel-stats dd {
+    font-size: 1.2rem;
+  }
+}

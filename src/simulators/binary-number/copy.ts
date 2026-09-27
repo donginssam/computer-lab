@@ -21,6 +21,3 @@ export const binaryCopy = {
   hiddenSetting:
     "지금 주소를 복사하면 탭과 입력한 수를 그대로 전달할 수 있습니다. 켜 둔 카드와 진행 단계는 전달되지 않습니다.",
 } as const
-
-/** 이진수를 읽기 쉽게 4비트마다 띄운다. */
-export const spacedBits = (text: string) => text.replace(/(.{4})(?=.)/g, "$1 ")

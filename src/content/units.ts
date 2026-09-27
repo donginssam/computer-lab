@@ -52,6 +52,27 @@ export const units: Unit[] = [
           "자릿값 카드와 2로 나누기로 양의 정수를 이진수로 바꾸고, 두 방법이 같은 답을 내는지 확인합니다.",
         status: "ready",
       },
+      {
+        slug: "text-encoding",
+        title: "문자를 0과 1로",
+        summary:
+          "ASCII 코드표로 글자를 코드와 이진수로 바꾸고, 거꾸로 이진수를 읽어 글자를 찾습니다. 한글은 몇 바이트일까요?",
+        status: "ready",
+      },
+      {
+        slug: "image-pixel",
+        title: "그림을 픽셀과 RGB로",
+        summary:
+          "빨강·초록·파랑을 섞어 색을 만들고 16진수와 이진수로 적은 뒤, 픽셀 그림 한 장이 몇 비트인지 계산합니다.",
+        status: "ready",
+      },
+      {
+        slug: "sound-digitize",
+        title: "소리를 0과 1로",
+        summary:
+          "이어진 소리 파형을 표본화·양자화·부호화해 이진수로 바꾸고, 표본 수와 비트 수에 따라 음질과 용량이 어떻게 달라지는지 봅니다.",
+        status: "ready",
+      },
     ],
   },
   {

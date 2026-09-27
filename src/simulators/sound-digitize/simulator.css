@@ -1,0 +1,220 @@
+/* 공용 뼈대는 src/simulators/shared/simulator-base.css에 있다. 여기에는 파형 그래프와 표본 목록만 둔다. */
+
+.sound-settings > .button-row {
+  flex-basis: 100%;
+}
+
+.sound-range {
+  flex: 1;
+  min-width: 160px;
+}
+
+.sound-range input {
+  width: 100%;
+  min-height: 30px;
+  accent-color: var(--unit);
+}
+
+.sound-range .small-note {
+  margin: 0;
+}
+
+.sound-group-label {
+  min-width: 4.5rem;
+  color: var(--color-ink-2);
+  font-size: 0.85rem;
+}
+
+.stage-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0 0 0.8rem;
+}
+
+.stage-list li {
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  color: var(--color-ink-3);
+  font-size: 0.85rem;
+}
+
+.stage-list li.past {
+  border-color: color-mix(in srgb, var(--unit) 45%, white);
+  color: var(--color-ink-2);
+}
+
+.stage-list li.current {
+  border-color: var(--unit);
+  background: var(--unit);
+  color: white;
+  font-weight: 700;
+}
+
+/* ─── 파형 그래프 ─────────────────────────────── */
+
+.wave-chart {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  background: white;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+.wave-chart__frame {
+  fill: none;
+  stroke: var(--color-line);
+}
+
+.wave-chart__zero {
+  stroke: var(--color-ink-3);
+  stroke-dasharray: 4 4;
+}
+
+.wave-chart__level line {
+  stroke: color-mix(in srgb, var(--unit) 30%, white);
+}
+
+.wave-chart__level text {
+  fill: var(--color-ink-2);
+  font-size: 11px;
+}
+
+.wave-chart__curve {
+  fill: none;
+  stroke: var(--color-ink);
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+}
+
+.wave-chart__curve--faded {
+  stroke: var(--color-ink-3);
+  stroke-dasharray: 5 4;
+  stroke-width: 2;
+}
+
+.wave-chart__sample > line {
+  stroke: var(--color-unit-algo);
+  stroke-width: 1.5;
+}
+
+.wave-chart__sample > line.wave-chart__snap {
+  stroke: var(--color-unit-culture);
+  stroke-width: 2.5;
+}
+
+.wave-chart__measured {
+  fill: var(--color-unit-algo);
+}
+
+.wave-chart__measured--hollow {
+  fill: white;
+  stroke: var(--color-unit-algo);
+  stroke-width: 2;
+}
+
+.wave-chart__quantized {
+  fill: var(--unit);
+  stroke: white;
+  stroke-width: 1.5;
+}
+
+.wave-chart__code {
+  fill: var(--color-ink);
+  font-size: 12px;
+  font-weight: 700;
+  paint-order: stroke;
+  stroke: white;
+  stroke-width: 3px;
+}
+
+.wave-chart__stairs {
+  fill: none;
+  stroke: var(--unit);
+  stroke-width: 3.5;
+}
+
+.wave-chart__axis {
+  fill: var(--color-ink-2);
+  font-family: var(--font-sans);
+  font-size: 12px;
+}
+
+/* ─── 표본 목록 ─────────────────────────────── */
+
+.sample-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
+  gap: 0.35rem;
+  margin: 0.4rem 0 0;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.sample-list li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  padding: 0.3rem 0.5rem;
+  border: 1px solid var(--color-line);
+  border-radius: 6px;
+  background: white;
+}
+
+.sample-list__index {
+  min-width: 1.5rem;
+  color: var(--color-ink-3);
+  font-size: 0.75rem;
+}
+
+.sample-list__level {
+  color: var(--unit);
+  font-weight: 700;
+}
+
+.sample-list__code {
+  margin-left: auto;
+  padding: 0 0.3rem;
+  border-radius: 4px;
+  background: var(--color-ink);
+  color: #d7e4ff;
+}
+
+.sound-stream {
+  margin: 0.4rem 0 0;
+  padding: 0.7rem 0.8rem;
+  border-radius: 8px;
+  background: var(--color-ink);
+  color: #d7e4ff;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  letter-spacing: 0.03em;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.sound-stats {
+  margin-top: 1rem;
+}
+
+.sound-sub {
+  color: var(--color-ink-2);
+  font-size: 0.8rem;
+  font-weight: 400;
+}
+
+.sound-listen {
+  margin-top: 0.8rem;
+}
+
+@media (max-width: 560px) {
+  .sound-stats dd {
+    font-size: 1.15rem;
+  }
+
+  .sound-sub {
+    display: block;
+  }
+}
