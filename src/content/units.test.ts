@@ -33,4 +33,11 @@ describe("units", () => {
     expect(simulatorPath(data, simulator)).toBe("/units/data/binary-number")
     expect(simulator.status).toBe("ready")
   })
+
+  it("데이터 단원에 문자·그림·소리를 한데 모은 시뮬레이터 경로를 만든다", () => {
+    const data = unitById("data")!
+    const simulator = data.simulators.find(item => item.slug === "data-representation")!
+    expect(simulatorPath(data, simulator)).toBe("/units/data/data-representation")
+    expect(data.simulators.map(item => item.slug)).toEqual(["binary-number", "data-representation"])
+  })
 })

@@ -1,0 +1,9 @@
+/* 문자·그림·소리 탭이 함께 쓰는 것만 둔다. 탭별 장면은 text/·image/·sound/의 simulator.css에 있다. */
+
+.data-lead {
+  margin: 0 0 0.8rem;
+}
+
+.data-views {
+  margin-bottom: 1rem;
+}

@@ -52,6 +52,13 @@ export const units: Unit[] = [
           "자릿값 카드와 2로 나누기로 양의 정수를 이진수로 바꾸고, 두 방법이 같은 답을 내는지 확인합니다.",
         status: "ready",
       },
+      {
+        slug: "data-representation",
+        title: "문자·그림·소리를 0과 1로",
+        summary:
+          "ASCII 코드표로 글자를, RGB와 픽셀로 그림을, 표본화·양자화·부호화로 소리를 이진수로 바꾸고 각각 몇 비트가 되는지 계산합니다.",
+        status: "ready",
+      },
     ],
   },
   {

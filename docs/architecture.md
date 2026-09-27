@@ -1,6 +1,6 @@
 # 아키텍처
 
-[문서 목록](README.md) · [양팔저울 이론](theory/balance-scale.md) · [문제 해결 전략 이론](theory/problem-solving.md) · [이진수 이론](theory/binary-number.md)
+[문서 목록](README.md) · [양팔저울 이론](theory/balance-scale.md) · [문제 해결 전략 이론](theory/problem-solving.md) · [이진수 이론](theory/binary-number.md) · [데이터 표현 이론](theory/data-representation.md)
 
 ## 책임 분리
 
@@ -21,6 +21,9 @@ src/
 │   ├── useRunLoop.ts               자동 실행 타이머와 Space/R/A 단축키
 │   ├── useRecords.ts · records.ts  기록 저장 훅과 병합·읽기 helper
 │   ├── useSaveOnce.ts              완료된 실험을 실험당 한 번만 저장
+│   ├── useStepRun.ts               기록 없는 짧은 단계 실행(reducer + useRunLoop)
+│   ├── NumberField.tsx             확정할 때 범위로 맞추고 이유를 알리는 정수 입력칸
+│   ├── digits.ts                   0을 채운 이진수·16진수, 4비트 띄어 쓰기
 │   ├── params.ts                   주소 값과 입력칸 값을 같은 규칙으로 읽고 범위 보정
 │   ├── SimulatorHeader.tsx         units.ts에서 만드는 브레드크럼·번호·제목
 │   ├── RunControls · TabList · Quiz  실행 제어·탭·질문 컴포넌트
@@ -50,6 +53,11 @@ src/
 │   ├── PlaceValueCards.tsx         자릿값 카드
 │   ├── DivideByTwo.tsx             2로 나누기 단계 실행
 │   └── simulator.css               카드·나눗셈 장면
+├── simulators/data-representation/
+│   ├── index.tsx · copy.ts         문자·그림·소리 탭(kind)과 주소, 탭 안 보기 버튼(ViewSwitch)
+│   ├── text/                       문자 → 이진수(EncodeText), 이진수 → 문자·ASCII 코드표(DecodeBits)
+│   ├── image/                      RGB 색 만들기(MixColor), 8×8 픽셀 그림(PixelCanvas)
+│   └── sound/                      표본화·양자화·부호화 단계 실행, 파형 SVG(WaveChart), 듣기(listen.ts)
 └── test/setup.ts                   테스트 환경 초기화
 ```
 
@@ -70,6 +78,7 @@ src/
 | `/units/algorithm/balance-scale`   | 양팔저울 시뮬레이터                    |
 | `/units/algorithm/problem-solving` | 문제 해결 전략 실험실                  |
 | `/units/data/binary-number`        | 0과 1로 수 나타내기                    |
+| `/units/data/data-representation`  | 문자·그림·소리를 0과 1로               |
 | 일치하지 않는 경로                 | NotFoundPage                           |
 
 [router.tsx](../src/router.tsx)는 `BrowserRouter`와 `Routes`로 `AppShell` 아래 중첩 라우트를 선언합니다. loader·action을 쓰지 않으므로 데이터 라우터 런타임(31 kB gzip)을 최초 로드에서 뺐고, 대신 `AppShell`이 [useScrollRestoration](../src/components/layout/useScrollRestoration.ts)으로 새 화면에서는 맨 위로, 뒤로 가기에서는 떠날 때 위치로 스크롤을 돌립니다. 경로는 그대로이고 주소의 `?` 뒤만 바뀌는 설정·모드 탭 변경에서는 스크롤도 저장된 위치도 건드리지 않습니다. 각 시뮬레이터는 `lazy`와 `Suspense`로 별도 청크가 되며, 청크는 모두 서비스 워커가 precache하므로 오프라인에서도 열립니다. `basename`은 `import.meta.env.BASE_URL`에서 마지막 `/`를 제거한 값입니다. 프로젝트 하위 배포에서는 [배포 설정](deployment.md)과 일치해야 합니다.
@@ -110,7 +119,7 @@ URL 설정 → ProblemSolvingPage → 전략 Experiment → 공용 stepper → �
 
 직접 입력한 비밀번호·카드, 무작위 결과, 현재 진행 단계는 URL에 넣지 않습니다.
 
-0과 1로 수 나타내기는 결과가 입력만으로 정해지므로 기록과 저장소를 두지 않습니다. 2로 나누기 탭만 단계 실행이 있어 작은 reducer 위에 공용 `RunControls`·`useRunLoop`·`StepLog`를 올리고, 자릿값 카드 탭은 입력에서 바로 화면을 계산합니다. `docs/`와 개발 계획 파일은 앱에서 import하지 않으므로 문서의 존재 여부가 빌드 결과를 바꾸지 않습니다.
+0과 1로 수 나타내기는 결과가 입력만으로 정해지므로 기록과 저장소를 두지 않습니다. 2로 나누기 탭만 단계 실행이 있어 공용 `useStepRun`(작은 reducer + `useRunLoop`) 위에 `RunControls`·`StepLog`를 올리고, 자릿값 카드 탭은 입력에서 바로 화면을 계산합니다. 문자·그림·소리를 0과 1로도 같은 이유로 기록이 없습니다. 한 페이지의 `kind` 탭 아래 세 패널이 각자 주소 값을 읽으며, 파라미터 이름은 탭끼리 겹치지 않게 나눴습니다(문자 `t`·`code`, 그림 `color`·`depth`, 소리 `wave`·`n`·`bits`). 탭을 바꿀 때는 탭 안 보기(`view`)만 지웁니다. 소리 변환은 `useStepRun`을 그대로 쓰되 설정이 바뀌어도 단계를 유지하고, 파형은 Recharts 대신 직접 그린 SVG로 단계마다 한 겹씩 더합니다. `docs/`와 개발 계획 파일은 앱에서 import하지 않으므로 문서의 존재 여부가 빌드 결과를 바꾸지 않습니다.
 
 ## 스타일 재사용
 

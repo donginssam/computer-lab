@@ -1,7 +1,8 @@
 import { useState } from "react"
 import { Quiz } from "../shared/Quiz"
-import { NumberField } from "./NumberField"
-import { binaryCopy, spacedBits } from "./copy"
+import { NumberField } from "../shared/NumberField"
+import { spacedBits } from "../shared/digits"
+import { binaryCopy } from "./copy"
 import { bitString, fromBits, placeValues, toBits, UNSIGNED_MAX, type Bit } from "./engine"
 
 const values = placeValues()
@@ -51,7 +52,7 @@ export function PlaceValueCards({
 
   return (
     <>
-      <section className="sim-card binary-settings" aria-label="자릿값 카드 설정">
+      <section className="sim-card sim-settings" aria-label="자릿값 카드 설정">
         <NumberField
           label="만들 수"
           value={target}
