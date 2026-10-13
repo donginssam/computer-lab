@@ -1,10 +1,11 @@
+import type { ChangeParams } from "../shared/useSimulatorParams"
 import { useMemo } from "react"
 import { Quiz } from "../shared/Quiz"
 import { NumberField } from "../shared/NumberField"
 import { RunControls } from "../shared/RunControls"
 import { StepLog } from "../shared/StepLog"
 import { useStepRun } from "../shared/useStepRun"
-import { spacedBits } from "../shared/digits"
+import { byteMaxNote, spacedBits } from "../shared/digits"
 import { divisionRows, readRemainders, UNSIGNED_MAX } from "./engine"
 
 const questions = [
@@ -28,7 +29,7 @@ export function DivideByTwo({
   openCards,
 }: {
   number: number
-  change: (updates: Record<string, string>) => void
+  change: ChangeParams
   openCards: (target: number) => void
 }) {
   const rows = useMemo(() => divisionRows(number), [number])
@@ -51,6 +52,7 @@ export function DivideByTwo({
           value={number}
           min={1}
           max={UNSIGNED_MAX}
+          maxNote={byteMaxNote(UNSIGNED_MAX)}
           onCommit={next => change({ d: String(next) })}
         />
         <button

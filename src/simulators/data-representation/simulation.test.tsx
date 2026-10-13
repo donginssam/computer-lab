@@ -1,21 +1,6 @@
-import { cleanup, fireEvent, render, screen } from "@testing-library/react"
+import { cleanup, fireEvent, screen } from "@testing-library/react"
 import { afterEach, expect, it } from "vitest"
-import { MemoryRouter, useLocation } from "react-router"
-import { DataRepresentationPage } from "."
-
-function LocationProbe() {
-  const location = useLocation()
-  return <output data-testid="location">{location.search}</output>
-}
-
-function open(query = "") {
-  return render(
-    <MemoryRouter initialEntries={[`/units/data/data-representation${query ? `?${query}` : ""}`]}>
-      <DataRepresentationPage />
-      <LocationProbe />
-    </MemoryRouter>,
-  )
-}
+import { renderDataRepresentation as open } from "./test-utils"
 
 const tab = (name: string) => screen.getByRole("tab", { name })
 

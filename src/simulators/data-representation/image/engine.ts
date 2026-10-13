@@ -66,6 +66,9 @@ export function imageSize(width: number, height: number, depth: Depth) {
 
 export const GRID = 8
 
+export const BLACK: Rgb = { r: 0, g: 0, b: 0 }
+export const WHITE: Rgb = { r: 255, g: 255, b: 255 }
+
 export interface PaletteColor {
   key: string
   name: string
@@ -73,8 +76,8 @@ export interface PaletteColor {
 }
 
 export const palette: readonly PaletteColor[] = [
-  { key: "K", name: "검정", color: { r: 0, g: 0, b: 0 } },
-  { key: "W", name: "하양", color: { r: 255, g: 255, b: 255 } },
+  { key: "K", name: "검정", color: BLACK },
+  { key: "W", name: "하양", color: WHITE },
   { key: "R", name: "빨강", color: { r: 255, g: 0, b: 0 } },
   { key: "G", name: "초록", color: { r: 0, g: 255, b: 0 } },
   { key: "B", name: "파랑", color: { r: 0, g: 0, b: 255 } },
@@ -144,3 +147,7 @@ export function presetPixels(preset: Preset): Rgb[] {
 }
 
 export const blankPixels = (): Rgb[] => Array.from({ length: GRID * GRID }, () => ({ ...byKey.W }))
+
+/** 흑백 보기에서는 원본을 바꾸지 않고 밝기에 따라 검정·하양으로 표시한다. */
+export const shownColor = (color: Rgb, depth: Depth): Rgb =>
+  depth === "bw" ? (toBlackWhite(color) ? WHITE : BLACK) : color

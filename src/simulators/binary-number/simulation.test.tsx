@@ -1,19 +1,12 @@
-import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
+import { act, cleanup, fireEvent, screen } from "@testing-library/react"
 import { afterEach, expect, it, vi } from "vitest"
-import { MemoryRouter, useLocation } from "react-router"
+import { renderWithRouter } from "../../test/renderWithRouter"
 import { BinaryNumberPage } from "."
 
-function LocationProbe() {
-  const location = useLocation()
-  return <output data-testid="location">{location.search}</output>
-}
-
 function open(query = "") {
-  return render(
-    <MemoryRouter initialEntries={[`/units/data/binary-number${query ? `?${query}` : ""}`]}>
-      <BinaryNumberPage />
-      <LocationProbe />
-    </MemoryRouter>,
+  return renderWithRouter(
+    <BinaryNumberPage />,
+    `/units/data/binary-number${query ? `?${query}` : ""}`,
   )
 }
 

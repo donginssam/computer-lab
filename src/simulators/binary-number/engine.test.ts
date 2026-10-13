@@ -1,11 +1,7 @@
 import { describe, expect, it } from "vitest"
-import { bitString, divisionRows, fromBits, placeValues, readRemainders, toBits } from "./engine"
+import { bitString, divisionRows, fromBits, readRemainders, toBits } from "./engine"
 
 describe("양의 정수와 이진수", () => {
-  it("자릿값은 큰 자리부터 2배씩 줄어든다", () => {
-    expect(placeValues()).toEqual([128, 64, 32, 16, 8, 4, 2, 1])
-  })
-
   it("0~255 전체를 8비트로 바꿨다가 그대로 되돌린다", () => {
     for (let n = 0; n <= 255; n += 1) {
       const result = toBits(n)

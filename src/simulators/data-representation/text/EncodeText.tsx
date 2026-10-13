@@ -1,3 +1,4 @@
+import type { ChangeParams } from "../../shared/useSimulatorParams"
 import { useId, useState, type CSSProperties } from "react"
 import { spacedBits, toBinary, toHex } from "../../shared/digits"
 import { Quiz } from "../../shared/Quiz"
@@ -25,13 +26,7 @@ const questions = [
   },
 ] as const
 
-export function EncodeText({
-  value,
-  change,
-}: {
-  value: string
-  change: (updates: Record<string, string>) => void
-}) {
+export function EncodeText({ value, change }: { value: string; change: ChangeParams }) {
   // 한글 입력 중(조합 중)에도 칸이 흔들리지 않도록 칸의 글자는 이 컴포넌트가 들고,
   // 주소는 뒤따라 바꾼다. 예시 버튼으로 주소가 바뀌면 칸도 따라간다.
   const [text, setText] = useState(value)

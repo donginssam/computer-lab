@@ -42,6 +42,8 @@ pnpm exec prettier --check README.md docs
 
 엔진 전수 검사는 알고리즘당 5,049개 `(N, fakeIndex)` 조합을 다룹니다. 정확한 테스트 개수와 통과 여부는 실행 결과를 기준으로 기록합니다.
 
+이진수와 데이터 표현 UI 테스트는 `src/test/renderWithRouter.tsx`를 통해 페이지와 현재 URL을 함께 확인합니다. 데이터 표현의 공통 진입점은 `test-utils.tsx`로 묶되 각 패널의 행동 검증은 개별 테스트에 남깁니다. 공용 `useSimulatorParams.test.tsx`는 URL 값 유지·삭제·빈 값과 뒤로/앞으로 이동을, `NumberField.test.tsx`는 기본 범위 안내·화면별 제한 이유·외부 값 변경 시 경고 해제를 검증합니다. 자릿값 검사는 `shared/digits.test.ts`에 있습니다.
+
 ## 브라우저 수동 확인
 
 | 시나리오                                    | 기대 결과                                                              |

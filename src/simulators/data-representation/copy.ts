@@ -22,6 +22,3 @@ export const dataCopy = {
   hiddenSetting:
     "지금 주소를 복사하면 탭과 설정(입력한 글자, 켜 둔 비트, 만든 색, 색 깊이, 소리 모양, 표본 수, 양자화 비트)을 그대로 전달할 수 있습니다. 칠한 픽셀 그림, 해독 문제, 진행 단계는 전달되지 않습니다.",
 } as const
-
-/** 주소의 여러 값을 한 번에 바꾼다. replace가 false면 뒤로 가기로 돌아올 수 있다. */
-export type Change = (updates: Record<string, string>, replace?: boolean) => void

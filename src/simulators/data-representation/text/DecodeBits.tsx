@@ -1,9 +1,10 @@
+import type { ChangeParams } from "../../shared/useSimulatorParams"
 import { useId, useState } from "react"
-import { spacedBits, toBinary, toHex } from "../../shared/digits"
+import { placeValues, spacedBits, toBinary, toHex } from "../../shared/digits"
 import { Quiz } from "../../shared/Quiz"
 import { ASCII_MAX, decodeCode } from "./engine"
 
-const places = [128, 64, 32, 16, 8, 4, 2, 1]
+const places = placeValues()
 /** ASCII 표의 행: 앞 3비트(맨 앞 비트는 늘 0이므로 010~111). 000·001행은 제어 문자라 뺀다. */
 const rows = [2, 3, 4, 5, 6, 7]
 const columns = Array.from({ length: 16 }, (_, i) => i)
@@ -31,13 +32,7 @@ function randomPuzzle(except?: string) {
   return choices[Math.floor(Math.random() * choices.length)]
 }
 
-export function DecodeBits({
-  code,
-  change,
-}: {
-  code: number
-  change: (updates: Record<string, string>) => void
-}) {
+export function DecodeBits({ code, change }: { code: number; change: ChangeParams }) {
   const bits = [...toBinary(code)].map(Number)
   const decoded = decodeCode(code)
   const setCode = (next: number) => change({ code: String(next) })

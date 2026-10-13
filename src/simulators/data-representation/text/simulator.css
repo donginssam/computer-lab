@@ -16,7 +16,7 @@
 }
 
 .text-mono {
-  font-family: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
 }
 
@@ -83,7 +83,7 @@
 }
 
 .byte-toggle__bit {
-  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-family: var(--font-mono);
   font-size: clamp(1.3rem, 4vw, 1.9rem);
   font-weight: 700;
   line-height: 1;
@@ -110,7 +110,7 @@
   border: 3px solid var(--unit);
   border-radius: 12px;
   background: white;
-  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-family: var(--font-mono);
   font-size: 3rem;
   font-weight: 700;
 }
@@ -123,7 +123,7 @@
 
 .ascii-table {
   --table-min: 640px;
-  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-family: var(--font-mono);
   text-align: center;
 }
 

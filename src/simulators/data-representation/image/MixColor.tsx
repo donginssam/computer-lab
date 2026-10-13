@@ -1,7 +1,8 @@
+import type { ChangeParams } from "../../shared/useSimulatorParams"
 import { useId, useState, type CSSProperties } from "react"
 import { NumberField } from "../../shared/NumberField"
 import { Quiz } from "../../shared/Quiz"
-import { toBinary, toHex } from "../../shared/digits"
+import { byteMaxNote, toBinary, toHex } from "../../shared/digits"
 import { channelNames } from "./copy"
 import {
   CHANNEL_MAX,
@@ -52,13 +53,7 @@ const presetColors: readonly { name: string; color: Rgb }[] = [
   { name: "자홍", color: { r: 255, g: 0, b: 255 } },
 ]
 
-export function MixColor({
-  color,
-  change,
-}: {
-  color: Rgb
-  change: (updates: Record<string, string>) => void
-}) {
+export function MixColor({ color, change }: { color: Rgb; change: ChangeParams }) {
   const hex = rgbToHex(color)
   const name = colorName(color)
   const setColor = (next: Rgb) => change({ color: rgbToHex(next).slice(1) })
@@ -83,6 +78,7 @@ export function MixColor({
                 value={color[channel]}
                 min={0}
                 max={CHANNEL_MAX}
+                maxNote={byteMaxNote(CHANNEL_MAX)}
                 onCommit={next => setChannel(channel, next)}
               />
               <label className="channel-slider">

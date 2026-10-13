@@ -1,5 +1,4 @@
-import { useCallback } from "react"
-import { useSearchParams } from "react-router"
+import { useSimulatorParams } from "../shared/useSimulatorParams"
 import { unitById, unitStyle } from "../../content/units"
 import { clampedParam, clampInteger, oneOfParam } from "../shared/params"
 import { SimulatorHeader } from "../shared/SimulatorHeader"
@@ -12,24 +11,10 @@ import "./simulator.css"
 
 export function BinaryNumberPage() {
   const unit = unitById("data")!
-  const [params, setParams] = useSearchParams()
+  const { params, change } = useSimulatorParams()
   const tab = oneOfParam(params.get("tab"), tabIds, "cards")
   const target = clampedParam(params.get("n"), 13, value => clampInteger(value, 0, UNSIGNED_MAX))
   const dividend = clampedParam(params.get("d"), 13, value => clampInteger(value, 1, UNSIGNED_MAX))
-
-  const change = useCallback(
-    (updates: Record<string, string>, replace = true) => {
-      setParams(
-        current => {
-          const next = new URLSearchParams(current)
-          for (const [key, value] of Object.entries(updates)) next.set(key, value)
-          return next
-        },
-        { replace },
-      )
-    },
-    [setParams],
-  )
 
   return (
     <div className="sim-page binary-page" style={unitStyle(unit)}>

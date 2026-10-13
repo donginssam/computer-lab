@@ -2,6 +2,7 @@
 @import "./simulators/shared/simulator-base.css";
 
 @theme {
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
   --font-display: "Nanum Myeongjo", "IBM Plex Sans KR", system-ui, sans-serif;
   --font-sans: "IBM Plex Sans KR", "Apple SD Gothic Neo", system-ui, sans-serif;
 

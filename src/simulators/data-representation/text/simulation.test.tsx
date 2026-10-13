@@ -1,23 +1,8 @@
-import { cleanup, fireEvent, render, screen, within } from "@testing-library/react"
+import { cleanup, fireEvent, screen, within } from "@testing-library/react"
 import { afterEach, expect, it, vi } from "vitest"
-import { MemoryRouter, useLocation } from "react-router"
-import { DataRepresentationPage } from ".."
+import { renderDataRepresentation } from "../test-utils"
 
-function LocationProbe() {
-  const location = useLocation()
-  return <output data-testid="location">{location.search}</output>
-}
-
-function open(query = "") {
-  return render(
-    <MemoryRouter
-      initialEntries={[`/units/data/data-representation?kind=text${query ? `&${query}` : ""}`]}
-    >
-      <DataRepresentationPage />
-      <LocationProbe />
-    </MemoryRouter>,
-  )
-}
+const open = (query = "") => renderDataRepresentation(`kind=text${query ? `&${query}` : ""}`)
 
 const status = () => screen.getAllByRole("status")[0]
 const bit = (place: number) =>

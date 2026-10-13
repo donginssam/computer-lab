@@ -14,7 +14,8 @@ export const SAMPLES_MAX = 32
 export const BITS_MIN = 1
 export const BITS_MAX = 4
 
-export type WaveId = "smooth" | "complex"
+export const waveIds = ["smooth", "complex"] as const
+export type WaveId = (typeof waveIds)[number]
 
 export interface Wave {
   id: WaveId

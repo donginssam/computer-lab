@@ -1,23 +1,8 @@
-import { cleanup, fireEvent, render, screen, within } from "@testing-library/react"
+import { cleanup, fireEvent, screen, within } from "@testing-library/react"
 import { afterEach, expect, it } from "vitest"
-import { MemoryRouter, useLocation } from "react-router"
-import { DataRepresentationPage } from ".."
+import { renderDataRepresentation } from "../test-utils"
 
-function LocationProbe() {
-  const location = useLocation()
-  return <output data-testid="location">{location.search}</output>
-}
-
-function open(query = "") {
-  return render(
-    <MemoryRouter
-      initialEntries={[`/units/data/data-representation?kind=image${query ? `&${query}` : ""}`]}
-    >
-      <DataRepresentationPage />
-      <LocationProbe />
-    </MemoryRouter>,
-  )
-}
+const open = (query = "") => renderDataRepresentation(`kind=image${query ? `&${query}` : ""}`)
 
 const status = () => screen.getAllByRole("status")[0]
 const pixel = (row: number, column: number) =>
@@ -73,6 +58,13 @@ it("픽셀을 살펴보고 칠하며, 크기를 계산한다", () => {
   fireEvent.click(screen.getByRole("button", { name: "파랑" }))
   fireEvent.click(pixel(1, 1))
   expect(pixel(1, 1)).toHaveAccessibleName("1행 1열, #0000FF")
+
+  fireEvent.click(screen.getByRole("button", { name: "흑백 1비트" }))
+  expect(pixel(1, 1)).toHaveAccessibleName("1행 1열, 0")
+  fireEvent.click(screen.getByRole("button", { name: "24비트 색" }))
+  expect(pixel(1, 1)).toHaveAccessibleName("1행 1열, #0000FF")
+  expect(pixel(1, 1)).toHaveAttribute("aria-pressed", "true")
+  expect(screen.getByRole("button", { name: "칠하기" })).toHaveAttribute("aria-pressed", "true")
 })
 
 it("RGB 탭에서 만든 색을 붓으로 쓴다", () => {

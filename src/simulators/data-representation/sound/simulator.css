@@ -60,7 +60,7 @@
   height: auto;
   border-radius: 8px;
   background: white;
-  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-family: var(--font-mono);
 }
 
 .wave-chart__frame {
@@ -149,7 +149,7 @@
   grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
   gap: 0.35rem;
   margin: 0.4rem 0 0;
-  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-family: var(--font-mono);
   font-size: 0.85rem;
   font-variant-numeric: tabular-nums;
 }
@@ -189,7 +189,7 @@
   border-radius: 8px;
   background: var(--color-ink);
   color: #d7e4ff;
-  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-family: var(--font-mono);
   letter-spacing: 0.03em;
   line-height: 1.8;
   overflow-wrap: anywhere;

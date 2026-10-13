@@ -26,14 +26,14 @@ export function NumberField({
   value,
   min,
   max,
-  maxNote = `8비트로 나타낼 수 있는 가장 큰 수가 ${max}입니다.`,
+  maxNote = `${min}~${max} 사이의 정수를 입력해 주세요.`,
   onCommit,
 }: {
   label: string
   value: number
   min: number
   max: number
-  /** 가장 큰 값으로 바꿨을 때 덧붙이는 이유. 기본은 8비트 범위다. */
+  /** 가장 큰 값으로 바꿨을 때 덧붙이는 이유. 기본은 입력 범위다. */
   maxNote?: string
   onCommit: (value: number) => void
 }) {

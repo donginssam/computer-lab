@@ -23,7 +23,8 @@ src/
 │   ├── useSaveOnce.ts              완료된 실험을 실험당 한 번만 저장
 │   ├── useStepRun.ts               기록 없는 짧은 단계 실행(reducer + useRunLoop)
 │   ├── NumberField.tsx             확정할 때 범위로 맞추고 이유를 알리는 정수 입력칸
-│   ├── digits.ts                   0을 채운 이진수·16진수, 4비트 띄어 쓰기
+│   ├── digits.ts                   이진 자릿값·0을 채운 이진수·16진수, 4비트 띄어 쓰기
+│   ├── useSimulatorParams.ts       URL 설정 일괄 변경·삭제와 이동 이력 관리
 │   ├── params.ts                   주소 값과 입력칸 값을 같은 규칙으로 읽고 범위 보정
 │   ├── SimulatorHeader.tsx         units.ts에서 만드는 브레드크럼·번호·제목
 │   ├── RunControls · TabList · Quiz  실행 제어·탭·질문 컴포넌트
@@ -121,11 +122,15 @@ URL 설정 → ProblemSolvingPage → 전략 Experiment → 공용 stepper → �
 
 0과 1로 수 나타내기는 결과가 입력만으로 정해지므로 기록과 저장소를 두지 않습니다. 2로 나누기 탭만 단계 실행이 있어 공용 `useStepRun`(작은 reducer + `useRunLoop`) 위에 `RunControls`·`StepLog`를 올리고, 자릿값 카드 탭은 입력에서 바로 화면을 계산합니다. 문자·그림·소리를 0과 1로도 같은 이유로 기록이 없습니다. 한 페이지의 `kind` 탭 아래 세 패널이 각자 주소 값을 읽으며, 파라미터 이름은 탭끼리 겹치지 않게 나눴습니다(문자 `t`·`code`, 그림 `color`·`depth`, 소리 `wave`·`n`·`bits`). 탭을 바꿀 때는 탭 안 보기(`view`)만 지웁니다. 소리 변환은 `useStepRun`을 그대로 쓰되 설정이 바뀌어도 단계를 유지하고, 파형은 Recharts 대신 직접 그린 SVG로 단계마다 한 겹씩 더합니다. `docs/`와 개발 계획 파일은 앱에서 import하지 않으므로 문서의 존재 여부가 빌드 결과를 바꾸지 않습니다.
 
+이진수·데이터 표현 페이지의 주소 갱신은 `useSimulatorParams`와 `ChangeParams` 타입을 공유합니다. `null`은 파라미터 삭제, 빈 문자열은 값 유지로 구분하며, 설정 변경은 현재 이력을 대체하고 탭 이동은 이력을 추가합니다. `NumberField`는 기본적으로 입력 범위를 안내하고, 8비트 제한 이유는 `digits.ts`의 `byteMaxNote`로, 표본 수 등 다른 제한 이유는 사용하는 화면에서 `maxNote`로 전달합니다.
+
+픽셀 편집 상태는 `PixelCanvas`가 유지하고 `PixelSettings`·`PixelResult`·`PixelConcepts`가 설정·표시·학습 설명을 나눠 맡습니다. 소리는 `SoundPanel`이 주소와 진행 단계를 관리하며 `SoundSettings`·`SoundProcess`·`SoundPlayback`·`SoundConcepts`가 각 화면 영역을 담당합니다.
+
 ## 스타일 재사용
 
 Tailwind CSS 4와 일반 CSS를 유지합니다. [공식 호환성 문서](https://tailwindcss.com/docs/compatibility#sass-less-and-stylus)는 Sass와의 결합 대신 CSS 변수와 네이티브 중첩을 권장합니다. 현재 규모에서는 별도 Sass 의존성과 빌드 단계를 추가할 이점이 작습니다.
 
-공통 색상·서체는 `src/index.css`의 `@theme`에서 관리하고, 시뮬레이터 CSS에서도 `var(--color-ink)`처럼 같은 변수를 참조합니다. 카드·표·탭·통계처럼 시뮬레이터가 똑같이 쓰는 뼈대는 [simulator-base.css](../src/simulators/shared/simulator-base.css)에 한 벌만 두고 `.sim-page` 아래에서 적용합니다. 저울·자물쇠·동전·카드처럼 시뮬레이터 전용 장면은 각자의 `simulator.css`, 일반적인 간격·반응형 배치는 Tailwind 유틸리티로 관리합니다.
+공통 색상·서체는 `src/index.css`의 `@theme`에서 관리합니다. 이진수·문자·그림·소리의 고정폭 글꼴은 `--font-mono`를 공유하고, 시뮬레이터 CSS에서도 `var(--color-ink)`처럼 같은 변수를 참조합니다. 카드·표·탭·통계처럼 시뮬레이터가 똑같이 쓰는 뼈대는 [simulator-base.css](../src/simulators/shared/simulator-base.css)에 한 벌만 두고 `.sim-page` 아래에서 적용합니다. 저울·자물쇠·동전·카드처럼 시뮬레이터 전용 장면은 각자의 `simulator.css`, 일반적인 간격·반응형 배치는 Tailwind 유틸리티로 관리합니다.
 
 ## 새 시뮬레이터 추가
 

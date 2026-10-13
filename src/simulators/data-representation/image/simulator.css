@@ -1,7 +1,7 @@
 /* 공용 뼈대는 src/simulators/shared/simulator-base.css에 있다. 여기에는 색 섞기·픽셀 장면만 둔다. */
 
 .pixel-mono {
-  font-family: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
 }
 
@@ -54,7 +54,7 @@
 .channel-code {
   display: inline-flex;
   gap: 0.6rem;
-  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
 }
 
@@ -132,7 +132,7 @@
 
 .image-page .hex-field input[type="text"] {
   width: 9rem;
-  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-family: var(--font-mono);
 }
 
 /* ─── 픽셀 그림 ─────────────────────────────── */
