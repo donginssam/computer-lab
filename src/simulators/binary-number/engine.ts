@@ -1,3 +1,5 @@
+import { placeValues } from "../shared/digits"
+
 /**
  * 십진수와 이진수 사이의 변환. 화면 상태와 무관한 순수 함수만 둔다.
  * 모든 이진수는 큰 자리부터 쓴 비트 배열(0 또는 1)로 다룬다.
@@ -9,11 +11,6 @@ export type Bit = 0 | 1
 export const WIDTH = 8
 /** 8비트로 나타낼 수 있는 가장 큰 양의 정수 */
 export const UNSIGNED_MAX = 2 ** WIDTH - 1
-
-/** 큰 자리부터의 자릿값: 128, 64, …, 1 */
-export function placeValues(width = WIDTH) {
-  return Array.from({ length: width }, (_, i) => 2 ** (width - 1 - i))
-}
 
 function assertUnsigned(n: number, width: number) {
   if (!Number.isInteger(n) || n < 0 || n > 2 ** width - 1)

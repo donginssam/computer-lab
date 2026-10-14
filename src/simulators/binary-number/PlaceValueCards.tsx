@@ -1,8 +1,10 @@
+import type { ChangeParams } from "../shared/useSimulatorParams"
 import { useState } from "react"
 import { Quiz } from "../shared/Quiz"
-import { NumberField } from "./NumberField"
-import { binaryCopy, spacedBits } from "./copy"
-import { bitString, fromBits, placeValues, toBits, UNSIGNED_MAX, type Bit } from "./engine"
+import { NumberField } from "../shared/NumberField"
+import { byteMaxNote, placeValues, spacedBits } from "../shared/digits"
+import { binaryCopy } from "./copy"
+import { bitString, fromBits, toBits, UNSIGNED_MAX, type Bit } from "./engine"
 
 const values = placeValues()
 
@@ -27,13 +29,7 @@ const questions = [
   },
 ] as const
 
-export function PlaceValueCards({
-  target,
-  change,
-}: {
-  target: number
-  change: (updates: Record<string, string>) => void
-}) {
+export function PlaceValueCards({ target, change }: { target: number; change: ChangeParams }) {
   const [bits, setBits] = useState<Bit[]>(() => toBits(0))
   // 만들 수가 바뀌면 새 문제이므로 카드를 모두 끈다. 컴포넌트를 새로 만들지 않아야
   // 입력칸이 남긴 경고가 함께 사라지지 않는다.
@@ -51,12 +47,13 @@ export function PlaceValueCards({
 
   return (
     <>
-      <section className="sim-card binary-settings" aria-label="자릿값 카드 설정">
+      <section className="sim-card sim-settings" aria-label="자릿값 카드 설정">
         <NumberField
           label="만들 수"
           value={target}
           min={0}
           max={UNSIGNED_MAX}
+          maxNote={byteMaxNote(UNSIGNED_MAX)}
           onCommit={next => change({ n: String(next) })}
         />
         <button
