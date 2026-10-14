@@ -8,21 +8,21 @@ import {
   XAxis,
   YAxis,
 } from "recharts"
-import { CARD_MAX, CARD_MIN, DIGIT_CHOICES, DIGIT_MAX, DIGIT_MIN } from "../bounds"
+import { DIGIT_CHOICES, DIGIT_MAX, DIGIT_MIN } from "../bounds"
 import { lockLimit } from "../lock/engine"
-import { mergeSortComparisonLimit } from "../sort/engine"
+import { EXAM_MIN, EXAM_MAX, divideComparisonCount } from "../sort/exam"
 import type { Experiment } from "./records"
 
 const lockLimits = DIGIT_CHOICES.map(digits => ({ digits, limit: lockLimit(digits) }))
-const sortLimits = Array.from({ length: CARD_MAX - CARD_MIN + 1 }, (_, index) => {
-  const n = index + CARD_MIN
-  return { n, limit: mergeSortComparisonLimit(n) }
+const sortLimits = Array.from({ length: EXAM_MAX - EXAM_MIN + 1 }, (_, index) => {
+  const n = index + EXAM_MIN
+  return { n, limit: divideComparisonCount(n) }
 })
 
 export function RecordCharts({ records }: { records: Experiment[] }) {
   const lock = records.filter(record => record.strategy === "lock")
   const change = records.filter(record => record.strategy === "change")
-  const sort = records.filter(record => record.strategy === "sort")
+  const sort = records.filter(record => record.strategy === "sort" && record.task === "exam")
 
   return (
     <section className="ps-record-charts" aria-labelledby="record-chart-title">
@@ -91,8 +91,10 @@ export function RecordCharts({ records }: { records: Experiment[] }) {
           </div>
         </article>
         <article className="sim-card">
-          <h3>카드 정리: 비교 횟수</h3>
-          <p className="small-note">선은 가장 많이 비교하는 횟수, 점은 내 실험입니다.</p>
+          <h3>시험지 정리: 비교 횟수</h3>
+          <p className="small-note">
+            선은 묶음 안에서 필요한 비교 횟수, 점은 내 시험지 실험입니다.
+          </p>
           <div className="chart">
             <ResponsiveContainer width="100%" height="100%" minWidth={0}>
               <ComposedChart data={sortLimits} accessibilityLayer>
@@ -100,14 +102,14 @@ export function RecordCharts({ records }: { records: Experiment[] }) {
                 <XAxis
                   dataKey="n"
                   type="number"
-                  domain={[CARD_MIN, CARD_MAX]}
+                  domain={[EXAM_MIN, EXAM_MAX]}
                   allowDecimals={false}
                 />
                 <YAxis type="number" allowDecimals={false} />
                 <Tooltip />
                 <Line
                   dataKey="limit"
-                  name="가장 많이 걸려도"
+                  name="묶음 정리 비교 횟수"
                   stroke="#6a3cc7"
                   dot={false}
                   isAnimationActive={false}

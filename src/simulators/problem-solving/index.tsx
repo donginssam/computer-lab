@@ -6,14 +6,7 @@ import { RecordsPanel } from "../shared/RecordsPanel"
 import { SimulatorHeader } from "../shared/SimulatorHeader"
 import { TabList } from "../shared/TabList"
 import { useRecords } from "../shared/useRecords"
-import {
-  CARD_DEFAULT,
-  clampAmount,
-  clampCardCount,
-  clampDigits,
-  LOCK_BATCHES,
-  lockPlacements,
-} from "./bounds"
+import { clampAmount, clampDigits, LOCK_BATCHES, lockPlacements } from "./bounds"
 import { ChangeExperiment } from "./change/ChangeExperiment"
 import { ChangePanel } from "./change/ChangePanel"
 import { coinPresets, coinSetIds } from "./change/engine"
@@ -25,7 +18,8 @@ import { ExperimentTable } from "./shared/ExperimentTable"
 import { readRecords, STORAGE_KEY } from "./shared/records"
 import { SortExperiment } from "./sort/SortExperiment"
 import { SortPanel } from "./sort/SortPanel"
-import { sortOrders } from "./sort/engine"
+import { EXAM_DEFAULT, clampExamCount, examOrders } from "./sort/exam"
+import { ProblemBrief } from "./shared/ProblemBrief"
 import { strategies, isStrategyId, type StrategyId } from "./strategies"
 import "./simulator.css"
 
@@ -35,7 +29,7 @@ const RecordCharts = lazy(() =>
 
 function lockBatchParam(value: string | null) {
   const parsed = Number(value)
-  return LOCK_BATCHES.find(batch => batch === parsed) ?? 1
+  return LOCK_BATCHES.find(batch => batch === parsed) ?? 1000
 }
 
 export function ProblemSolvingPage() {
@@ -54,8 +48,8 @@ export function ProblemSolvingPage() {
   const amount = clampedParam(params.get("amount"), preset.exampleAmount, clampAmount)
   const coins = preset.coins
 
-  const n = clampedParam(params.get("n"), CARD_DEFAULT, clampCardCount)
-  const order = oneOfParam(params.get("order"), sortOrders, "random")
+  const n = clampedParam(params.get("n"), EXAM_DEFAULT, clampExamCount)
+  const order = oneOfParam(params.get("order"), examOrders, "random")
   const [manualCards, setManualCards] = useState<number[] | undefined>()
   const { records, storageError, save, remove, clear } = useRecords(STORAGE_KEY, readRecords)
 
@@ -75,7 +69,7 @@ export function ProblemSolvingPage() {
 
   return (
     <div className="sim-page problem-page" style={unitStyle(unit)}>
-      <SimulatorHeader unit={unit} slug="problem-solving">
+      <SimulatorHeader unit={unit} slug="problem-solving" showLabLabel={false}>
         {problemSolvingCopy.lead}
       </SimulatorHeader>
       <TabList
@@ -94,6 +88,11 @@ export function ProblemSolvingPage() {
       >
         {strategy === "lock" && (
           <>
+            <ProblemBrief title="답을 찾을 수 있지만, 얼마나 많은 시도가 필요할까?">
+              비밀번호를 모르는 <strong>{digits}자리 숫자 자물쇠</strong>가 있습니다.
+              <br />
+              가능한 번호를 하나씩 시도해 <strong>자물쇠를 여는 비밀번호</strong>를 찾아보세요.
+            </ProblemBrief>
             <LockPanel
               digits={digits}
               placement={lockPlacement}
@@ -114,6 +113,14 @@ export function ProblemSolvingPage() {
         )}
         {strategy === "change" && (
           <>
+            <ProblemBrief title="지금 가장 좋아 보이는 선택이 최종 결과에서도 좋을까?">
+              <strong>{amount.toLocaleString("ko-KR")}원</strong>을 동전으로 거슬러 주어야 합니다.
+              사용할 수 있는 동전은{" "}
+              <strong>{coins.map(value => `${value.toLocaleString("ko-KR")}원`).join(", ")}</strong>
+              입니다.
+              <br />
+              동전을 가능한 적게 사용해서 <strong>정확한 금액</strong>을 만들어 보세요.
+            </ProblemBrief>
             <ChangePanel
               key={`${coinSet}:${coins.join("-")}`}
               amount={amount}
@@ -131,7 +138,13 @@ export function ProblemSolvingPage() {
         )}
         {strategy === "sort" && (
           <>
-            <SortPanel n={n} order={order} change={change} setManualCards={setManualCards} />
+            <SortPanel
+              key={n}
+              n={n}
+              order={order}
+              change={change}
+              setManualCards={setManualCards}
+            />
             <SortExperiment
               key={`${n}:${order}:${manualCards?.join("-") ?? "fallback"}`}
               n={n}
@@ -149,9 +162,6 @@ export function ProblemSolvingPage() {
           />
         )}
       </section>
-      {strategy !== "records" && (
-        <p className="small-note ps-share-note">{problemSolvingCopy.hiddenSetting}</p>
-      )}
     </div>
   )
 }

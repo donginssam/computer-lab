@@ -1,12 +1,18 @@
 import { useCallback, useMemo } from "react"
-import { RunControls } from "../../shared/RunControls"
+import { RunControls, type SpeedChoice } from "../../shared/RunControls"
 import { useSaveOnce } from "../../shared/useSaveOnce"
-import { StepLog } from "../../shared/StepLog"
 import type { Experiment } from "../shared/records"
 import { useStepper } from "../shared/useStepper"
 import { SortConcept } from "./SortConcept"
 import { SortView } from "./SortView"
-import { sortEngine, sortStepText, type SortOptions, type SortOrder } from "./engine"
+import { examEngine, type ExamOptions, type ExamOrder } from "./exam"
+
+const speeds: readonly SpeedChoice[] = [
+  { label: "느림 (1.5초)", speed: 1500, batch: 1 },
+  { label: "보통 (0.8초)", speed: 800, batch: 1 },
+  { label: "빠름 (10단계씩)", speed: 400, batch: 10 },
+  { label: "끝까지 (한 번에)", speed: 800, batch: 1000 },
+]
 
 export function SortExperiment({
   n,
@@ -15,18 +21,17 @@ export function SortExperiment({
   save,
 }: {
   n: number
-  order: SortOrder
+  order: ExamOrder
   cards?: number[]
   save: (records: Experiment[]) => void
 }) {
-  const options = useMemo<SortOptions>(() => ({ n, order, cards }), [n, order, cards])
+  const options = useMemo<ExamOptions>(() => ({ n, order, papers: cards }), [n, order, cards])
   const createSeed = useCallback(() => Math.floor(Math.random() * 0x1_0000_0000), [])
   const { run, dispatch, done, step, reset, toggle } = useStepper({
-    engine: sortEngine,
+    engine: examEngine,
     options,
     createSeed,
   })
-
   useSaveOnce<Experiment>(
     save,
     done
@@ -34,16 +39,14 @@ export function SortExperiment({
           {
             id: `${run.runId}:sort`,
             strategy: "sort",
+            task: "exam",
             n,
-            // 직접 입력이 비어 있으면 엔진이 무작위 카드로 돌아가므로, 기록도 그렇게 남긴다.
             order: order === "manual" && !cards ? "random" : order,
             comparisons: run.state.comparisons,
           },
         ]
       : [],
   )
-
-  const entries = run.state.trace.slice(0, run.state.index).map(sortStepText)
   return (
     <>
       <RunControls
@@ -52,6 +55,7 @@ export function SortExperiment({
         tick={run.tick}
         speed={run.speed}
         batch={run.batch}
+        speeds={speeds}
         onStep={step}
         onBack={() => dispatch({ type: "back" })}
         onReset={reset}
@@ -59,9 +63,6 @@ export function SortExperiment({
         onSpeed={(speed, batch) => dispatch({ type: "speed", speed, batch })}
       />
       <SortView state={run.state} />
-      <section className="sim-card">
-        <StepLog entries={entries.slice(-30)} total={entries.length} />
-      </section>
       <SortConcept />
     </>
   )

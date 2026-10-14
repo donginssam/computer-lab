@@ -10,6 +10,7 @@ import {
 } from "../bounds"
 import { coinSetIds, normalizeCoins, type CoinSetId } from "../change/engine"
 import { lockLimit } from "../lock/engine"
+import { EXAM_MIN, EXAM_MAX, examOrders, divideComparisonCount } from "../sort/exam"
 import { mergeSortComparisonLimit, sortOrders, type SortOrder } from "../sort/engine"
 
 interface BaseExperiment {
@@ -37,6 +38,7 @@ export interface ChangeExperimentRecord extends BaseExperiment {
 
 export interface SortExperimentRecord extends BaseExperiment {
   strategy: "sort"
+  task?: "exam"
   n: number
   order: SortOrder
   comparisons: number
@@ -94,6 +96,17 @@ function validChange(record: Record<string, unknown>) {
 }
 
 function validSort(record: Record<string, unknown>) {
+  if (record.task === "exam") {
+    return (
+      record.strategy === "sort" &&
+      Number.isInteger(record.n) &&
+      Number(record.n) >= EXAM_MIN &&
+      Number(record.n) <= EXAM_MAX &&
+      examOrders.includes(record.order as (typeof examOrders)[number]) &&
+      record.comparisons === divideComparisonCount(Number(record.n))
+    )
+  }
+  if (record.task !== undefined) return false
   return (
     record.strategy === "sort" &&
     Number.isInteger(record.n) &&

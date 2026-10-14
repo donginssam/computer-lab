@@ -1,5 +1,6 @@
 import { lockPlacementLabel, sortOrderLabel } from "../copy"
 import { formatCode, lockLimit } from "../lock/engine"
+import { divideComparisonCount } from "../sort/exam"
 import { mergeSortComparisonLimit } from "../sort/engine"
 import { strategyNames } from "../strategies"
 import { RecordTable, type RecordColumn } from "../../shared/RecordTable"
@@ -12,7 +13,7 @@ function problem(record: Experiment) {
     case "change":
       return `${record.amount.toLocaleString()}원 · ${record.coins.join("·")}원`
     case "sort":
-      return `${record.n}장 · ${sortOrderLabel[record.order]}`
+      return `${record.task === "exam" ? "시험지 " : ""}${record.n}장 · ${sortOrderLabel[record.order]}`
   }
 }
 
@@ -36,7 +37,9 @@ function comparison(record: Experiment) {
         ? "만들 수 있는 답 없음"
         : `가장 적은 개수 ${record.optimalCount}개`
     case "sort":
-      return `가장 많이 걸려도 ${mergeSortComparisonLimit(record.n)}회`
+      return record.task === "exam"
+        ? `묶음 정리 ${divideComparisonCount(record.n)}회`
+        : `가장 많이 걸려도 ${mergeSortComparisonLimit(record.n)}회`
   }
 }
 

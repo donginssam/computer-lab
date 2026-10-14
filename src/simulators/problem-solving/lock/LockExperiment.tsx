@@ -1,12 +1,11 @@
 import { useCallback } from "react"
 import { RunControls, type SpeedChoice } from "../../shared/RunControls"
 import { useSaveOnce } from "../../shared/useSaveOnce"
-import { StepLog } from "../../shared/StepLog"
 import type { Experiment } from "../shared/records"
 import { useStepper } from "../shared/useStepper"
 import { LockConcept } from "./LockConcept"
 import { LockView } from "./LockView"
-import { formatCode, lockEngine, lockLimit, type LockOptions } from "./engine"
+import { lockEngine, lockLimit, type LockOptions } from "./engine"
 import { LOCK_BATCHES, type LockBatch, type LockPlacement } from "../bounds"
 
 const batchLabel: Record<LockBatch, string> = {
@@ -66,12 +65,6 @@ export function LockExperiment({
       : [],
   )
 
-  const entries = run.state.recent.map(value =>
-    value === run.state.secret
-      ? `${formatCode(value, digits)} 시도 → 열렸습니다.`
-      : `${formatCode(value, digits)} 시도 → 열리지 않았습니다.`,
-  )
-
   return (
     <>
       <RunControls
@@ -91,9 +84,6 @@ export function LockExperiment({
         }}
       />
       <LockView state={run.state} />
-      <section className="sim-card">
-        <StepLog entries={entries} total={run.state.attempts} />
-      </section>
       <LockConcept />
     </>
   )

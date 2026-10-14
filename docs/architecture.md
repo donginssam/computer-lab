@@ -98,7 +98,7 @@ URL 설정 → BalanceScalePage → Simulation → useSimulation
 
 `Simulation`은 실행 제어와 완료 기록 수집을 담당하고, 공용 `TabList`가 모드 선택과 키보드 이동을 담당합니다. 공용 `useRecords`는 저장소 키를 받아 저장·삭제와 저장 실패 상태를 관리하고, `mergeRecords`는 ID 중복을 제거하고 공통 제한 `MAX_RECORDS`에 맞춰 최신 기록만 남깁니다. 시뮬레이터의 자동 실행 타이머와 단축키는 `useRunLoop`, 완료 기록의 중복 저장 방지는 `useSaveOnce`가 함께 맡습니다. 기록 탭은 공용 `RecordsPanel`이 저장 실패 안내·기록 표·지연 로딩 그래프를 같은 순서와 문구로 보여 주고, 표의 뼈대는 `RecordTable`이 맡아 시뮬레이터는 열과 안내 문구만 정합니다. 주소의 숫자 설정과 설정 패널의 입력칸은 공용 `clampedParam`으로 같은 값을 같은 결과로 읽습니다.
 
-문제 해결 전략 실험실은 세 엔진을 하나씩 같은 실행기에 연결합니다. `shared/stepper.ts`의 reducer가 tick 단위 진행과 되감기를 맡고, 각 전략의 `Experiment` 컴포넌트가 완료 결과를 한 번만 기록합니다. 자물쇠는 한 tick에 여러 시도를 묶을 수 있고, 합병 정렬은 초기화할 때 만든 짧은 trace의 현재 위치만 이동합니다. 기록은 `strategy` 판별 필드가 있는 합 타입으로 저장하며 그래프는 기록 탭에서만 지연 로딩합니다.
+문제 해결 전략 실험실은 세 엔진을 하나씩 같은 실행기에 연결합니다. `shared/stepper.ts`의 reducer가 tick 단위 진행과 되감기를 맡고, 각 전략의 `Experiment` 컴포넌트가 완료 결과를 한 번만 기록합니다. 자물쇠는 한 tick에 여러 시도를 묶을 수 있고, 시험지 정리는 초기화할 때 만든 trace의 현재 위치만 이동합니다. 기록은 `strategy` 판별 필드가 있는 합 타입으로 저장하며 그래프는 기록 탭에서만 지연 로딩합니다.
 
 ```text
 URL 설정 → ProblemSolvingPage → 전략 Experiment → 공용 stepper → 순수 엔진

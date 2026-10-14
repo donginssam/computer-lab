@@ -10,10 +10,12 @@ export function SimulatorHeader({
   unit,
   slug,
   children,
+  showLabLabel = true,
 }: {
   unit: Unit
   slug: string
   children: ReactNode
+  showLabLabel?: boolean
 }) {
   const index = unit.simulators.findIndex(simulator => simulator.slug === slug)
   const { title } = unit.simulators[index]
@@ -21,9 +23,11 @@ export function SimulatorHeader({
     <>
       <Breadcrumb items={[{ label: unit.title, to: unitPath(unit) }, { label: title }]} />
       <header className="mt-6">
-        <p className="small-note">
-          {unit.lab ?? unit.title} · {String(index + 1).padStart(2, "0")}
-        </p>
+        {showLabLabel && (
+          <p className="small-note">
+            {unit.lab ?? unit.title} · {String(index + 1).padStart(2, "0")}
+          </p>
+        )}
         <h1 className="text-[clamp(2rem,5vw,3rem)]">{title}</h1>
         <p className="mt-4">{children}</p>
       </header>

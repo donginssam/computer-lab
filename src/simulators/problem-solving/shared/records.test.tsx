@@ -27,6 +27,27 @@ afterEach(() => {
 })
 
 describe("문제 해결 전략 기록", () => {
+  it("새 시험지 기록과 기존 카드 기록을 함께 읽고 잘못된 시험지 결과는 제외한다", () => {
+    const exam = {
+      id: "exam",
+      strategy: "sort",
+      task: "exam",
+      n: 30,
+      order: "random",
+      comparisons: 135,
+    }
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify([
+        ...records,
+        exam,
+        { ...exam, id: "bad-count", comparisons: 435 },
+        { ...exam, id: "bad-order", order: "worst" },
+      ]),
+    )
+    expect(readRecords()).toEqual([...records, exam])
+  })
+
   it("세 전략 형식을 검증하고 손상된 값은 제외한다", () => {
     localStorage.setItem(
       STORAGE_KEY,

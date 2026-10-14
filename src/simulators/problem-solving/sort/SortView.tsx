@@ -1,101 +1,68 @@
-import { strategyNames } from "../strategies"
-import { mergeSortComparisonLimit, sortStepText, type SortState, type SortStep } from "./engine"
+import { groupLabel, type ExamDivideState } from "./exam"
+import { ExamMethodHeader, ExamPapers } from "./ExamPapers"
 
-function CardRow({
-  values,
-  active = [],
-}: {
-  values: readonly number[]
-  active?: readonly number[]
-}) {
+export function SortView({ state }: { state: ExamDivideState }) {
+  const current = state.trace[state.index - 1]
+  const phase = !current ? 0 : current.kind === "divide" ? 1 : current.kind === "combine" ? 3 : 2
+  const combined = state.groups.flatMap(group => group.output)
   return (
-    <div className="sort-card-row">
-      {values.map((value, index) => (
-        <span
-          className={`sort-card ${active.includes(value) ? "active" : ""}`}
-          key={`${value}:${index}`}
-        >
-          {value}
-        </span>
-      ))}
-    </div>
-  )
-}
-
-function StepGroups({ step }: { step: SortStep }) {
-  if (step.kind === "split")
-    return (
-      <>
-        <CardRow values={step.left} />
-        <span aria-hidden="true">+</span>
-        <CardRow values={step.right} />
-      </>
-    )
-  if (step.kind === "merged") return <CardRow values={step.values} />
-  return (
-    <>
-      <CardRow
-        values={[...step.output, ...step.remainingLeft, ...step.remainingRight]}
-        active={step.kind === "compare" ? [step.left, step.right] : []}
-      />
-    </>
-  )
-}
-
-export function SortView({ state }: { state: SortState }) {
-  const applied = state.trace.slice(0, state.index)
-  const current = applied.at(-1)
-  const splits = applied.filter(step => step.kind === "split").length
-  const merges = applied.filter(step => step.kind === "merged").length
-  const latestByDepth = new Map<number, SortStep>()
-  for (const step of applied) latestByDepth.set(step.depth, step)
-  const sorted = state.trace.at(-1)
-
-  return (
-    <section className="sim-card sort-scene">
-      <div className="section-title">
-        <div>
-          <p className="small-note">{strategyNames.sort.longTitle}</p>
-          <h2>나누고, 정리하고, 합치기</h2>
+    <section
+      className="sim-card exam-method"
+      data-method="divide"
+      aria-label="나누어 해결하기 과정"
+    >
+      <ExamMethodHeader count={state.comparisons} />
+      <ol className="exam-phases" aria-label="시험지 정리 순서">
+        {["① 나누기", "② 묶음 정리", "③ 합치기"].map((label, index) => (
+          <li
+            key={label}
+            className={phase === index + 1 ? "current" : phase > index + 1 ? "complete" : ""}
+          >
+            {label}
+          </li>
+        ))}
+      </ol>
+      <p className="exam-status" role="status" aria-live="polite">
+        {current?.message ?? "먼저 시험지 번호를 보고 10장씩 작은 묶음으로 나눠 보세요."}
+      </p>
+      {!current && (
+        <div className="exam-tray">
+          <p className="exam-row-label">뒤섞인 시험지</p>
+          <ExamPapers values={state.papers} />
         </div>
-        <span className="strategy-chip sort-chip">많아도 빠름</span>
-      </div>
-      <dl className="stats">
-        <div>
-          <dt>나눈 횟수</dt>
-          <dd>{splits}회</dd>
-        </div>
-        <div>
-          <dt>비교 횟수</dt>
-          <dd>{state.comparisons}회</dd>
-        </div>
-        <div>
-          <dt>가장 많이 걸려도</dt>
-          <dd>{mergeSortComparisonLimit(state.cards.length)}회</dd>
-        </div>
-      </dl>
-      <div className="sort-workspace" aria-label="카드 정리 과정">
-        <div className="sort-depth-row">
-          <strong>처음</strong>
-          <CardRow values={state.cards} />
-        </div>
-        {[...latestByDepth.entries()].map(([depth, step]) => (
-          <div className="sort-depth-row current" key={depth}>
-            <strong>{depth + 1}단계 깊이</strong>
-            <div className="sort-groups">
-              <StepGroups step={step} />
+      )}
+      <div className="exam-groups" aria-label="번호 범위별 시험지 묶음">
+        {state.groups.map((group, index) => (
+          <div key={group.first} className={`exam-tray ${group.finished ? "is-complete" : ""}`}>
+            <div className="exam-tray-heading">
+              <strong>{groupLabel(group)}</strong>
+              <span>
+                {!current
+                  ? "아직 나누지 않음"
+                  : group.finished
+                    ? `정리 완료 · ${group.comparisons}회`
+                    : current.groupIndex === index
+                      ? `정리 중 · ${group.comparisons}회`
+                      : "아직 섞여 있음"}
+              </span>
             </div>
+            <ExamPapers
+              values={[...group.output, ...group.remaining]}
+              sorted={group.output}
+              active={current?.groupIndex === index ? current.active : []}
+            />
           </div>
         ))}
       </div>
-      <p className="result" role="status" aria-live="polite">
-        {state.finished && sorted?.kind === "merged"
-          ? `${sorted.values.join(" → ")} 순서로 정리했습니다. 비교는 ${state.comparisons}회입니다.`
-          : current
-            ? sortStepText(current)
-            : "다음 단계를 눌러 카드 묶음을 나눠 보세요."}
+      {state.finished && (
+        <div className="exam-tray is-complete">
+          <p className="exam-row-label">합쳐서 완성한 줄 · 1번부터 {state.papers.length}번까지</p>
+          <ExamPapers values={combined} sorted={combined} />
+        </div>
+      )}
+      <p className="small-note">
+        번호를 보고 나누기와 묶음 이어 붙이기는 시험지끼리 비교하지 않습니다.
       </p>
-      <p className="small-note">지금까지 합치기를 끝낸 묶음은 {merges}개입니다.</p>
     </section>
   )
 }

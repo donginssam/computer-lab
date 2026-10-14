@@ -25,7 +25,7 @@ export interface CoinPreset {
 }
 
 export const coinPresets: readonly CoinPreset[] = [
-  { id: "korea", name: "한국 동전", coins: [500, 100, 50, 10], exampleAmount: 870 },
+  { id: "korea", name: "한국 동전", coins: [500, 100, 50, 10], exampleAmount: 120 },
   { id: "labA", name: "실험용 동전 A", coins: [100, 60, 10], exampleAmount: 120 },
   { id: "labB", name: "실험용 동전 B", coins: [50, 30, 20], exampleAmount: 60 },
 ]
